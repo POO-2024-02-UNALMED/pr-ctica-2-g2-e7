@@ -1,16 +1,6 @@
 from enum import Enum
 
 class Producto:
-    cantidad = 0
-    cantidadDevuelta = 0
-    cantidadVendida = 0
-    cantidadAlerta = 0
-    categoria = None
-    ID = 0
-    nombre = ""
-    precio = 0
-    retornable = False
-
 
     class Categoria(Enum):
         TECNOLOGIA = "Tecnologia"
@@ -23,10 +13,6 @@ class Producto:
         def __init__(self, nombre):
             self._nombre = nombre
 
-        @property
-        def getNombre(self):
-            return self._nombre
-        
 
     def __init__(self, cantidad, cantidadAlerta, cantidadVendida, cantidadDevuelta, categoria, ID, nombre, precio, retornable):
         self.cantidad = cantidad
@@ -43,3 +29,12 @@ class Producto:
         return self.cantidad
     def setCantidad(self, value):
         self.cantidad = value
+    
+    def getNombre(self):
+        return self.nombre
+    
+    def getCategoria(self):
+        return self.categoria
+    
+    def getPrecio(self):
+        return self.precio

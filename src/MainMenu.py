@@ -3,9 +3,10 @@ from CuentaBancaria import CuentaBancaria
 from CarritoCompras import CarritoCompras
 
 class MainMenu:
-    comprador = None
-    def __init__(self, comprador):
+    def __init__(self, comprador, vendedor, inventario):
         self.comprador = comprador
+        self.vendedor = vendedor
+        self.inventario = inventario
 
     def display(self):
         while True:
@@ -58,6 +59,7 @@ class MainMenu:
                         print("\nERROR. Saldo insuficiente para hacer la compra.")
                     else:
                         self.comprador.getCarritoCompras().calcularTotal()
+                        self.buyProcessDisplay()
                 elif opcion == 5:
                     #Espacio para gestionar cupones
                     break
@@ -115,12 +117,47 @@ class MainMenu:
                                 print(f"El precio total de la compra es de: {precioTotal}. Pero con descuento queda en: {precioConDescuento}. Ahora se prosigue con el pago.")
                                 self.comprador.getCarritoCompras().setPrecioTotal(precioConDescuento) # Se actualiza el precio total de la compra en el carrito de compras.
                                 self.comprador.getCarritoCompras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
+                                
+                                # Espacio para lo de las membresias (para que Santiago lo implemente)
+
+                                self.comprador.pago(self.comprador, self.vendedor, precioConDescuento, "compra") #Se inicia el proceso de pago.
+                                self.comprador.getValorCupones.pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
+                                self.comprador.cantidadCupones-= 1 # Se disminuye la cantidad de cupones en 1.
+                                print("============COMPRA===========")
+                                print("Resumen de la compra:")
+                                print(self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))) # Se muestra por pantalla la factura.
+                                print("¡Muchas gracias por su compra!")
+                                if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
+                                    print(f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.")
+                                    self.comprador.cantidadCupones += 1
+                                print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
+                                
+                                # Falta lo de las notificaciones (Espacio para eso)
+                                
+                                self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
                                 break
                         except ValueError:
                             print("ERROR. Ingrese un valor válido.")
                         break
                 elif opcion == 2:
-                    #Espacio para hacer el proceso
+                    self.comprador.getCarritoCompras().restarProductosAlComprar()
+                    self.comprador.pago(self.comprador, self.vendedor, self.comprador.getCarritoCompras().getPrecioTotal(), "compra") #Se inicia el proceso de pago.
+
+                    # Espacio para lo de las membresias (para que Santiago lo implemente)
+
+                    print(f"El precio total de la compra es de: {self.comprador.getCarritoCompras().getPrecioTotal()}. Ahora se prosigue con el pago.")
+                    print("============COMPRA===========")
+                    print("Resumen de la compra:")
+                    print(self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))) # Se muestra por pantalla la factura.
+                    print("¡Muchas gracias por su compra!")
+                    if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
+                        print(f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.")
+                        self.comprador.cantidadCupones += 1
+                    print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
+
+                    # Falta lo de las notificaciones (Espacio para eso)
+
+                    self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
                     break
                 elif opcion == 3:
                     print("Regresando al menú del comprador...")
@@ -130,12 +167,3 @@ class MainMenu:
             except ValueError:
                 print("ERROR. Ingrese una cantidad válida.")
 
-
-if __name__ == "__main__":
-    comprador = Comprador("Juan", None, None)
-    cuenta = CuentaBancaria(comprador)
-    comprador.setCuentaBancaria(cuenta)
-    carrito = CarritoCompras(comprador)
-    comprador.setCarritoCompras(carrito)
-    test = MainMenu(comprador)
-    test.display()

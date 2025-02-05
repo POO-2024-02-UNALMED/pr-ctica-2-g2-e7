@@ -1,9 +1,9 @@
 class CuentaBancaria:
-    saldo = 0
-    usuario = None
+
 
     def __init__(self, usuario):
         self.usuario = usuario
+        self.saldo = 0
     
     def getSaldo(self):
         return self.saldo

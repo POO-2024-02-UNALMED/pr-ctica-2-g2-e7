@@ -1,9 +1,6 @@
 from Cupon import Cupon
 
 class Factura(Cupon):
-    carritoCompras = None
-    IDFactura = 0
-    transaccion = None
 
     def __init__(self, carritoCompras, IDFactura, transaccion):
         super().__init__()
@@ -16,3 +13,10 @@ class Factura(Cupon):
             valorDescuentoAleatorio = Cupon.generarValorCupon()
             comprador = transaccion.getUsuarioRemitente()
             comprador.getValorCupones().append(valorDescuentoAleatorio)
+        
+    
+    def getCarritoCompras(self):
+        return self.carritoCompras
+    
+    def getIDFactura(self):
+        return self.IDFactura

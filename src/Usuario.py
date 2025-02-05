@@ -1,13 +1,12 @@
+from Transaccion import Transaccion
+
 class Usuario:
-    membresia = ""
-    vecesComprado = 0
-    puntos = 0
-    nombre = ""
-    cuentaBancaria = None
 
     def __init__(self, nombre, cuentaBancaria):
         self.nombre = nombre
         self.cuentaBancaria = cuentaBancaria
+        self.membresia = ""
+        self.vecesComprado = 0
 
     def  getCuentaBancaria(self):
         return self.cuentaBancaria
@@ -16,5 +15,12 @@ class Usuario:
         self.cuentaBancaria = value
     
     def pago(self, usuarioRemitente, usuarioReceptor, cantidadTransferir, tipoTransaccion):
-        # Espacio para eso xd
-        pass
+        transaccion = Transaccion(usuarioRemitente, usuarioReceptor, tipoTransaccion)
+        transaccion.setEstadoCompra(True)
+
+        if tipoTransaccion.casefold() == "devolución":
+            transaccion.ejecutarTransaccion(cantidadTransferir)
+        elif tipoTransaccion.casefold() == "compra":
+            transaccion.generarFactura()
+            transaccion.ejecutarTransaccion(cantidadTransferir)
+            pass

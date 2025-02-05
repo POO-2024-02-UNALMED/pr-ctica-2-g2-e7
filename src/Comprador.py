@@ -1,14 +1,13 @@
 from Usuario import Usuario
+from HistorialCompras import HistorialCompras
 
 class Comprador(Usuario):
-    carritoCompras = None
-    historialCompras = None
-    valorCupones = [10]
-    cantidadCupones = 1
-
     def __init__(self, nombre, cuentaBancaria, carritoCompras):
         super().__init__(nombre, cuentaBancaria)
         self.carritoCompras = carritoCompras
+        self.historialCompras = HistorialCompras()
+        self.valorCupones = [10]
+        self.cantidadCupones = 1
 
 
     def getValorCupones(self):
@@ -25,3 +24,6 @@ class Comprador(Usuario):
         return self.carritoCompras
     def setCarritoCompras(self, carritoCompras):
         self.carritoCompras = carritoCompras
+
+    def getHistorialCompras(self):
+        return self.historialCompras

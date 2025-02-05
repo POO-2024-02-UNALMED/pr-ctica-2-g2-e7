@@ -1,15 +1,12 @@
 from Factura import Factura
 
 class Transaccion:
-    usuarioRemitente = None
-    usuarioReceptor = None
-    tipoTransaccion = ""
-    estadoCompra = False
 
     def __init__(self, usuarioRemitente, usuarioReceptor, tipoTransaccion):
         self.usuarioRemitente = usuarioRemitente
         self.usuarioReceptor = usuarioReceptor
         self.tipoTransaccion = tipoTransaccion
+        self.estadoCompra = False
 
 
     def setEstadoCompra(self, estadoCompra):
