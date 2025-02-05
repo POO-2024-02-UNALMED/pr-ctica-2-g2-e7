@@ -114,7 +114,7 @@ class MainMenu:
 
                                 print(f"El precio total de la compra es de: {precioTotal}. Pero con descuento queda en: {precioConDescuento}. Ahora se prosigue con el pago.")
                                 self.comprador.getCarritoCompras().setPrecioTotal(precioConDescuento) # Se actualiza el precio total de la compra en el carrito de compras.
-                                self.comprador.getCarritoCmpras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
+                                self.comprador.getCarritoCompras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
                                 break
                         except ValueError:
                             print("ERROR. Ingrese un valor válido.")
