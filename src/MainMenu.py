@@ -61,8 +61,7 @@ class MainMenu:
                         self.comprador.getCarritoCompras().calcularTotal()
                         self.buyProcessDisplay()
                 elif opcion == 5:
-                    #Espacio para gestionar cupones
-                    break
+                    self.voucherMenuDisplay()
                 elif opcion == 6:
                     #Espacio para ver historial de compras
                     break
@@ -166,4 +165,43 @@ class MainMenu:
                     print("ERROR. Por favor ingrese alguna de las opciones mostradas")
             except ValueError:
                 print("ERROR. Ingrese una cantidad válida.")
+
+
+    def voucherMenuDisplay(self):
+        while True:
+            print("===== MENÚ CUPONES =====")
+            print(f"Usted actualmente dispone de {len(self.comprador.getValorCupones())} cupones. ¿Que desea hacer?:")
+            print("1. Ver cupones disponibles")
+            print("2. Eliminar cupones")
+            print("3. Regresar al menú del comprador")
+            try:
+                opcion = int(input(("\nSeleccione una opción: ")))
+                if opcion < 1 or opcion > 3:
+                    print("ERROR. Seleccione una opción válida.")
+                elif opcion == 1:
+                    if len(self.comprador.getValorCupones()) == 0:
+                        print("No cuentas con cupones disponibles de momento...")
+                    else:
+                        print(self.comprador.mostrarCupones())
+                elif opcion == 2:
+                    if len(self.comprador.getValorCupones()) == 0:
+                        print("No cuentas con cupones disponibles para eliminar...")
+                    else:
+                        print("Cupones dispoibles:")
+                        print(self.comprador.mostrarCupones())
+                        try:
+                            cuponEliminar = int(input("Seleccione el cupón que desea eliminar: "))
+                            if cuponEliminar < 1 or cuponEliminar > len(self.comprador.getValorCupones()):
+                                print("ERROR. Seleccione un cupón válido.")
+                            else:
+                                self.comprador.eliminarCupones(cuponEliminar)
+                                self.comprador.cantidadCupones -= 1
+                                print("El cupón ha sido eliminado exitosamente")
+                        except ValueError:
+                            print("ERROR. Ingrese un valor válido.")
+                elif opcion == 3:
+                    print("Regresando al menú del comprador...")
+                    break
+            except ValueError:
+                print("ERROR. Ingrese un valor válido.")
 

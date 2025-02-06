@@ -27,3 +27,6 @@ class Comprador(Usuario):
 
     def getHistorialCompras(self):
         return self.historialCompras
+    
+    def eliminarCupones(self, cuponEliminar):
+        self.valorCupones.pop(cuponEliminar - 1)
