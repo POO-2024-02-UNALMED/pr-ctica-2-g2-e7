@@ -121,7 +121,7 @@ class MainMenu:
                                 # Espacio para lo de las membresias (para que Santiago lo implemente)
 
                                 self.comprador.pago(self.comprador, self.vendedor, precioConDescuento, "compra") #Se inicia el proceso de pago.
-                                self.comprador.getValorCupones.pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
+                                self.comprador.getValorCupones().pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
                                 self.comprador.cantidadCupones-= 1 # Se disminuye la cantidad de cupones en 1.
                                 print("============COMPRA===========")
                                 print("Resumen de la compra:")

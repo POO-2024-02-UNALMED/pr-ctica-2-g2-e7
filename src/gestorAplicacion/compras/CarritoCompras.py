@@ -22,7 +22,7 @@ class CarritoCompras:
     def getListaItems(self):
         return self.listaItems
     
-    def setDesceuntoAplicadoCompra(self, descuento):
+    def setDescuentoAplicadoCompra(self, descuento):
         self.descuentoAplicadoCompra = descuento
 
     def getCantidadPorProducto(self):
