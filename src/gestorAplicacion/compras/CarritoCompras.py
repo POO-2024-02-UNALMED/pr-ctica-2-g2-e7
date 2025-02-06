@@ -88,45 +88,6 @@ class CarritoCompras:
             cantidadComprada = self.cantidadPorProducto[i]
             producto.setCantidad(producto.getCantidad() - cantidadComprada) #Esto es para restar la cantidad de productos comprados a la cantidad total de ese producto
 
-    def añadirProducto(self, producto):
-        #Si no se le pasa cantidad, se asume que se quiere añadir un producto
-        estado = self.inventario.verificarProducto(producto, 1)
-        if estado == True:
-            if producto in self.listaItems:
-                indice = self.listaItems.index(producto)
-                cantidad = self.cantidadPorProducto[indice]
-                if cantidad == 0:
-                    return "Error. La cantidad mínima de productos que se puede añadir es 1"
-                else:
-                    self.cantidadPorProducto.insert(indice, cantidad + 1)
-                    return "Producto añadido al carrito exitosamente"
-            else:
-                self.listaItems.append(producto)
-                self.cantidadPorProducto.append(1)
-                return "Producto añadido al carrito exitosamente"
-        else:
-            return "No hay suficiente producto en stock"
-        
-    
-    def añadirProductoConCantidad(self, producto, cantidadAñadir):
-        estado = self.inventario.verificarProducto(producto, cantidadAñadir)
-        if estado == True:
-            if cantidadAñadir > 5:
-                return "Error. La cantidad máxima de productos que se puede añadir es 5"
-            elif producto in self.listaItems:
-                indice = self.listaItems.index(producto)
-                cantidad = self.cantidadPorProducto[indice]
-                if (cantidad + cantidadAñadir) > 5:
-                    return "Error. La cantidad máxima de productos que se puede añadir es 5"
-                else:
-                    self.cantidadPorProducto.insert(indice, cantidad + cantidadAñadir)
-                    return "Producto añadido al carrito exitosamente"
-            else:
-                self.listaItems.append(producto)
-                self.cantidadPorProducto.append(cantidadAñadir)
-                return "Producto añadido al carrito exitosamente"
-        else:
-            return "No hay suficiente producto en stock"
     def restarCantidadPorProducto(self , producto, cantidad):
         indice= self.listaItems.index(producto)
         self.cantidadPorProducto[indice]-=cantidad
