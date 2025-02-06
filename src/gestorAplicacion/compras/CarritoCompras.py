@@ -1,13 +1,20 @@
 from ..tienda.Inventario import Inventario
+from ..usuario.Usuario import Usuario
+from multimethod import multimethod
+from ..tienda.Producto import Producto
 
 class CarritoCompras:
-    def __init__(self, usuario, inventario):
+    @multimethod
+    def __init__(self, usuario : Usuario, inventario : Inventario ):
         self.usuario = usuario
         self.inventario = inventario
         self.listaItems = []
         self.cantidadPorProducto = []
         self.precioTotal = 0
         self.descuentoAplicadoCompra = 0
+    @multimethod 
+    def __init__(self):
+        return
     
     def getUsuario(self):
         return self.usuario
@@ -80,3 +87,49 @@ class CarritoCompras:
                 return "Producto añadido al carrito exitosamente"
         else:
             return "No hay suficiente producto en stock"
+    def restarCantidadPorProducto(self , producto, cantidad):
+        indice= self.listaItems.index(producto)
+        self.cantidadPorProducto[indice]-=cantidad
+        if self.cantidadPorProducto[indice] == 0:
+            self.listaItems.pop(indice)
+        self.calcularTotal()
+    def buscarProducto(self , idProducto):
+        for i in range(0,len(self.listaItems),1):
+            if self.listaItems[i].getID()== idProducto:
+                return self.listaItems[i]
+        return None   
+    
+
+    def __str__(self):
+        sb = []
+        sb.append(f"Carrito de {self.usuario.getNomnbre()}:\n\n")
+        sb.append("Lista de productos:\n")
+        
+        for i in range(len(self.listaItems)):
+            sb.append(f"{self.listaItems[i]} cantidad: {self.cantidadPorProducto[i]}\n\n")
+        
+        self.calcularTotal()
+        sb.append(f"total: {self.precioTotal}\n")
+        
+        return "".join(sb)
+    @multimethod #usando el multimethod para simular cuando a eliminar producto no le entregamos una cantidad 
+    def eliminarProducto(self,producto: Producto):
+        indice=self.listaItems.index(producto)
+        self.listaItems.pop(indice)
+        self.cantidadPorProducto.pop(indice)
+        return "proceso exitoso"
+    @multimethod
+    def eliminarProducto(self, producto : Producto , cantidad: int):#aqui usamos el multimethos para simular cuando si le entregamos alguna cantidad 
+        indice = self. listaItems.index(producto)
+        cantidadproducto= self.cantidadPorProducto[indice]
+        if cantidadproducto > cantidad:
+            self.cantidadPorProducto[indice]-=cantidad
+            return f"La cantidad del producto ahora es {self.cantidadPorProducto[indice]}"
+        elif cantidadproducto==cantidad:
+            self.cantidadPorProducto.pop(indice)
+            self.listaItems.pop(indice)
+            return f"El producto ha sido eliminado en su totalidad"
+        else:
+            return "ERROR: la cantidad que deseas eliminar es mayor que la disponible "
+
+

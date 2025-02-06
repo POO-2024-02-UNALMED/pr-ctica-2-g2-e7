@@ -38,3 +38,5 @@ class Producto:
     
     def getPrecio(self):
         return self.precio
+    def getID(self):
+        return self.ID

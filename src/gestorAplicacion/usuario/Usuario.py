@@ -13,6 +13,8 @@ class Usuario:
     
     def setCuentaBancaria(self, value):
         self.cuentaBancaria = value
+    def getNomnbre(self):
+        return self.nombre
     
     def pago(self, usuarioRemitente, usuarioReceptor, cantidadTransferir, tipoTransaccion):
         transaccion = Transaccion(usuarioRemitente, usuarioReceptor, tipoTransaccion)
