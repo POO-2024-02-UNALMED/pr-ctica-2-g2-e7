@@ -1,6 +1,6 @@
-from Comprador import Comprador
-from CuentaBancaria import CuentaBancaria
-from CarritoCompras import CarritoCompras
+from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 
 class MainMenu:
     def __init__(self, comprador, vendedor, inventario):

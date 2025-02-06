@@ -1,4 +1,4 @@
-from Factura import Factura
+from .Factura import Factura
 
 class Transaccion:
 

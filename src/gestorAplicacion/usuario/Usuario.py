@@ -1,4 +1,4 @@
-from Transaccion import Transaccion
+from ..pasarelaPago.Transaccion import Transaccion
 
 class Usuario:
 

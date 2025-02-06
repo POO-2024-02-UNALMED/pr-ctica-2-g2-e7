@@ -1,4 +1,4 @@
-from Inventario import Inventario
+from ..tienda.Inventario import Inventario
 
 class CarritoCompras:
     def __init__(self, usuario, inventario):

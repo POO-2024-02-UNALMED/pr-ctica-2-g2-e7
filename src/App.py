@@ -1,10 +1,10 @@
-from Comprador import Comprador
-from CuentaBancaria import CuentaBancaria
-from CarritoCompras import CarritoCompras
+from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from MainMenu import MainMenu
-from Producto import Producto
-from Inventario import Inventario
-from Vendedor import Vendedor
+from gestorAplicacion.tienda.Producto import Producto
+from gestorAplicacion.tienda.Inventario import Inventario
+from gestorAplicacion.usuario.Vendedor import Vendedor
 
 
 

@@ -1,4 +1,4 @@
-from Usuario import Usuario
+from .Usuario import Usuario
 
 class Vendedor(Usuario):
     def __init__(self, nombre, cuentaBancaria, inventario, fabrica):

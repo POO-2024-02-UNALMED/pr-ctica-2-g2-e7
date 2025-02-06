@@ -1,5 +1,5 @@
-from Usuario import Usuario
-from HistorialCompras import HistorialCompras
+from .Usuario import Usuario
+from ..compras.HistorialCompras import HistorialCompras
 
 class Comprador(Usuario):
     def __init__(self, nombre, cuentaBancaria, carritoCompras):

@@ -1,4 +1,4 @@
-from Cupon import Cupon
+from .Cupon import Cupon
 
 class Factura(Cupon):
 
