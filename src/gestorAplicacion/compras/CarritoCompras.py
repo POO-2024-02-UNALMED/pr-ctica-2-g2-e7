@@ -12,11 +12,11 @@ class CarritoCompras:
         self.cantidadPorProducto = []
         self.precioTotal = 0
         self.descuentoAplicadoCompra = 0
-    @multimethod 
+    @multimethod  
     def __init__(self):
         return
     
-    def getUsuario(self):
+    def getUsuario(self): #getters
         return self.usuario
     def setUsuario(self, usuario):
         self.usuario = usuario
@@ -110,7 +110,7 @@ class CarritoCompras:
 
     def __str__(self):
         sb = []
-        sb.append(f"Carrito de {self.usuario.getNomnbre()}:\n\n")
+        sb.append(f"Carrito de {self.usuario.getNombre()}:\n\n")
         sb.append("Lista de productos:\n")
         
         for i in range(len(self.listaItems)):
