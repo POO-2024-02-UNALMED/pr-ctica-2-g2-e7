@@ -7,3 +7,7 @@ class Vendedor(Usuario):
         self.inventario = inventario
         self.fabrica = fabrica
 
+
+    def consultarCuentaBancaria(self):
+        return f"Estado de tu cuenta bancaria:\nSaldo: {self.cuentaBancaria.getSaldo()}"
+

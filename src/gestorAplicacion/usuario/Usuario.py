@@ -1,6 +1,7 @@
 from ..pasarelaPago.Transaccion import Transaccion
+from abc import ABC, abstractmethod
 
-class Usuario:
+class Usuario(ABC):
 
     def __init__(self, nombre, cuentaBancaria):
         self.nombre = nombre
@@ -65,4 +66,6 @@ class Usuario:
     def recibirNotificacion(self, notificacion):
         self.notificaciones.append(notificacion)
     
-    # definir metodos abstractos
+    @abstractmethod
+    def consultarCuentaBancaria(self):
+        pass

@@ -30,3 +30,6 @@ class Comprador(Usuario):
     
     def eliminarCupones(self, cuponEliminar):
         self.valorCupones.pop(cuponEliminar - 1)
+
+    def consultarCuentaBancaria(self):
+        return f"Estado de tu cuenta bancaria:\nSaldo: {self.cuentaBancaria.getSaldo()}"

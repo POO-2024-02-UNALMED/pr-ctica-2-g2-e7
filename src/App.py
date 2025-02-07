@@ -17,7 +17,6 @@ if __name__ == "__main__":
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
     comprador.setCuentaBancaria(cuenta)
-    comprador.getCuentaBancaria().recargarCuenta(10000)
     carrito = CarritoCompras(comprador, inventario)
     carrito.añadirProducto(producto1)
     carrito.añadirProducto(producto2, 5)
