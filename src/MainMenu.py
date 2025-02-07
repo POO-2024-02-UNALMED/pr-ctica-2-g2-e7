@@ -81,8 +81,10 @@ class MainMenu:
         precioCompra = self.comprador.getCarritoCompras().getPrecioTotal()
         saldoComprador = self.comprador.getCuentaBancaria().getSaldo()
         if precioCompra > saldoComprador:
+            self.comprador.getCarritoCompras().setPrecioTotal(0)
             return False
         else:
+            self.comprador.getCarritoCompras().setPrecioTotal(0)
             return True
         
     

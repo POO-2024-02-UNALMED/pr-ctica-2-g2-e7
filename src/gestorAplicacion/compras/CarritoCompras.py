@@ -45,7 +45,7 @@ class CarritoCompras:
         
         if self.descuentoAplicadoCompra != 0:
       
-          self.precioTotal -= self.precioTotal * self.descuentoAplicadoCompra / 100
+          self.precioTotal -= self.precioTotal * (self.descuentoAplicadoCompra / 100)
     @multimethod
     def añadirProducto(self, producto : Producto):
         #Si no se le pasa cantidad, se asume que se quiere añadir un producto
