@@ -49,7 +49,8 @@ class CarritoCompras:
     @multimethod
     def añadirProducto(self, producto : Producto):
         #Si no se le pasa cantidad, se asume que se quiere añadir un producto
-        estado = self.inventario.verificarProducto(producto, 1)
+        estado = self.inventario.verificarProducto(producto, 1)# estado hace referencia a la verificacion del producto en el inventario
+        #despues de la verificacion seguimos con :
         if estado == True:
             if producto in self.listaItems:
                 indice = self.listaItems.index(producto)
