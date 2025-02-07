@@ -2,12 +2,18 @@ from gestorAplicacion.usuario.Comprador import Comprador
 from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from gestorAplicacion.usuario.Notificacion import Notificacion
+from baseDatos.Serializador import serializar
+from baseDatos.Deserializador import deserializar
 
 class MainMenu:
-    def __init__(self, comprador, vendedor, inventario):
-        self.comprador = comprador
-        self.vendedor = vendedor
-        self.inventario = inventario
+    def __init__(self, comprador = None, vendedor = None, inventario = None):
+        if comprador is not None and vendedor is not None and inventario is not None:
+            self.comprador = comprador
+            self.vendedor = vendedor
+            self.inventario = inventario
+        else:
+            deserializar(self)
+    
 
     def display(self):
         while True:
@@ -19,18 +25,19 @@ class MainMenu:
                     opcion = int(input("Seleccione una opción: "))
                     if opcion == 1:
                         self.buyerMenuDisplay()
-                        break
                     elif opcion == 2:
                         #Espacio para el menú del vendedor
                         break
                     elif opcion == 3:
                         print("Saliendo del programa...")
+                        serializar(self)
                         break
                     else:
                         print("ERROR. Por favor ingrese alguna de las opciones mostradas")
                 except ValueError:
                     print("ERROR. Ingrese un valor válido.")
     
+
     def buyerMenuDisplay(self):
         while True:
             print("===== MENÚ COMPRADOR =====")
@@ -269,3 +276,17 @@ class MainMenu:
             except ValueError:
                 print("ERROR. Por favor ingrese un valor válido.")
 
+    def getComprador(self):
+        return self.comprador
+    def setComprador(self, comprador):
+        self.comprador = comprador
+
+    def getVendedor(self):
+        return self.vendedor
+    def setVendedor(self, vendedor):
+        self.vendedor = vendedor
+
+    def getInventario(self):
+        return self.inventario
+    def setInventario(self, inventario):
+        self.inventario = inventario

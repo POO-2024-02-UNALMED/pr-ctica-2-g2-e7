@@ -26,4 +26,6 @@ if __name__ == "__main__":
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)
+    # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
+    # test = MainMenu()
     test.display()
