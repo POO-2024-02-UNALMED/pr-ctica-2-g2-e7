@@ -40,3 +40,13 @@ class Producto:
         return self.precio
     def getID(self):
         return self.ID
+    
+    def getCantidadVendida(self):
+        return self.cantidadVendida
+    def setCantidadVendida(self, value):
+        self.cantidadVendida = value
+    
+    def verificarCantidadProductos(self):
+        if self.cantidad <= self.cantidadAlerta:
+            return True
+        return False

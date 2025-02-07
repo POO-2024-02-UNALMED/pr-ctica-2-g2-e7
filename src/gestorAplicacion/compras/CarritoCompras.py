@@ -29,11 +29,15 @@ class CarritoCompras:
     def getListaItems(self):
         return self.listaItems
     
+    def getCantidadPorProducto(self):
+        return self.cantidadPorProducto
+    
     def setDescuentoAplicadoCompra(self, descuento):
         self.descuentoAplicadoCompra = descuento
 
-    def getCantidadPorProducto(self):
-        return self.cantidadPorProducto
+    def getCantidadPorProductos(self, producto):
+        indice = self.listaItems.index(producto)
+        return self.cantidadPorProducto[indice]
 
     def calcularTotal(self):
         for i in range(len(self.listaItems)):
