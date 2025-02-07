@@ -46,16 +46,18 @@ class CarritoCompras:
         if self.descuentoAplicadoCompra != 0:
       
           self.precioTotal -= self.precioTotal * (self.descuentoAplicadoCompra / 100)
-    @multimethod
+    @multimethod # en este metodo solo entregamos el producto y se asume cantidad por default : 1
     def añadirProducto(self, producto : Producto):
         #Si no se le pasa cantidad, se asume que se quiere añadir un producto
         estado = self.inventario.verificarProducto(producto, 1)# estado hace referencia a la verificacion del producto en el inventario
         #despues de la verificacion seguimos con :
         if estado == True:
+            #aqui revisamos si el producto ya estaba en el carrito , para saber si se añade la referencia o si solamente se le aumenta a la cantidad 
             if producto in self.listaItems:
+                #si el producto ya estaba en el carrito y queremos modificar la cantidad:
                 indice = self.listaItems.index(producto)
                 cantidad = self.cantidadPorProducto[indice]
-                if cantidad == 0:
+                if cantidad == 0:# si la cantidad entregada es inválida 
                     return "Error. La cantidad mínima de productos que se puede añadir es 1"
                 else:
                     self.cantidadPorProducto.insert(indice, cantidad + 1)
@@ -66,26 +68,26 @@ class CarritoCompras:
                 return "Producto añadido al carrito exitosamente"
         else:
             return "No hay suficiente producto en stock"
-    @multimethod 
+    @multimethod # en este metodo entregamos el producto y su cantidad a añadir 
     def añadirProducto(self, producto : Producto , cantidadAñadir : int):
-        estado = self.inventario.verificarProducto(producto, cantidadAñadir)
-        if estado == True:
-                if cantidadAñadir > 5:
+        estado = self.inventario.verificarProducto(producto, cantidadAñadir) #misma verificacion del producto que arriba 
+        if estado == True: # si estado == true quiere decir que se cumplieron todas las verificaciones
+                if cantidadAñadir > 5: #la cantidad maxima que se puede añadir son cinco
                     return "Error. La cantidad máxima de productos que se puede añadir es 5"
                 elif producto in self.listaItems:
-                    indice = self.listaItems.index(producto)
+                    indice = self.listaItems.index(producto)# el producto ya esta en el carrito y solamente queremos modificar sus cantidades
                     cantidad = self.cantidadPorProducto[indice]
                     if (cantidad + cantidadAñadir) > 5:
-                        return "Error. La cantidad máxima de productos que se puede añadir es 5"
+                        return "Error. La cantidad máxima de productos que se puede añadir es 5"# cuando vamos a modificar la cantidad, la suma da mas que 5
                     else:
-                        self.cantidadPorProducto.insert(indice, cantidad + cantidadAñadir)
+                        self.cantidadPorProducto.insert(indice, cantidad + cantidadAñadir)#cuando no se pasa de cinco solamente sumamos 
                         return "Producto añadido al carrito exitosamente"
-                else:
-                    self.listaItems.append(producto)
-                    self.cantidadPorProducto.append(cantidadAñadir)
+                else: # si el producto no esta en el carrito, añadimos referencia y cantidad
+                    self.listaItems.append(producto)# lista que lleva las referencias 
+                    self.cantidadPorProducto.append(cantidadAñadir) # lista que lleva las cantidades 
                     return "Producto añadido al carrito exitosamente"
         else:
-                return "No hay suficiente producto en stock"
+                return "No hay suficiente producto en stock" # no se cumplio la verificacion del inventario 
 
     def restarProductosAlComprar(self):
         for i in range(len(self.listaItems)):
