@@ -38,3 +38,13 @@ class Inventario:
                     verificacion = True
                     break
         return verificacion
+    
+    def buscarProductoMaseconomico(self):
+        maseconomico=None
+        categorias= []
+        categorias+=self.categoriaAseo+self.categoriaComida+self.categoriaDeportes+self.categoriaJugueteria+self.categoriaPapeleria+self.categoriaTecnologia
+        for categoria in categorias:
+            for producto in categoria:
+                if maseconomico== None or (producto.getPrecio()< maseconomico.getPrecio() and producto.getCantidad()>=1):
+                    maseconomico = producto
+        return maseconomico

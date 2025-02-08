@@ -40,6 +40,8 @@ class Producto:
         return self.precio
     def getID(self):
         return self.ID
+    def setPrecio(self, precio):
+        self.precio=precio
     
     def getCantidadVendida(self):
         return self.cantidadVendida
@@ -50,3 +52,8 @@ class Producto:
         if self.cantidad <= self.cantidadAlerta:
             return True
         return False
+    def aplicardescuento(self, producto  , descuento ): #este es el metodo encargado de hacer los productos mas baratos 
+        resta= producto.getPrecio()*descuento # cantidad del descuento 
+        final=producto.getPrecio()-resta # precio final del producto 
+        producto.setPrecio(final)
+        return resta

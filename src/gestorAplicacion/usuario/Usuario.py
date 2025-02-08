@@ -6,7 +6,7 @@ class Usuario(ABC):
     def __init__(self, nombre, cuentaBancaria):
         self.nombre = nombre
         self.cuentaBancaria = cuentaBancaria
-        self.membresia = ""
+        self.membresia = None
         self.vecesComprado = 0
         self.puntos = 0
         self.notificaciones = []
