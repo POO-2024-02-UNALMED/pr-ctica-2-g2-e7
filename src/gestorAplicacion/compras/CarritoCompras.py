@@ -16,6 +16,10 @@ class CarritoCompras:
     @multimethod  
     def __init__(self):
         return
+    def getInventario(self):
+        return self.inventario
+    def setInventario(self, inventario):
+        self.inventario=inventario
     
     def getUsuario(self): #getters
         return self.usuario
@@ -97,6 +101,22 @@ class CarritoCompras:
                 return "No hay suficiente producto en stock" # no se cumplio la verificacion del inventario 
 
     def restarProductosAlComprar(self):
+        contador =0
+        self.usuario.setVecesComprado(1)
+        Usuario=self.usuario
+        suma=0  # recorremos la lista de las cantidades del usuario para empezar a añadirle puntos con respecto a esto
+        for numero in self.cantidadPorProducto:
+            suma+=numero
+        if suma <= 5:
+            contador+=1 #le estamos dando puntos al usuario segun la cantidad de cosas que esté comprando
+        elif suma > 5 and suma <= 10:
+            contador+=2
+        elif suma > 10 and suma <= 15:
+            contador+=4
+        else:
+            contador+=6
+        Usuario.setPuntos(contador)
+
         for i in range(len(self.listaItems)):
             producto = self.listaItems[i]
             cantidadComprada = self.cantidadPorProducto[i]
@@ -289,6 +309,11 @@ class CarritoCompras:
                             return "Por ser un cliente Platino hoy te daremos un descuento de " + str(descuento) + " en el producto " + producto.getNombre()
 
             return None
-
-
-
+    def descuentoporproductomenosvendido(self):
+        ProductoMenosVendido=self.inventario.buscarProductoMenosVendido()
+        for producto in self.listaItems:
+            if producto== ProductoMenosVendido:
+                descuento=producto.aplicardescuento(producto,0.10)
+                self.descuentoPorproductos+=descuento
+                return f"Por impulso de producto has obtenido un descuento de {descuento} en el producto {producto.getNombre()}" 
+    def 

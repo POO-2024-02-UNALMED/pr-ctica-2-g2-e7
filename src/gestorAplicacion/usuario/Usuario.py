@@ -36,7 +36,7 @@ class Usuario(ABC):
         return self.vecesComprado
     
     def setVecesComprado(self, value):
-        self.vecesComprado = value
+     self.vecesComprado+=value
 
     def getPuntos(self):
         return self.puntos
