@@ -26,9 +26,6 @@ if __name__ == "__main__":
     vendedor = Vendedor("pedro", None, inventario, None)
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
-    notificacion = Notificacion("Hola", "Asunto", comprador)
-    vendedor.recibirNotificacion(notificacion)
-    print(vendedor.mostrarNotificaciones())
     test = MainMenu(comprador, vendedor, inventario)
     # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
     # test = MainMenu()

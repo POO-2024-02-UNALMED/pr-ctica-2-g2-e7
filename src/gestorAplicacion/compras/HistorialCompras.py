@@ -37,3 +37,6 @@ class HistorialCompras:
             mensaje += "{:<15} {:<15}\n".format(item.getNombre(), cantidad)
         mensaje += f"\nPrecio Total de la Compra: {factura.getCarritoCompras().getPrecioTotal()}\n"
         return mensaje
+
+    def actualizarCantidadDevueltos(self, cantidad):
+        self.cantidadDevueltos += cantidad

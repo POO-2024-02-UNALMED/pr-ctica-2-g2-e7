@@ -21,15 +21,25 @@ class Comprador(Usuario):
             mensaje += f"{i+1}. Descuento de: {self.valorCupones[i]}%\n"
         return mensaje
     
-    def devolverProducto(self, idfactura, idproducto, cantidadretornar, vendedor):
+    def devolverProducto(self, idfactura, idproducto, cantidadRetornar, vendedor):
         factura = self.historialCompras.buscarFactura(idfactura)
         if(factura != None):
-            producto = factura.verificarProducto(idproducto, cantidadretornar)
+            producto = factura.verificarProducto(idproducto, cantidadRetornar)
             if(producto != None):
                 descuento = factura.getCarritoCompras().getDescuentoAplicadoCompra()
-                valorDevolver = vendedor.devolucionDinero(self, producto.getPrecio(), descuento, cantidadretornar)
-                vendedor.reingresarProducto(cantidadretornar, producto)
-                
+                valorDevolver = vendedor.devolucionDinero(self, producto.getPrecio(), descuento, cantidadRetornar)
+                vendedor.reingresarProducto(cantidadRetornar, producto)
+                self.historialCompras.actualizarCantidadDevueltos(cantidadRetornar)
+                factura.modificarFactura(producto, cantidadRetornar, "eliminar")
+                mensajeComprador = f"Su devolución de {cantidadRetornar} {producto.getNombre()}/s por un valor de {valorDevolver} pesos (corresponde a lo pagado menos un 10% de retención) ha sido procesada exitosamente."; 
+                asuntoComprador = "Devolución procesada"; 
+                mensajeVendedor = f"Ha recibido una devolución de {cantidadRetornar} productos por un valor de {valorDevolver}."; 
+                asuntoVendedor = "Devolución recibida";
+                self.recibirNotificacion(mensajeComprador, asuntoComprador)
+                vendedor.recibirNotificacion(mensajeVendedor, asuntoVendedor)
+                return "DevolucionExitosa"
+            return "ProductoInvalido"
+        return "FacturaInvalida"
     
     def getCarritoCompras(self):
         return self.carritoCompras

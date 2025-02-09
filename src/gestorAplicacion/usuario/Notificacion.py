@@ -1,4 +1,3 @@
-from .Usuario import Usuario
 from datetime import datetime
 
 class Notificacion:

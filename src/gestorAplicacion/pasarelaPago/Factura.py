@@ -14,14 +14,18 @@ class Factura(Cupon):
             comprador = transaccion.getUsuarioRemitente()
             comprador.getValorCupones().append(valorDescuentoAleatorio)
     
-    def verificarProducto(self, idproducto, cantidadretornar):
+    def verificarProducto(self, idproducto, cantidadRetornar):
         producto = self.carritoCompras.buscarProducto(idproducto)
         if(producto != None):
             if(producto.isRetornable()):
                 cantidadVendida = self.carritoCompras.getCantidadPorProducto(producto)
-                if(cantidadVendida >= cantidadretornar and cantidadretornar > 0):
+                if(cantidadVendida >= cantidadRetornar and cantidadRetornar > 0):
                     return producto
         return None
+    
+    def modificarFactura(self, producto, cantidad, accion):
+        if accion.casefold() == "eliminar":
+            self.carritoCompras.restarCantidadPorProducto(producto, cantidad)
     
     def getCarritoCompras(self):
         return self.carritoCompras

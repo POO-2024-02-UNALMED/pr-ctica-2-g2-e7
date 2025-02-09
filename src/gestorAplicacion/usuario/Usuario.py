@@ -1,4 +1,5 @@
 from ..pasarelaPago.Transaccion import Transaccion
+from .Notificacion import Notificacion
 from abc import ABC, abstractmethod
 
 class Usuario(ABC):
@@ -63,7 +64,8 @@ class Usuario(ABC):
             cont += 1
         return notificaciones
     
-    def recibirNotificacion(self, notificacion):
+    def recibirNotificacion(self, mensaje, asunto):
+        notificacion = Notificacion(mensaje, asunto, self)
         self.notificaciones.append(notificacion)
     
     @abstractmethod
