@@ -6,10 +6,12 @@ class Vendedor(Usuario):
         self.ventasRealizadas = 0
         self.inventario = inventario
         self.fabrica = fabrica
-
-
-    def consultarCuentaBancaria(self):
-        return f"Estado de tu cuenta bancaria:\nSaldo: {self.cuentaBancaria.getSaldo()}"
+    
+    def buscarProducto(self, nombre):
+        for producto in self.inventario.getProductosTotal():
+            if producto.getNombre() == nombre:
+                return producto
+        return None
     
     def devolucionDinero(self, usuarioReceptor, precioProducto, descuento, cantidadRetornar):
         valorDevolver = 0
@@ -25,3 +27,5 @@ class Vendedor(Usuario):
     def reingresarProducto(self, cantidad, producto):
         self.inventario.reabastecerProductos(cantidad, producto)
 
+    def consultarCuentaBancaria(self):
+        return f"Estado de tu cuenta bancaria:\nSaldo: {self.cuentaBancaria.getSaldo()}"
