@@ -9,6 +9,8 @@ class Comprador(Usuario):
         self.valorCupones = [10]
         self.cantidadCupones = 1
 
+    def mostrarHistorialCompras(self):
+        return self.historialCompras.mostrarFactura()
 
     def getValorCupones(self):
         return self.valorCupones
@@ -19,9 +21,19 @@ class Comprador(Usuario):
             mensaje += f"{i+1}. Descuento de: {self.valorCupones[i]}%\n"
         return mensaje
     
+    def devolverProducto(self, idfactura, idproducto, cantidadretornar, vendedor):
+        factura = self.historialCompras.buscarFactura(idfactura)
+        if(factura != None):
+            producto = factura.verificarProducto(idproducto, cantidadretornar)
+            if(producto != None):
+                descuento = factura.getCarritoCompras().getDescuentoAplicadoCompra()
+                valorDevolver = vendedor.devolucionDinero(self, producto.getPrecio(), descuento, cantidadretornar)
+                vendedor.reingresarProducto(cantidadretornar, producto)
+                
     
     def getCarritoCompras(self):
         return self.carritoCompras
+    
     def setCarritoCompras(self, carritoCompras):
         self.carritoCompras = carritoCompras
 

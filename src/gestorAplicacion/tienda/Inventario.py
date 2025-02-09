@@ -57,3 +57,8 @@ class Inventario:
                 if menosvendido == None or (producto.getCantidadVendida()< menosvendido.getCantidadVendida() ) :
                     menosvendido = producto
         return menosvendido
+    
+    def reabastecerProductos(self, cantidad, producto):
+        producto.setCantidadVendida(producto.getCantidadVendida() - cantidad)
+        producto.setCantidadDevuelta(producto.getCantidadDevuelta() + cantidad)
+        producto.reabastecerCantidad(cantidad)

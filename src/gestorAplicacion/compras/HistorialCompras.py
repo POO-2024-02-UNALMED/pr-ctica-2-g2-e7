@@ -9,6 +9,12 @@ class HistorialCompras:
     def agregarFactura(self, factura):
         self.facturas.append(factura)
 
+    def buscarFactura(self, id_factura):
+        for factura in self.facturas:
+            if factura.getIDFactura() == id_factura:
+                return factura
+        return None
+
     def mostrar_factura(self):
         factura_str = ""
         for factura in self.facturas:

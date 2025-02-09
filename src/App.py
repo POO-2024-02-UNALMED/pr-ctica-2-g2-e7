@@ -1,4 +1,5 @@
 from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from MainMenu import MainMenu
@@ -25,6 +26,9 @@ if __name__ == "__main__":
     vendedor = Vendedor("pedro", None, inventario, None)
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
+    notificacion = Notificacion("Hola", "Asunto", comprador)
+    vendedor.recibirNotificacion(notificacion)
+    print(vendedor.mostrarNotificaciones())
     test = MainMenu(comprador, vendedor, inventario)
     # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
     # test = MainMenu()

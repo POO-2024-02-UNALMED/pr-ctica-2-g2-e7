@@ -28,6 +28,7 @@ class CarritoCompras:
 
     def getPrecioTotal(self):
         return self.precioTotal
+    
     def setPrecioTotal(self, value):
         self.precioTotal = value
 
@@ -39,10 +40,14 @@ class CarritoCompras:
     
     def setDescuentoAplicadoCompra(self, descuento):
         self.descuentoAplicadoCompra = descuento
+    
+    def getDescuentoAplicadoCompra(self):
+        return self.descuentoAplicadoCompra
 
     def getCantidadPorProductos(self, producto):
         indice = self.listaItems.index(producto)
         return self.cantidadPorProducto[indice]
+    
     def buscarProductoMaseconomico(self):
         maseconomico=None
 
@@ -128,6 +133,7 @@ class CarritoCompras:
         if self.cantidadPorProducto[indice] == 0:
             self.listaItems.pop(indice)
         self.calcularTotal()
+
     def buscarProducto(self , idProducto):
         for i in range(0,len(self.listaItems),1):
             if self.listaItems[i].getID()== idProducto:
@@ -316,4 +322,3 @@ class CarritoCompras:
                 descuento=producto.aplicardescuento(producto,0.10)
                 self.descuentoPorproductos+=descuento
                 return f"Por impulso de producto has obtenido un descuento de {descuento} en el producto {producto.getNombre()}" 
-    def 
