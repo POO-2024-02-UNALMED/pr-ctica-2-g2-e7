@@ -141,11 +141,9 @@ class MainMenu:
                                     self.comprador.cantidadCupones += 1
                                 print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
                                 
-                                notificacion = Notificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!", self.comprador.getNombre())
-                                self.comprador.recibirNotificacion(notificacion) # Se envía la notificacion al comprador.
+                                self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
 
-                                notificacion2 = Notificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra", self.vendedor.getNombre())
-                                self.vendedor.recibirNotificacion(notificacion2) # Se envía la notificacion al vendedor.
+                                self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
 
                                 cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
                                 for producto in self.comprador.getCarritoCompras().getListaItems():
@@ -155,8 +153,7 @@ class MainMenu:
 
                                 for i in range(len(cantidadProductos)):
                                     if cantidadProductos[i] == True:
-                                        notificacion3 = Notificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse", self.vendedor.getnombre())
-                                        self.vendedor.recibirNotificacion(notificacion3) # Se envía la notificacion al vendedor.
+                                        self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
                                 
                                 self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
                                 break
@@ -179,11 +176,9 @@ class MainMenu:
                         self.comprador.cantidadCupones += 1
                     print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
 
-                    notificacion = Notificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!", self.comprador.getNombre())
-                    self.comprador.recibirNotificacion(notificacion) # Se envía la notificacion al comprador.
+                    self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
 
-                    notificacion2 = Notificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra", self.vendedor.getNombre())
-                    self.vendedor.recibirNotificacion(notificacion2) # Se envía la notificacion al vendedor.
+                    self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
 
                     cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
                     for producto in self.comprador.getCarritoCompras().getListaItems():
@@ -193,8 +188,7 @@ class MainMenu:
 
                     for i in range(len(cantidadProductos)):
                         if cantidadProductos[i] == True:
-                            notificacion3 = Notificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse", self.vendedor.getNombre())
-                            self.vendedor.recibirNotificacion(notificacion3) # Se envía la notificacion al vendedor.
+                            self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
 
                     self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
                     break

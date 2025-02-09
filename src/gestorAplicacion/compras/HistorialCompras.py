@@ -20,7 +20,7 @@ class HistorialCompras:
         for factura in self.facturas:
             factura_str += f"ID factura: {factura.getIDFactura()}\n"
             factura_str += "{:<20} {:<20} {:<20}\n".format("Producto", "Cantidad", "ID Producto")
-            for i in range(len(factura.getCarritoCompras().getLisaItems())):
+            for i in range(len(factura.getCarritoCompras().getListaItems())):
                 item = factura.getCarritoCompras().getListaItems()[i]
                 cantidad = factura.getCarritoCompras().getCantidadPorProducto()[i]
                 factura_str += "{:<20} {:<20} {:<20}\n".format(item.getNombre(), cantidad, cantidad)

@@ -10,7 +10,7 @@ class Comprador(Usuario):
         self.cantidadCupones = 1
 
     def mostrarHistorialCompras(self):
-        return self.historialCompras.mostrarFactura()
+        return self.historialCompras.mostrar_factura()
 
     def getValorCupones(self):
         return self.valorCupones
