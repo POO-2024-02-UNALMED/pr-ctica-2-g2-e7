@@ -27,7 +27,6 @@ class MainMenu:
                         self.buyerMenuDisplay()
                     elif opcion == 2:
                         self.sellerMenuDisplay()
-                        break
                     elif opcion == 3:
                         print("Saliendo del programa...")
                         serializar(self)
