@@ -78,7 +78,10 @@ class MainMenu:
                         print(self.comprador.mostrarHistorialCompras())
                     break
                 elif opcion == 7:
-                    #Espacio para ver notificaciones
+                    if len(self.comprador.getNotificaciones()) == 0:
+                        print("Usted no tiene notificaciones...\n")
+                    else: 
+                        print(self.comprador.mostrarNotificaciones() + "\n")
                     break
                 elif opcion == 8:
                     print("Volviendo al Menú Principal...")
