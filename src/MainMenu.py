@@ -26,7 +26,7 @@ class MainMenu:
                     if opcion == 1:
                         self.buyerMenuDisplay()
                     elif opcion == 2:
-                        #Espacio para el menú del vendedor
+                        self.sellerMenuDisplay()
                         break
                     elif opcion == 3:
                         print("Saliendo del programa...")
@@ -324,3 +324,35 @@ class MainMenu:
                 break
             else:
                 print("La devolución se ha procesado correctamente, en sus notificaciones encontrará más información.\n")
+
+    def sellerMenuDisplay(self):
+
+        while True:
+            print("===== MENÚ VENDEDOR =====")
+            print("1. Generar reporte de ventas")
+            print("2. Consultar cuenta bancaria")
+            print("3. Ver notificaciones")
+            print("4. Volver al Menú Principal\n")
+            print("Seleccione una opción: ")
+
+            try:
+                opcion = int(input("Seleccione una opción: "))
+                if opcion == 1:
+                    #Espacio para eso
+                    break
+                elif opcion == 2:
+                    print("========= CUENTA BANCARIA =========")
+                    print(self.vendedor.consultarCuentaBancaria())
+                elif opcion == 3:
+                    if len(self.vendedor.getNotificaciones()) == 0:
+                        print("Usted no tiene notificaciones...\n")
+                    else: 
+                        print(self.vendedor.mostrarNotificaciones() + "\n")
+                elif opcion == 4:
+                    print("Volviendo al Menú Principal...")
+                    break
+                else:
+                    print("Opción no válida. Intente nuevamente.")
+            except ValueError:
+                print("ERROR. Ingrese un valor válido.")
+        
