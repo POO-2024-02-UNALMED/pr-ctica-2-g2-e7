@@ -71,7 +71,11 @@ class MainMenu:
                 elif opcion == 5:
                     self.voucherMenuDisplay()
                 elif opcion == 6:
-                    #Espacio para ver historial de compras
+                    if len(self.comprador.getHistorialCompras().getFacturas()) == 0:
+                        print("Usted no ha realizado compras hasta el momento.\n")
+                    else:
+                        print("Historial de compras: ")
+                        print(self.comprador.mostrarHistorialCompras())
                     break
                 elif opcion == 7:
                     #Espacio para ver notificaciones
