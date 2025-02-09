@@ -53,13 +53,12 @@ class MainMenu:
                 opcion = int(input("Seleccione una opción: "))
                 if opcion == 1:
                     #Espacio para gestionar carrito/ver catálogo
-                    break
+                    break #quitar el break cuando se implemente
                 elif opcion == 2:
                     self.cuentaBancariaDisplay()
                 elif opcion == 3:
                     print("\n")
                     self.returnMenuDisplay()
-                    break
                 elif opcion == 4:
                     if len(self.comprador.getCarritoCompras().getListaItems()) == 0:
                         print("\nERROR. No hay productos en el carrito.\n")
@@ -76,13 +75,11 @@ class MainMenu:
                     else:
                         print("Historial de compras: ")
                         print(self.comprador.mostrarHistorialCompras())
-                    break
                 elif opcion == 7:
                     if len(self.comprador.getNotificaciones()) == 0:
                         print("Usted no tiene notificaciones...\n")
                     else: 
                         print(self.comprador.mostrarNotificaciones() + "\n")
-                    break
                 elif opcion == 8:
                     print("Volviendo al Menú Principal...")
                     break
