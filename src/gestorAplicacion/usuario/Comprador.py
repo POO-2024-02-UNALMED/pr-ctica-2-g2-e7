@@ -34,7 +34,7 @@ class Comprador(Usuario):
                 mensajeComprador = f"Su devolución de {cantidadRetornar} {producto.getNombre()}/s por un valor de {valorDevolver} pesos (corresponde a lo pagado menos un 10% de retención) ha sido procesada exitosamente."; 
                 asuntoComprador = "Devolución procesada"; 
                 mensajeVendedor = f"Ha recibido una devolución de {cantidadRetornar} productos por un valor de {valorDevolver}."; 
-                asuntoVendedor = "Devolución recibida";
+                asuntoVendedor = "Devolución recibida"
                 self.recibirNotificacion(mensajeComprador, asuntoComprador)
                 vendedor.recibirNotificacion(mensajeVendedor, asuntoVendedor)
                 return "DevolucionExitosa"

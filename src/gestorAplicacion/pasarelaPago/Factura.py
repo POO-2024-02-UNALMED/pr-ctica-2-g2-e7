@@ -18,7 +18,7 @@ class Factura(Cupon):
         producto = self.carritoCompras.buscarProducto(idproducto)
         if(producto != None):
             if(producto.isRetornable()):
-                cantidadVendida = self.carritoCompras.getCantidadPorProducto(producto)
+                cantidadVendida = self.carritoCompras.getCantidadPorProductos(producto)
                 if(cantidadVendida >= cantidadRetornar and cantidadRetornar > 0):
                     return producto
         return None

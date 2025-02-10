@@ -2,6 +2,7 @@ class HistorialCompras:
     
     def __init__(self):
         self.facturas = []
+        self.cantidadDevueltos = 0
 
     def getFacturas(self):
         return self.facturas
@@ -23,7 +24,7 @@ class HistorialCompras:
             for i in range(len(factura.getCarritoCompras().getListaItems())):
                 item = factura.getCarritoCompras().getListaItems()[i]
                 cantidad = factura.getCarritoCompras().getCantidadPorProducto()[i]
-                factura_str += "{:<20} {:<20} {:<20}\n".format(item.getNombre(), cantidad, cantidad)
+                factura_str += "{:<20} {:<20} {:<20}\n".format(item.getNombre(), cantidad, item.getID())
             factura_str += f"\nPrecio Total de la Compra: {factura.getCarritoCompras().getPrecioTotal()}\n\n"
         return factura_str
 
