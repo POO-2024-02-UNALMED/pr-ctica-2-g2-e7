@@ -62,8 +62,40 @@ class HistorialCompras:
             categoria = producto.getCategoria()
 
             if categoria == Producto.Categoria.TECNOLOGIA:
-                pass
-            #Trabajo en proceso ;)
+                self.cantidadTecnologia += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+            if categoria == Producto.Categoria.ASEO: 
+                self.cantidadAseo += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+            if categoria == Producto.Categoria.COMIDA:
+                self.cantidadComida += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+            if categoria == Producto.Categoria.PAPELERIA:
+                self.cantidadPapeleria += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+            if categoria == Producto.Categoria.JUGUETERIA:
+                self.cantidadJugueteria += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+            if categoria == Producto.Categoria.DEPORTES:
+                self.cantidadDeportes += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+
+    def actualizarCategoriasMasCompradas(self):
+        #Se crea una lista con las cantidades compradas
+        cantidadesOrdenadas = [self.cantidadTecnologia, self.cantidadAseo, self.cantidadComida, self.cantidadPapeleria, self.cantidadJugueteria, self.cantidadDeportes]
+
+        #Se crea una lista con las categorias
+        categoriasOrdenadas = list(Producto.Categoria)
+
+        #Ordenar ambas listas manteniendo la correspondencia entre índices
+
+        for i in range (0, len(cantidadesOrdenadas)):
+            for j in range (1, len(cantidadesOrdenadas)):
+                if cantidadesOrdenadas[j] > cantidadesOrdenadas[i]:
+                    #Intercambiar cantidades
+                    tempCantidad = cantidadesOrdenadas[i]
+                    cantidadesOrdenadas[i] = cantidadesOrdenadas[j]
+                    cantidadesOrdenadas[j] = tempCantidad
+
+                    #Intercambiar categorías para mantener correspondencia
+                    tempCategoria = categoriasOrdenadas[i]
+                    categoriasOrdenadas[i] = categoriasOrdenadas[j]
+                    categoriasOrdenadas[j] = tempCategoria
+        pass
 
     def getCantidadTecnologia(self):
         return self.cantidadTecnologia

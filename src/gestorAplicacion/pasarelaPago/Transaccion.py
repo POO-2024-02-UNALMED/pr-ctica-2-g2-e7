@@ -23,3 +23,5 @@ class Transaccion:
         comprador = self.usuarioRemitente
         factura = Factura(comprador.getCarritoCompras(), len(comprador.getHistorialCompras().getFacturas()) + 1, self)
         comprador.getHistorialCompras().agregarFactura(factura)
+        comprador.getHistorialCompras().actualizarCantidadesCompradas(factura)
+        comprador.getHistorialCompras().actualizarCategoriasMasCompradas()

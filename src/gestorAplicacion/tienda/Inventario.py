@@ -1,4 +1,7 @@
+from tienda.Producto import Producto
+
 class Inventario:
+
     def __init__(self, categoriaTecnologia, categoriaAseo, categoriaComida, categoriaPapeleria, categoriaJugueteria, categoriaDeportes):
         self.categoriaTecnologia = categoriaTecnologia
         self.categoriaAseo = categoriaAseo
@@ -6,6 +9,7 @@ class Inventario:
         self.categoriaPapeleria = categoriaPapeleria
         self.categoriaJugueteria = categoriaJugueteria
         self.categoriaDeportes = categoriaDeportes
+        self.productosTotal = []
 
     def verificarProducto(self, producto, unidades):
         categoria = producto.getCategoria()
@@ -62,3 +66,21 @@ class Inventario:
         producto.setCantidadVendida(producto.getCantidadVendida() - cantidad)
         producto.setCantidadDevuelta(producto.getCantidadDevuelta() + cantidad)
         producto.reabastecerCantidad(cantidad)
+
+    def añadirProducto(self, producto):
+        self.productosTotal.append(producto)
+
+        categoria = producto.getCategoria()
+
+        if categoria == Producto.Categoria.TECNOLOGIA:
+            self.categoriaTecnologia.append(producto)
+        if categoria == Producto.Categoria.ASEO:
+            self.categoriaAseo.append(producto)
+        if categoria == Producto.Categoria.COMIDA:
+            self.categoriaComida.append(producto)
+        if categoria == Producto.Categoria.PAPELERIA:
+            self.categoriaPapeleria.append(producto)
+        if categoria == Producto.Categoria.JUGUETERIA:
+            self.categoriaJugueteria.append(producto)
+        if categoria == Producto.Categoria.DEPORTES:
+            self.categoriaDeportes.append(producto)
