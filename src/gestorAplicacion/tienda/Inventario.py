@@ -1,4 +1,4 @@
-from tienda.Producto import Producto
+from ..tienda.Producto import Producto
 
 class Inventario:
 
