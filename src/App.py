@@ -70,10 +70,9 @@ if __name__ == "__main__":
             cantidad = id*5 #Ejemplo de valor para cantidad
             cantidadAlerta  = id*2 #Ejemplo de cantidad alerta
             precio = 10+id*3 #Ejemplo de precio
-            descripcion = f"Descripcion del producto {id}"
             retornable = (id%2 == 0) #Alterna retornabilidad
 
-            producto = Producto(cantidad, cantidadAlerta, 0, 0, categoria, id, nombres[j], precio, descripcion, retornable)
+            producto = Producto(cantidad, cantidadAlerta, 0, 0, categoria, id, nombres[j], precio, retornable)
 
             #Crear el producto y agregarlo al inventario
             inventario.añadirProducto(producto)
