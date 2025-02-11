@@ -1,8 +1,21 @@
+from tienda.Producto import Producto
+from pasarelaPago import Factura
+
 class HistorialCompras:
     
     def __init__(self):
         self.facturas = []
         self.cantidadDevueltos = 0
+
+        self.cantidadTecnologia = 0
+        self.cantidadAseo = 0
+        self.cantidadComida = 0
+        self.cantidadPapeleria = 0
+        self.cantidadJugueteria = 0
+        self.cantidadDeportes = 0
+
+        self.caegoriasMasCompradas = []
+
 
     def getFacturas(self):
         return self.facturas
@@ -41,3 +54,31 @@ class HistorialCompras:
 
     def actualizarCantidadDevueltos(self, cantidad):
         self.cantidadDevueltos += cantidad
+
+    def actualizarCantidadesCompradas(self, factura):
+        categoria = None
+
+        for producto in factura.getCarritoCompras().getListaItems():
+            categoria = producto.getCategoria()
+
+            if categoria == Producto.Categoria.TECNOLOGIA:
+                pass
+            #Trabajo en proceso ;)
+
+    def getCantidadTecnologia(self):
+        return self.cantidadTecnologia
+
+    def getCantidadAseo(self):
+        return self.cantidadAseo
+    
+    def getCantidadComida(self):
+        return self.cantidadComida
+    
+    def getCantidadPapeleria(self):
+        return self.cantidadPapeleria
+    
+    def getCantidadJugueteria(self):
+        return self.cantidadJugueteria
+    
+    def getCantidadDeportes(self):
+        return self.cantidadDeportes
