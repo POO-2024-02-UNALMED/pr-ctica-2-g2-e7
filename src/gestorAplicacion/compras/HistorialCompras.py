@@ -1,5 +1,5 @@
-from tienda.Producto import Producto
-from pasarelaPago import Factura
+from ..tienda.Producto import Producto
+from ..pasarelaPago import Factura
 
 class HistorialCompras:
     
