@@ -80,5 +80,5 @@ if __name__ == "__main__":
             id += 1
     
     # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
-    # test = MainMenu()
+#     test = MainMenu()
     test.display()

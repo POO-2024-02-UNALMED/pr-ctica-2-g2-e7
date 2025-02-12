@@ -62,17 +62,17 @@ class HistorialCompras:
             categoria = producto.getCategoria()
 
             if categoria == Producto.Categoria.TECNOLOGIA:
-                self.cantidadTecnologia += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadTecnologia += factura.getCarritoCompras().getCantidadPorProductos(producto)
             if categoria == Producto.Categoria.ASEO: 
-                self.cantidadAseo += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadAseo += factura.getCarritoCompras().getCantidadPorProductos(producto)
             if categoria == Producto.Categoria.COMIDA:
-                self.cantidadComida += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadComida += factura.getCarritoCompras().getCantidadPorProductos(producto)
             if categoria == Producto.Categoria.PAPELERIA:
-                self.cantidadPapeleria += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadPapeleria += factura.getCarritoCompras().getCantidadPorProductos(producto)
             if categoria == Producto.Categoria.JUGUETERIA:
-                self.cantidadJugueteria += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadJugueteria += factura.getCarritoCompras().getCantidadPorProductos(producto)
             if categoria == Producto.Categoria.DEPORTES:
-                self.cantidadDeportes += factura.getCarritoCompras().getCantidadPorProductos().get(factura.getCarritoCompras().getListaItems().index(producto))
+                self.cantidadDeportes += factura.getCarritoCompras().getCantidadPorProductos(producto)
 
     def actualizarCategoriasMasCompradas(self):
         #Se crea una lista con las cantidades compradas
