@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
+from tkinter import messagebox
 
 class App:
     def __init__(self):  
@@ -15,13 +16,14 @@ class App:
         self.configurar_grid()
         #despues de tener bien organizadas las columnas y filas donde van a estar los frames , pasamos a crear los frames
         self.crear_frames()
+        self.menu()
         
         self.etiqueta.config(image=self.imagen_tk)
         self.p4.after(100, self.cargar_imagen_inicial)
         self.p4.bind("<Enter>", self.imagenes)
         
         self.window.mainloop()
-    
+    #metodo para configurar el grid de la ventana principal 
     def configurar_grid(self):
         margin_x = 10#margenes 
         margin_y = 10
@@ -32,6 +34,7 @@ class App:
         self.window.columnconfigure(2, weight=1, minsize=spacing)
         self.window.columnconfigure(3, weight=15)
         self.window.columnconfigure(4, weight=1, minsize=margin_x)
+        #abajo configuramos las filas
         self.window.rowconfigure(0, weight=1, minsize=margin_y)
         self.window.rowconfigure(1, weight=30)
         self.window.rowconfigure(2, weight=1, minsize=margin_y)
@@ -86,7 +89,22 @@ class App:
         #el label que va a contener las imagenes asociadas al sistema
         self.etiqueta = tk.Label(self.p4)
         self.etiqueta.grid(column=0, row=0, sticky="nsew")
-    
+    def salir(self): #este metodo nos saca del sistema
+        self.window.destroy()
+    def nada(self):
+        pass
+    def descripcion(self): #este metodoe es el asociado a la opcion "descripcion"
+        messagebox.showinfo("Descripcion de la tienda","Este es el sistema de gestion de una tienda , aqui puedes segun tu cargo con la tienda , administrarla o ser un comprador, con acceso a todo lo que se puede hacer en cualquier tienda, con algunos beneficios")
+    def menu(self): #metodo que crea la barra de menu donde estara descripcion y salir
+        menubar=tk.Menu(self.window)
+        self.window.config(menu=menubar)
+        menu1=tk.Menu(menubar,tearoff=0)
+        menubar.add_cascade(label="Inicio",menu=menu1,command=self.nada)
+        menu1.add_command(label="Descripcion",command=self.descripcion)
+        menu1.add_separator()
+        menu1.add_command(label="Salir",command=self.salir)
+
+    #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
         ruta = os.path.join(directorio_actual, "imagenes", "imagen1.jpg")
@@ -98,14 +116,15 @@ class App:
         self.imagen_tk = ImageTk.PhotoImage(imagen)
         self.etiqueta.config(image=self.imagen_tk)
         self.etiqueta.imagen = self.imagen_tk
-    
+    #esre es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
     def imagenes(self, evento):
-        self.window.update_idletasks()
+
+        self.window.update_idletasks()#este metodo actualiza las medidad del frame
         ancho = self.p4.winfo_width()
         alto = self.p4.winfo_height()
 
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        rutas = ["imagen1.jpg", "imagen2.jpg", "imagen3.jpg", "imagen4.jpg", "imagen5.jpg"]
+        rutas = ["imagen1.jpg", "imagen2.jpg", "imagen3.jpg", "imagen4.jpg", "imagen5.jpg"] #este contiene las direcciones de las imagenes
         ruta = os.path.join(directorio_actual, "imagenes", rutas[self.contador])
         
         imagen = Image.open(ruta)
