@@ -150,6 +150,30 @@ class App:
         ventana_principal.config(menu= menu_bar)
         menu_archivo = tk.Menu(menu_bar, tearoff= 0) # Se crea el menú llamado archivo
         menu_proceso_consultas = tk.Menu(menu_bar, tearoff= 0) # Se crea el menú llamado procesos y consultas
+        submenu_comprador = tk.Menu(menu_proceso_consultas, tearoff= 0) # Se crea el submenu para procesos y consultas del comprador
+        submenu_vendedor = tk.Menu(menu_proceso_consultas, tearoff= 0)# Se crea el submenu para procesos y consultas del vendedor
+        menu_proceso_consultas.add_cascade(label= "1. Menú Comprador", menu= submenu_comprador)
+        menu_proceso_consultas.add_separator()
+        menu_proceso_consultas.add_cascade(label= "2. Menú Vendedor", menu= submenu_vendedor)
+        submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "2. Consultar cuenta bancaria")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "3. Realizar Devolución")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "4. Realizar Compra")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "5. Gestionar cupones")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "6. Ver historial de compras")
+        submenu_comprador.add_separator()
+        submenu_comprador.add_command(label= "7. Ver Notificaciones")
+        submenu_comprador.add_separator()
+        submenu_vendedor.add_command(label= "1. Generar reporte de ventas")
+        submenu_vendedor.add_separator()
+        submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria")
+        submenu_vendedor.add_separator()
+        submenu_vendedor.add_command(label= "3. Ver notificaciones")
         menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
         menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
         menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
