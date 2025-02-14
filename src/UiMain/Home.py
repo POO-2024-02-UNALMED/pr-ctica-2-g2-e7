@@ -4,9 +4,13 @@ import os
 from tkinter import messagebox
 
 class App:
-    def __init__(self):  
+    def __init__(self, ventana_principal = None):  
+        if ventana_principal != None:
+            ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
+        
         self.contador = 0
         self.imagen_tk = None
+
 
         # Crear ventana principal
         self.window = tk.Tk()
@@ -84,7 +88,7 @@ class App:
         self.p4.rowconfigure(0, weight=3)
         self.p4.rowconfigure(1, weight=1)
         # el boton que nos da el acceso al sistema 
-        self.boton_accesosistema = tk.Button(self.p4, text="Ingresar al sistema")
+        self.boton_accesosistema = tk.Button(self.p4, text="Ingresar al sistema", command= lambda: self.crear_ventana_principal(self.window))
         self.boton_accesosistema.grid(column=0, row=1, sticky="nsew", padx=2, pady=2)
         #el label que va a contener las imagenes asociadas al sistema
         self.etiqueta = tk.Label(self.p4)
@@ -134,6 +138,42 @@ class App:
         self.etiqueta.imagen = self.imagen_tk
 
         self.contador = (self.contador + 1) %5
+
+    # Método para crear la ventana principal de la aplicación
+    def crear_ventana_principal(self, ventana_inicio = None):
+        if ventana_inicio != None:
+            ventana_inicio.destroy() # Se destruye la ventana de inicio
+        ventana_principal = tk.Tk()
+        ventana_principal.geometry("800x600")
+        ventana_principal.title("Kartera") #Se crea una nueva ventana
+        menu_bar = tk.Menu(ventana_principal) # Se crea el menú para esta ventana principal
+        ventana_principal.config(menu= menu_bar)
+        menu_archivo = tk.Menu(menu_bar, tearoff= 0) # Se crea el menú llamado archivo
+        menu_proceso_consultas = tk.Menu(menu_bar, tearoff= 0) # Se crea el menú llamado procesos y consultas
+        menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
+        menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
+        menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
+        menu_archivo.add_separator()
+        menu_archivo.add_command(label= "Salir", command= lambda: App(ventana_principal)) # Se crea una nueva ventana de inicio y se destruye esta ventana principal
+        menu_bar.add_cascade(label= "Procesos y consultas", menu= menu_proceso_consultas)
+        menu_bar.add_cascade(label= "Ayuda", menu= menu_ayuda)
+        menu_ayuda.add_command(label= "Desarrolladores", command= self.ayuda)
+
+        frame0 = tk.Frame(ventana_principal)
+        frame0.pack(expand= True, fill = "both")
+        label0 = tk.Label(frame0, text= "Kartera")
+        label0.pack(padx= 10, anchor= "nw")
+
+        frame1 = tk.Frame(frame0)
+        frame1.pack(expand= True, fill= "both", pady= 15)
+        ventana_principal.mainloop()
+
+    def informacion_basica(self):
+        messagebox.showinfo("Descripción de la aplicación", "En la aplicación podrás cumplir el rol de un vendedor o un comprador de una tienda. Como comprador vas a poder gestionar tu carrito, ver el catálogo, comprar, realizar devoluciones, etc. Mientras que como vendedor pordrás actualizar productos, generar reportes de ventas, etc.")
+
+    def ayuda(self):
+        messagebox.showinfo("Ayuda", "Desarrolladores:\nTomás Aristizábal Gómez\nSantiago Barrientos Medina\nJosé Alejandro Castro Rey\nJuan Nicolás Chaparro Rodríguez\nSimón David Díaz Rojas")
+
 
 if __name__ == "__main__":
     App()
