@@ -1,5 +1,6 @@
-#from tienda import Inventario, Producto
-#from usuario import Vendedor
+from tienda.Inventario import Inventario
+from tienda.Producto import Producto
+from usuario.Vendedor import Vendedor
 import Trabajador
 
 class Fabrica:

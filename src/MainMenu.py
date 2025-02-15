@@ -1,4 +1,5 @@
 from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.usuario.Vendedor import Vendedor
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
@@ -590,8 +591,19 @@ class MainMenu:
             try:
                 opcion = int(input("Seleccione una opción: "))
                 if opcion == 1:
-                    #Espacio para eso
-                    break
+                    print(Inventario.generar_reporte())
+                    print("A continuación elija los productos que quiere crear en la fábrica para reponer en el inventario.\n- Primero elija el producto y posteriormente la cantidad, puede elegir otro producto y repite el proceso.\n- Asegúrese de que esté correcto el nombre y la cantidad de cada producto ya que si se equivoca tiene que ingresar todo de nuevo.\n- Seleccione un máximo de 50 unidades por orden.\nEscriba 'fin' para terminar la orden y enviarla o para salir")
+
+                    resultado = ""
+                    while not resultado.startswith("Orden creada con éxito.") and resultado != "No se seleccionaron productos. La orden no se creó.":
+                        resultado = Vendedor.crear_orden_fabricacion()
+                        print(resultado)
+
+                    if Vendedor.get_ordenes_pendientes():
+                        mensaje_fabrica_notif = "Se han entregado los productos "
+                        asunto_vendedor = "Orden De producción"
+                        Vendedor.recibir_notificacion(Notificacion(mensaje_fabrica_notif, asunto_vendedor, Vendedor))
+                        Vendedor.get_ordenes_pendientes().clear()
                 elif opcion == 2:
                     print("========= CUENTA BANCARIA =========")
                     print(self.vendedor.consultarCuentaBancaria())
