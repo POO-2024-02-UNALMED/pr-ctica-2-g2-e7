@@ -18,7 +18,7 @@ class MainMenu:
             self.comprador = comprador
             self.vendedor = vendedor
             self.inventario = inventario
-          
+        else:
             deserializar(self)
     
 
