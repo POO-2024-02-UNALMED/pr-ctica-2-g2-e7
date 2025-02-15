@@ -107,7 +107,7 @@ class App:
         menu1.add_command(label="Descripcion",command=self.descripcion)
         menu1.add_separator()
         menu1.add_command(label="Salir",command=self.salir)
-
+    
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))

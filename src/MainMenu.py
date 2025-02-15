@@ -1,17 +1,24 @@
 from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from gestorAplicacion.usuario.Notificacion import Notificacion
+from gestorAplicacion.tienda.Inventario import Inventario
+from multimethod import multimethod
 from baseDatos.Serializador import serializar
 from baseDatos.Deserializador import deserializar
 
 class MainMenu:
+    fila = None
+    columna = None
+    filas = ["1", "2", "3", "4", "5", "6"]
+    columnas = ["A", "B", "C", "D", "E", "F"]
     def __init__(self, comprador = None, vendedor = None, inventario = None):
         if comprador is not None and vendedor is not None and inventario is not None:
             self.comprador = comprador
             self.vendedor = vendedor
             self.inventario = inventario
-        else:
+          
             deserializar(self)
     
 
@@ -36,7 +43,256 @@ class MainMenu:
                 except ValueError:
                     print("ERROR. Ingrese un valor válido.")
     
+    def cart_menu_display(self):
+       
+        opcion = 0
 
+        while opcion != 4:
+            print("===== MENÚ CARRITO =====")
+            print("1. Agregar productos/ver Catálogo")
+            print("2. Eliminar productos del carrito")
+            print("3. Ver el carrito")
+            print("4. Regresar")
+            opcion = int(input("Seleccione una opción: "))
+
+            if opcion == 1:
+                if len(self.comprador.getHistorialCompras().getFacturas()) == 0:
+                    catalogo = self.mostrar_catalogo(None, False)
+                    self.recomendaciones = False
+                    self.product_selection_process()
+                else:
+                    print("\nDesea actualizar las recomendaciones? 1. Sí - 2. No")
+                    respuesta = int(input())
+                    
+                    if respuesta == 1:
+                        catalogo = self.mostrar_catalogo(self.comprador.get_historial_compras(), False)
+                        self.recomendaciones = True
+                        self.product_selection_process()
+                    elif respuesta == 2:
+                        self.mostrar_catalogo(None, False)
+                        self.recomendaciones = False
+                        self.product_selection_process()
+            
+            elif opcion == 2:
+                print("A continuación te mostraremos tu carrito para que elijas qué quieres eliminar")
+                print(self.comprador.get_carrito_compras())
+                
+                eliminar = input("Por favor, ingresa el nombre del producto a eliminar: ")
+                
+                count = 0
+                while True:
+                    try:
+                        count = int(input("Ahora ingresa la cantidad: "))
+                        if count > 0:
+                            break
+                        else:
+                            print("La cantidad debe ser mayor que 0.")
+                    except ValueError:
+                        print("Por favor, ingresa un número válido para la cantidad.")
+                
+                producto = self.comprador.get_carrito_compras().busqueda(eliminar)
+                
+                if producto is None:
+                    print(f"El producto '{eliminar}' no se encuentra en el carrito.")
+                else:
+                    resultado = self.comprador.get_carrito_compras().eliminarproducto(producto, count)
+                    print(resultado)
+            
+            elif opcion == 3:
+                print(self.comprador.get_carrito_compras())
+            
+            elif opcion == 4:
+                print("Volviendo al menú del carrito...")
+    def productSelectionProcess(self):
+        scanner = input
+
+        llevar = "1"
+        opcion = ""
+
+        while True:
+            print("\nIngrese las coordenadas del producto que desea \n\n"
+                "Ingrese primero la fila (número) y luego la columna (letra) \n"
+                "en la que se encuentra el producto deseado \n")
+
+            opcion = scanner("Ingrese la fila para continuar o 0 para salir: ")
+
+            if opcion == "0":
+                break
+
+            if opcion in self.filas:
+                fila = opcion
+
+                opcion = scanner("Ingrese la columna (en mayúscula) para continuar o 0 para salir: ")
+
+                if opcion == "0":
+                    break
+
+                if opcion in self.columnas:
+                    columna = opcion
+                    productoSeleccionado = self.catalogo[int(fila)][self.columnas.index(columna) + 2]
+
+                    print(f"Producto seleccionado: {productoSeleccionado.getNombre()}\n")
+
+                    if self.recomendaciones:
+                        # A partir de la segunda compra ya se tiene acceso al historial,
+                        # por lo que se llama al método sobrecargado de productSelectionMenu
+                        # que permite calificar los productos recomendados
+
+                        retorno = self.productSelectionMenu(self.comprador.getHistorialCompras())
+
+                        if not retorno:
+                            break
+                        else:
+                            self.mostrar_Catalogo(self.comprador.getHistorialCompras(), False)
+                            continue
+
+                    else:
+                        # En la primera compra no hay historial, por lo que no se pueden hacer recomendaciones
+
+                        # Este método retorna un valor booleano dependiendo de la opción que se escoja,
+                        # esto con el fin de saber si se debe volver al menú de selección de productos o
+                        # al menú del carrito directamente
+                        retorno = self.productSelectionMenu()
+
+                        if not retorno:
+                            break
+                        else:
+                            self.mostrar_Catalogo(None, False)
+                            continue
+
+                else:
+                    print("Columna inválida, intente de nuevo")
+                    continue
+
+            else:
+                print("Fila inválida, intente de nuevo")
+                continue
+    @multimethod
+    def productSelectionMenu(self):
+        # Si retorna True, se devuelve al menú de selección de productos 
+        # Si no, vuelve al menú del carrito
+
+        scanner = input
+        opcion = 0
+
+        while True:
+            print("¿Qué desea hacer?")
+            print("1. Agregar al carrito")
+            print("2. Ver información del producto")
+            print("3. Regresar/Seleccionar otro producto")
+            opcion = scanner("Seleccione una opción: ")
+
+            try:
+                opcion = int(opcion)
+            except ValueError:
+                print("Opción inválida, intente de nuevo")
+                continue
+
+            if opcion == 1:
+                llevar = scanner("Ingresa la cantidad a llevar (máximo 5): ")
+                try:
+                    numerico = int(llevar)
+                    if numerico not in [1, 2, 3, 4, 5]:
+                        llevar = "1"
+                        print("Cantidad inválida, se te asignará una por default que es 1")
+                except ValueError:
+                    llevar = "1"
+                    print("Entrada inválida, se asignará 1 por defecto")
+
+                if self.productoSeleccionado.getCantidad() <= 0:
+                    print("Error. No hay más productos disponibles.")
+                    continue
+                else:
+                    mensaje = self.comprador.getCarritoCompras().añadirProducto(self.productoSeleccionado, int(llevar))
+                    print(mensaje)
+                    return False
+
+            elif opcion == 2:
+                print(self.productoSeleccionado.toStringdif())
+                continue
+
+            elif opcion == 3:
+                return True
+
+            else:
+                print("Opción inválida, intente de nuevo")
+                continue
+    import random
+    @multimethod
+    def product_selection_menu(self,historial):
+        """
+        Menú de selección de productos.
+        Si retorna True, se devuelve al menú de selección de productos.
+        Si no, vuelve al menú del carrito.
+        """
+
+        opcion = ""
+        llevar = ""
+
+        categorias_a_recomendar = 0
+
+        # Revisa cuántas categorías hay almacenadas en categorias_mas_compradas del historial.
+        # Ejemplo: puede que guarde ["TECNOLOGIA", None, None] porque solo
+        # se han comprado productos de la categoría "TECNOLOGIA".
+        for i in range(3):
+            if historial.get_categorias_mas_compradas()[i] is not None:
+                categorias_a_recomendar += 1
+
+        if categorias_a_recomendar == 1:
+
+            while True:
+
+                if self.fila == "1":
+                    print("¿Qué te gustaría hacer?")
+                    print("1. Agregar al carrito")
+                    print("2. Ver información del producto")
+                    print("3. Seleccionar otro producto")
+                    print("4. Calificar recomendación")
+                    opcion = input("Selecciona una opción: ")
+
+                    if opcion == "1":
+                        llevar = input("Ingresa la cantidad a llevar (máximo 5): ")
+                        try:
+                            numerico = int(llevar)
+                            if numerico < 1 or numerico > 5:
+                                llevar = "1"
+                                print("Cantidad inválida, se te asignará una por defecto que es 1.")
+                        except ValueError:
+                            llevar = "1"
+                            print("Entrada no válida, se asignará la cantidad por defecto: 1.")
+
+                        if self.productoseleccionado.cantidad <= 0:
+                            print("Error. No hay más productos disponibles.")
+                            continue
+                        else:
+                            self.comprador.carrito_compras.añadir_producto(self.productoseleccionado, int(llevar))
+                            print("Producto añadido correctamente.")
+                            return False
+
+                    elif opcion == "2":
+                        print(self.productoseleccionado.to_stringdif())
+                        continue
+
+                    elif opcion == "3":
+                        return True
+
+                    elif opcion == "4":
+                        calificacion = input("¿Le parece adecuada esta recomendación? 1. Sí - 2. No: ")
+
+                        if calificacion == "1":
+                            reemplazo = Inventario.listacategorias[self.productoseleccionado.categoria.ordinal()][10]
+                            categoria_producto_reemplazar = Inventario.listacategorias[reemplazo.categoria.ordinal()]
+
+                            # Se añade un nuevo producto de la misma categoría al inicio de la fila.
+                            self.catalogo[int(self.fila)][2] = reemplazo
+
+                            # Se mueve el reemplazo al final de la lista de su respectiva categoría
+                            # para que no se repita en recomendaciones futuras.
+                            categoria_producto_reemplazar.remove(reemplazo)
+                            categoria_producto_reemplazar.append(reemplazo)
+
+                            print("Producto reemplazado en la lista de recomendaciones.")
+                
     def buyerMenuDisplay(self):
         while True:
             print("===== MENÚ COMPRADOR =====")
@@ -352,3 +608,43 @@ class MainMenu:
             except ValueError:
                 print("ERROR. Ingrese un valor válido.")
         
+    def mostrar_catalogo(self, historial, reemplazo):
+        # Reemplazo se usa para saber si se mostrará el catálogo luego que el usuario haya calificado
+        # alguna recomendación, en cuyo caso no se realizará el proceso de las recomendaciones nuevamente, 
+        # sino que se mostrará el catálogo como ha sido guardado hasta entonces, ya que en este caso solo se
+        # modifica un elemento
+
+        # Llamada a lógica para mostrar el catálogo
+        print("===== CATÁLOGO ===== \n".rjust(105))
+
+        # Se guarda la matriz de productos en la variable catálogo
+        if historial is None:
+            catalogo = self.tienda.get_inventario().crear_catalogo()
+        else:
+            if not reemplazo:
+                catalogo = self.tienda.recomendar_productos(self.comprador)
+        
+        # Se recorre la matriz para mostrar los productos uno por uno
+        # Examina si lo que hay en el índice dado es un objeto producto para
+        # utilizar el método get_nombre()
+        for fila in range(len(catalogo)):
+            for columna in range(len(catalogo[fila])):
+                if columna == 7:
+                    if isinstance(catalogo[fila][columna], Producto):
+                        salida = f"{catalogo[fila][columna].get_nombre():<22}"
+                        print(salida)
+                    else:
+                        salida = f"{catalogo[fila][columna]:<22}"
+                        print(salida)
+                else:
+                    if columna >= 2:
+                        if isinstance(catalogo[fila][columna], Producto):
+                            salida = f"{catalogo[fila][columna].get_nombre():<22}"
+                            print(salida, end=" ")
+                        else:
+                            salida = f"{catalogo[fila][columna]:<22}"
+                            print(salida, end=" ")
+                    else:
+                        print(catalogo[fila][columna], end="      ")
+        
+        return catalogo
