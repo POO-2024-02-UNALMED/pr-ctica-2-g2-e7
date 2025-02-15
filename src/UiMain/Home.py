@@ -11,9 +11,11 @@ sys.path.append(os.path.abspath('src'))
 # Ahora puedes importar lo que necesites
 from gestorAplicacion.tienda.Inventario import Inventario
 class App:
-    def __init__(self, ventana_principal = None):  
-       
-           
+    def __init__(self, ventana_principal = None):
+        # POR FAVOR NO BORRAR ESTO
+        if ventana_principal != None:
+            ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
+        
         self.ventana_principal=ventana_principal
         self.contador = 0
         self.imagen_tk = None
