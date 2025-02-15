@@ -2,12 +2,19 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import os
 from tkinter import messagebox
+import sys
+import os
 
+# Añadir el directorio src al sys.path
+sys.path.append(os.path.abspath('src'))
+
+# Ahora puedes importar lo que necesites
+from gestorAplicacion.tienda.Inventario import Inventario
 class App:
     def __init__(self, ventana_principal = None):  
-        if ventana_principal != None:
-            ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
-        
+       
+           
+        self.ventana_principal=ventana_principal
         self.contador = 0
         self.imagen_tk = None
 
@@ -107,7 +114,7 @@ class App:
         menu1.add_command(label="Descripcion",command=self.descripcion)
         menu1.add_separator()
         menu1.add_command(label="Salir",command=self.salir)
-    
+    ''
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
@@ -138,12 +145,23 @@ class App:
         self.etiqueta.imagen = self.imagen_tk
 
         self.contador = (self.contador + 1) %5
-
+    
+        
+       
+    def limpiar_ventana(self,ventana_principal,menu_bar):
+      # Obtener todos los widgets de la ventana
+        for widget in ventana_principal.winfo_children():
+        # Destruir el widget solo si no es el menu_bar
+         if widget != menu_bar:
+            widget.destroy()
+        
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
         if ventana_inicio != None:
             ventana_inicio.destroy() # Se destruye la ventana de inicio
+        global ventana_principal
         ventana_principal = tk.Tk()
+        
         ventana_principal.geometry("800x600")
         ventana_principal.title("Kartera") #Se crea una nueva ventana
         menu_bar = tk.Menu(ventana_principal) # Se crea el menú para esta ventana principal
@@ -155,7 +173,7 @@ class App:
         menu_proceso_consultas.add_cascade(label= "1. Menú Comprador", menu= submenu_comprador)
         menu_proceso_consultas.add_separator()
         menu_proceso_consultas.add_cascade(label= "2. Menú Vendedor", menu= submenu_vendedor)
-        submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo")
+        submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.carrito()])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "2. Consultar cuenta bancaria")
         submenu_comprador.add_separator()
