@@ -9,7 +9,7 @@ from gestorAplicacion.usuario.Vendedor import Vendedor
 
 
 
-if __name__ == "__main__":
+def instanciar():
     producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
     producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
     producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
@@ -28,13 +28,10 @@ if __name__ == "__main__":
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)
 
-    #Productos creados
-
+    # Productos creados
     categorias = list(Producto.Categoria)
     
-    
-
-    nombresTecnologia = ["Celular", "Laptop", "Tableta ", "Audifonos", "Camara", "Smartwatch", "Teclado", 
+    nombresTecnologia = ["Celular", "Laptop", "Tableta", "Audifonos", "Camara", "Smartwatch", "Teclado", 
           "Mouse", "Monitor", "Drone", "Impresor", "Router", "Smart TV", "Cargador", "Auriculares", "Memoria Flash", 
           "Bafle", "Reproductor Blu-ray", "Consola Gamium", "Proyector HD"] 
     
@@ -50,7 +47,7 @@ if __name__ == "__main__":
          "Pegamento", "Cinta", "Regla", "Marcadores", "Lapices", "Bloc de Dibujo", "Corrector",
          "Papel de Colores", "Grapadora", "Perforadora", "Cartulina", "Compas"]
     
-    nombresJugueteria = ["Muñeca ", "Auto Rayo", "Pelota Saltarina", "Lego ", "Puzzle", "Figura de Accion", "Bicicleta",
+    nombresJugueteria = ["Muñeca", "Auto Rayo", "Pelota Saltarina", "Lego", "Puzzle", "Figura de Accion", "Bicicleta",
          "Patinete", "Dron Junior", "Set de Tren", "Juguete de Cocina", "Castillo de Princesa", "Helicoptero RC", "Avion de Pasajeros", "Torre de Bloques",
          "Rompecabezas", "Bate de beisbol", "Robot Interactivo", "Tabla de Skate", "Cubo Rubik"]
     
@@ -62,23 +59,25 @@ if __name__ == "__main__":
     
     id = 1
 
-    for i in range (0, len(categorias)):
+    for i in range(len(categorias)): 
         categoria = categorias[i]
         nombres = nombresCategorias[i]
 
-        for j in range(0, len(nombres)):
-            cantidad = id*5 #Ejemplo de valor para cantidad
-            cantidadAlerta  = id*2 #Ejemplo de cantidad alerta
-            precio = 10+id*3 #Ejemplo de precio
-            retornable = (id%2 == 0) #Alterna retornabilidad
+        for j in range(len(nombres)):
+            cantidad = id * 5  # Ejemplo de valor para cantidad
+            cantidadAlerta = id * 2  # Ejemplo de cantidad alerta
+            precio = 10 + id * 3  # Ejemplo de precio
+            retornable = (id % 2 == 0)  # Alterna retornabilidad
 
             producto = Producto(cantidad, cantidadAlerta, 0, 0, categoria, id, nombres[j], precio, retornable)
 
-            #Crear el producto y agregarlo al inventario
+            # Crear el producto y agregarlo al inventario
             inventario.añadirProducto(producto)
 
             id += 1
+
+    return inventario
     
     # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
 #     test = MainMenu()
-    test.display()
+ #   test.display()

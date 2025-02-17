@@ -10,11 +10,17 @@ sys.path.append(os.path.abspath('src'))
 
 # Ahora puedes importar lo que necesites
 from gestorAplicacion.tienda.Inventario import Inventario
+from gestorAplicacion.tienda.Producto import Producto
+from App import instanciar
+
 class App:
     def __init__(self, ventana_principal = None):
         # POR FAVOR NO BORRAR ESTO
         if ventana_principal != None:
             ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
+        
+        #Catálogo de productos a mostrar por pantalla
+        #self.catalogo = catalogo = instanciar().crearCatalogo()
         
         self.ventana_principal=ventana_principal
         self.contador = 0
@@ -156,6 +162,60 @@ class App:
         # Destruir el widget solo si no es el menu_bar
          if widget != menu_bar:
             widget.destroy()
+
+    # MÉTODOS PRESENTES EN EL MENÚ DEL CARRITO
+    #    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V
+
+    def mostrarCatalogo(self):
+        
+
+        frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
+        frameCatalogo.pack(expand= True)
+
+        titulo = tk.Label(frameCatalogo, text= "tuki", font= ("Arial", 10))
+        titulo.pack(expand = True)
+
+      #  for fila in range(0, 4):
+       #     for columna in range(0,5):
+        #        producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), command= self.seleccionarProducto())
+         #       producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+
+    def seleccionarProducto(self):
+        pass
+    
+    def eliminarProductosDelCarrito(self):
+        pass #Agregar lógica para esta opción
+
+    def verElCarrito(self):
+        pass #Agregar lógica para esta opción
+
+    def regresar(self):
+        pass #Agregar lógica para esta opción
+
+    def menuCarrito(self, menu_bar):
+        #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
+        #Sin eliminarlo
+
+        #Se le da un color al frame solo para verificar su tamaño, luego se borra
+        frameCarrito = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
+        frameCarrito.pack(expand= True)
+
+        titulo = tk.Label(frameCarrito, text= "Menú Carrito", font= ("Arial", 10))
+        titulo.grid(row= 0, column= 1, columnspan=2, padx= 10, pady= 10)
+
+        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo()])
+        opcion1.grid(row= 1, column= 1, padx= 10, pady= 10)
+
+        opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= self.eliminarProductosDelCarrito())
+        opcion2.grid(row= 2, column= 1, padx= 10, pady= 10)
+
+        opcion3 = tk.Button(frameCarrito, text= "Ver el carrito", command= self.verElCarrito())
+        opcion3.grid(row= 3, column= 1, padx= 10, pady= 10)
+
+        opcion4 = tk.Button(frameCarrito, text= "Regresar", command= self.regresar())
+        opcion4.grid(row= 4, column= 1, padx= 10, pady= 10)
+
         
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
@@ -175,7 +235,7 @@ class App:
         menu_proceso_consultas.add_cascade(label= "1. Menú Comprador", menu= submenu_comprador)
         menu_proceso_consultas.add_separator()
         menu_proceso_consultas.add_cascade(label= "2. Menú Vendedor", menu= submenu_vendedor)
-        submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.carrito()])
+        submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCarrito(menu_bar)])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "2. Consultar cuenta bancaria")
         submenu_comprador.add_separator()
