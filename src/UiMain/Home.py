@@ -19,6 +19,10 @@ class App:
         self.ventana_principal=ventana_principal
         self.contador = 0
         self.imagen_tk = None
+        self.imagen1 = None
+        self.imagen2 = None
+        self.imagen3 = None
+        self.imagen4 = None
 
 
         # Crear ventana principal
@@ -32,6 +36,8 @@ class App:
         self.menu()
         
         self.etiqueta.config(image=self.imagen_tk)
+        self.p6.after(100,self.cargar_imagen_nosotros)
+        self.p5.bind("<Button-1>",self.actualizar_imagenes)
         self.p4.after(100, self.cargar_imagen_inicial)
         self.p4.bind("<Enter>", self.imagenes)
         
@@ -52,6 +58,10 @@ class App:
         self.window.rowconfigure(1, weight=30)
         self.window.rowconfigure(2, weight=1, minsize=margin_y)
     
+
+
+
+    
     def crear_frames(self): 
         #frames principales
         self.p1 = tk.Frame(self.window)
@@ -70,6 +80,7 @@ class App:
         self.p4 = tk.Frame(self.p1)
         self.p4.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
         self.p4.grid_propagate(False)
+        
 
         self.p2.rowconfigure(1, weight=1)
         self.p2.rowconfigure(2, weight=1)
@@ -80,9 +91,14 @@ class App:
         
         self.p6 = tk.Frame(self.p2, bg="orange")
         self.p6.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.p6.grid_propagate(False)
         
-        self.p3.columnconfigure(0, weight=1)
-        self.p3.rowconfigure(1, weight=1)
+        self.p3.columnconfigure(0, weight=2)
+        self.p3.rowconfigure(1, weight=2)
+        self.p6.columnconfigure(0, weight=2)
+        self.p6.rowconfigure(0, weight=2)
+        self.p6.columnconfigure(1, weight=2)
+        self.p6.rowconfigure(1, weight=2)
         #el label que da la bienvenida
         texto_bienvenida = tk.Label(
             self.p3, 
@@ -102,6 +118,14 @@ class App:
         #el label que va a contener las imagenes asociadas al sistema
         self.etiqueta = tk.Label(self.p4)
         self.etiqueta.grid(column=0, row=0, sticky="nsew")
+        self.etiqueta1=tk.Label(self.p6)
+        self.etiqueta1.grid(column=0,row=0,sticky="nsew")
+        self.etiqueta2 = tk.Label(self.p6,background="red")
+        self.etiqueta2.grid(column=1,row=0,sticky="nsew")
+        self.etiqueta3 = tk.Label(self.p6,background="green")
+        self.etiqueta3.grid(column=0,row=1,sticky="nsew")
+        self.etiqueta4 = tk.Label(self.p6,background="black")
+        self.etiqueta4.grid(column=1,row=1,sticky="nsew")
     def salir(self): #este metodo nos saca del sistema
         self.window.destroy()
     def nada(self):
@@ -117,14 +141,86 @@ class App:
         menu1.add_separator()
         menu1.add_command(label="Salir",command=self.salir)
     ''
+    def cargar_imagen_nosotros(self):
+       
+        directorio_actual = os.path.dirname(os.path.abspath(__file__))
+        ruta1 = os.path.join(directorio_actual, "imagenes", "imagen1.jpg")
+        imagen1 = Image.open(ruta1)
+        
+        
+        ruta2 = os.path.join(directorio_actual, "imagenes", "imagen2.jpg")
+        imagen2= Image.open(ruta2)
+        ruta3 = os.path.join(directorio_actual, "imagenes", "imagen3.jpg")
+        imagen3 = Image.open(ruta3)
+        ruta4 = os.path.join(directorio_actual, "imagenes", "imagen4.jpg")
+        imagen4= Image.open(ruta4)
+        self.window.update_idletasks()#este metodo actualiza las medidad del frame
+        ancho = self.p6.winfo_width()
+        alto = self.p6.winfo_height()
+        imagen1 = imagen1.resize((ancho//2, alto//2))
+        self.imagen_tk1= ImageTk.PhotoImage(imagen1)
+        self.etiqueta1.config(image=self.imagen_tk1)
+        self.etiqueta1.imagen = self.imagen_tk1
+        imagen2 = imagen2.resize((ancho//2, alto//2))
+        self.imagen_tk2= ImageTk.PhotoImage(imagen2)
+        self.etiqueta2.config(image=self.imagen_tk2)
+        self.etiqueta2.imagen = self.imagen_tk2
+        imagen3 = imagen3.resize((ancho//2, alto//2))
+        self.imagen_tk3= ImageTk.PhotoImage(imagen3)
+        self.etiqueta3.config(image=self.imagen_tk3)
+        self.etiqueta3.imagen = self.imagen_tk3
+        imagen4 = imagen4.resize((ancho//2, alto//2))
+        self.imagen_tk4= ImageTk.PhotoImage(imagen4)
+        self.etiqueta4.config(image=self.imagen_tk4)
+        self.etiqueta4.imagen = self.imagen_tk4
+        self.imagen1=imagen1
+        self.imagen2=imagen2
+        self.imagen3=imagen3
+        self.imagen4=imagen4
+
+
+    
+    def actualizar_imagenes(self, evento):
+        """Intercambia las imágenes entre las etiquetas"""
+        
+        # Obtener las dimensiones del frame (p6)
+        ancho_imagen = self.p6.winfo_width()
+        alto_imagen = self.p6.winfo_height()
+
+        # Redimensionar las imágenes antes de rotarlas
+        imagen1_redimensionada = self.imagen1.resize((ancho_imagen//2, alto_imagen), Image.Resampling.LANCZOS)
+        imagen2_redimensionada = self.imagen2.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
+        imagen3_redimensionada = self.imagen3.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
+        imagen4_redimensionada = self.imagen4.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
+
+        # Convertir las imágenes redimensionadas a formato PhotoImage de Tkinter
+        self.imagen_tk1 = ImageTk.PhotoImage(imagen1_redimensionada)
+        self.imagen_tk2 = ImageTk.PhotoImage(imagen2_redimensionada)
+        self.imagen_tk3 = ImageTk.PhotoImage(imagen3_redimensionada)
+        self.imagen_tk4 = ImageTk.PhotoImage(imagen4_redimensionada)
+
+        # Rotar las imágenes
+        self.imagen_tk1, self.imagen_tk2, self.imagen_tk3, self.imagen_tk4 = (
+            self.imagen_tk2, self.imagen_tk3, self.imagen_tk4, self.imagen_tk1
+        )
+
+        # Asignar las imágenes rotadas a las etiquetas
+        self.etiqueta1.config(image=self.imagen_tk1)
+        self.etiqueta2.config(image=self.imagen_tk2)
+        self.etiqueta3.config(image=self.imagen_tk3)
+        self.etiqueta4.config(image=self.imagen_tk4)
+
+        # Actualizar el frame de la ventana
+        self.window.update_idletasks()
+
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        ruta = os.path.join(directorio_actual, "imagenes", "imagen1.jpg")
+        ruta = os.path.join(directorio_actual, "imagenes", "imagen2.jpg")
         imagen = Image.open(ruta)
 
-        ancho = self.p4.winfo_width()
-        alto = self.p4.winfo_height()
+        ancho = 500
+        alto = 200
         imagen = imagen.resize((ancho, alto))
         self.imagen_tk = ImageTk.PhotoImage(imagen)
         self.etiqueta.config(image=self.imagen_tk)
