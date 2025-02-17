@@ -42,10 +42,10 @@ class Comprador(Usuario):
         return "FacturaInvalida"
     
     def getCarritoCompras(self):
-        return self.carritoCompras
+        return self.carritoComprascarritoCompras
     
     def setCarritoCompras(self, carritoCompras):
-        self.carritoCompras = carritoCompras
+       self.carritoCompras = carritoCompras
 
     def getHistorialCompras(self):
         return self.historialCompras
