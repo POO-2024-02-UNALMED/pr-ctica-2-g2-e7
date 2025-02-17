@@ -155,13 +155,19 @@ class App:
     def descripcion(self): #este metodoe es el asociado a la opcion "descripcion"
         messagebox.showinfo("Descripcion de la tienda","Este es el sistema de gestion de una tienda , aqui puedes segun tu cargo con la tienda , administrarla o ser un comprador, con acceso a todo lo que se puede hacer en cualquier tienda, con algunos beneficios")
     def menu(self): #metodo que crea la barra de menu donde estara descripcion y salir
-        menubar=tk.Menu(self.window)
+        menubar = tk.Menu(self.window)
         self.window.config(menu=menubar)
-        menu1=tk.Menu(menubar,tearoff=0)
-        menubar.add_cascade(label="Inicio",menu=menu1,command=self.nada)
-        menu1.add_command(label="Descripcion",command=self.descripcion)
+
+        # Crear los submenús
+        menu1 = tk.Menu(menubar, tearoff=0)
+
+        # Agregar opciones a los submenús
+        menu1.add_command(label="Descripción", command=self.descripcion)
         menu1.add_separator()
-        menu1.add_command(label="Salir",command=self.salir)
+        menu1.add_command(label="Salir", command=self.salir)
+
+        # Agregar los submenús a la barra de menú
+        menubar.add_cascade(label="Inicio", menu=menu1)
     ''
     def cargar_imagen_nosotros(self):
        
@@ -247,7 +253,7 @@ class App:
         self.imagen_tk = ImageTk.PhotoImage(imagen)
         self.etiqueta.config(image=self.imagen_tk)
         self.etiqueta.imagen = self.imagen_tk
-    #esre es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
+    #este es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
     def imagenes(self, evento):
 
         self.window.update_idletasks()#este metodo actualiza las medidad del frame
@@ -352,7 +358,20 @@ class App:
         opcion4 = tk.Button(frameCarrito, text= "Regresar", command= self.regresar())
         opcion4.grid(row= 4, column= 1, padx= 10, pady= 10)
 
-        
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DEL CARRITO
+
+    # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+
+
+
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
+
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
         if ventana_inicio != None:
