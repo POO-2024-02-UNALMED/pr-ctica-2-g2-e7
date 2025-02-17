@@ -340,7 +340,8 @@ class App:
         pass #Agregar lógica para esta opción
 
     def regresar(self):
-        pass #Agregar lógica para esta opción
+        pass
+
 
     def menuCarrito(self, menu_bar):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
@@ -381,8 +382,16 @@ class App:
             self.regresar()
 
         else:
-            frameDevolucion = tk.Frame(ventana_principal, bg="yellow", width= 600, height= 400)
+            frameDevolucion = tk.Frame(ventana_principal, bg="white", width= 1000, height= 800)
             frameDevolucion.pack(expand=True)
+
+            titulo = tk.Label(frameDevolucion, text="Devolución de Producto", font=("Arial", 16, "bold"), bg="white")
+            titulo.pack(pady=(20, 5))  # Título en la parte superior con un margen superior
+
+            # Descripción del detalle del proceso
+            descripcion = tk.Label(frameDevolucion, text="A continuación, ingrese los detalles del producto a devolver.", font=("Arial", 12), bg="white")
+            descripcion.pack(pady=(0, 20))  # Descripción debajo del título con un margen inferior
+
 
             criterios = ["ID Factura", "ID Producto", "Cantidad a devolver"]
             valores_iniciales = [None, None, None]
