@@ -8,7 +8,7 @@ import os
 # Añadir el directorio src al sys.path
 sys.path.append(os.path.abspath('src'))
 
-# Ahora puedes importar lo que necesites
+# Ahora puedes importar lo que quieras
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.tienda.Producto import Producto
 from App import instanciar
@@ -326,8 +326,23 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
 
+    def menuDevolucion(self, menu_bar):
 
+        respuesta = messagebox.askyesno("Devolver producto", "¿Conoce el ID de la factura y del producto a devolver?")
+        if not respuesta:
+            messagebox.showinfo("Ayuda", "Por favor, consiga la información necesaria en el numeral 6 del MENÚ COMPRADOR")
+            self.regresar()
 
+        else:
+            frameDevolucion = tk.Frame(ventana_principal, bg="yellow", width= 600, height= 400)
+            frameDevolucion.pack(expand=True)
+
+            criterios = ["ID Factura", "ID Producto", "Cantidad a devolver"]
+            valores_iniciales = [None, None, None]
+            habilitados = [True, True, True]
+
+            field_frame = FieldFrame(frameDevolucion, "Criterios", criterios, "Valores", valores_iniciales, habilitados)
+            field_frame.pack(padx=10, pady=10)
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
@@ -354,7 +369,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "2. Consultar cuenta bancaria")
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "3. Realizar Devolución")
+        submenu_comprador.add_command(label= "3. Realizar Devolución", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuDevolucion(menu_bar)])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "4. Realizar Compra")
         submenu_comprador.add_separator()
@@ -392,6 +407,67 @@ class App:
 
     def ayuda(self):
         messagebox.showinfo("Ayuda", "Desarrolladores:\nTomás Aristizábal Gómez\nSantiago Barrientos Medina\nJosé Alejandro Castro Rey\nJuan Nicolás Chaparro Rodríguez\nSimón David Díaz Rojas")
+
+class FieldFrame(tk.Frame):
+    def __init__(self, parent, tituloCriterios, criterios, tituloValores, valores=None, habilitado=None):
+        super().__init__(parent)
+        self.tituloCriterios = tituloCriterios
+        self.criterios = criterios
+        self.tituloValores = tituloValores
+        self.valores = valores if valores else [None] * len(criterios)
+        self.habilitado = habilitado if habilitado else [True] * len(criterios)
+        
+        self.entries = []  # Almacenar entradas para obtener sus valores después
+        
+        self.crear_ventanas()
+
+    def crear_ventanas(self):
+        # Crear el título de los criterios
+        label_criterio = tk.Label(self, text=self.tituloCriterios)
+        label_criterio.grid(row=0, column=0, padx=5, pady=5)
+        
+        label_valor = tk.Label(self, text=self.tituloValores)
+        label_valor.grid(row=0, column=1, padx=5, pady=5)
+        
+        # Crear los campos de entrada según los criterios
+        for i, criterio in enumerate(self.criterios):
+            label = tk.Label(self, text=criterio)
+            label.grid(row=i+1, column=0, padx=5, pady=5, sticky='w')
+            
+            entry = tk.Entry(self)
+            if self.valores[i]:
+                entry.insert(0, self.valores[i])  #Insertar valor inicial si está presente
+            
+            #Si el campo está deshabilitado, lo hacemos no-editable
+            if not self.habilitado[i]:
+                entry.config(state='disabled')
+                
+            entry.grid(row=i+1, column=1, padx=5, pady=5)
+            self.entries.append(entry)
+
+    def getValue(self, criterio):
+        #Devuelve el valor del criterio solicitado
+        if criterio not in self.criterios:
+            raise ValueError(f"El criterio '{criterio}' no existe.")
+        indice = self.criterios.index(criterio)
+        return self.entries[indice].get()
+
+    def limpiar_campos(self):
+        #Borra todos los campos de texto
+        for entry in self.entries:
+            entry.delete(0, tk.END)
+    
+    def validate_and_save(self):
+        #Verifica que todos los campos de texto tengan valores
+        campos_faltantes = []
+        for i, entry in enumerate(self.entries):
+            if not entry.get().strip():
+                campos_faltantes.append(self.criterios[i])
+        
+        if campos_faltantes:
+            messagebox.showwarning("Campos Vacíos", f"Por favor, complete los siguientes campos: {', '.join(campos_faltantes)}")
+            return False
+        return True
 
 
 if __name__ == "__main__":
