@@ -237,7 +237,7 @@ class App:
         self.imagen_tk = ImageTk.PhotoImage(imagen)
         self.etiqueta.config(image=self.imagen_tk)
         self.etiqueta.imagen = self.imagen_tk
-    #esre es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
+    #este es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
     def imagenes(self, evento):
 
         self.window.update_idletasks()#este metodo actualiza las medidad del frame
@@ -318,7 +318,20 @@ class App:
         opcion4 = tk.Button(frameCarrito, text= "Regresar", command= self.regresar())
         opcion4.grid(row= 4, column= 1, padx= 10, pady= 10)
 
-        
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DEL CARRITO
+
+    # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+
+
+
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
+
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
         if ventana_inicio != None:
