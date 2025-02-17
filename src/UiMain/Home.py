@@ -5,13 +5,27 @@ from tkinter import messagebox
 import sys
 import os
 
+
+
 # Añadir el directorio src al sys.path
 sys.path.append(os.path.abspath('src'))
+ruta_superior = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# Agregarla al sys.path
+sys.path.append(ruta_superior)
 
 # Ahora puedes importar lo que quieras
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.tienda.Producto import Producto
-from App import instanciar
+
+from gestorAplicacion.usuario.Comprador import Comprador
+from gestorAplicacion.usuario.Notificacion import Notificacion
+from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.compras.CarritoCompras import CarritoCompras
+from MainMenu import MainMenu
+from gestorAplicacion.tienda.Producto import Producto
+from gestorAplicacion.tienda.Inventario import Inventario
+from gestorAplicacion.usuario.Vendedor import Vendedor
 
 class App:
     def __init__(self, ventana_principal = None):
@@ -46,6 +60,8 @@ class App:
         self.p5.bind("<Button-1>",self.actualizar_imagenes)
         self.p4.after(100, self.cargar_imagen_inicial)
         self.p4.bind("<Enter>", self.imagenes)
+        Inventario=self.instanciar()
+        
         
         self.window.mainloop()
     #metodo para configurar el grid de la ventana principal 
@@ -286,9 +302,33 @@ class App:
     def seleccionarProducto(self):
         pass
     
-    def eliminarProductosDelCarrito(self):
-        pass #Agregar lógica para esta opción
+    def eliminarProductosDelCarrito(self,ventanappal):
+        alto = ventana_principal.winfo_height()
+        contenedorcarrito = tk.Frame(self.ventana_principal, height=alto*0.75)
+        contenedorcarrito.pack(side="top", fill="x", padx=10, pady=10)
+        contenedorcarrito.columnconfigure(0, weight=1)
+        contenedorcarrito.rowconfigure(0, weight=1)
 
+        # Título "Eliminar del Carrito"
+        titulo = tk.Label(
+            contenedorcarrito, 
+            text="Eliminar del Carrito",
+            font=("Arial", 24, "bold"),
+            justify="center"
+        )
+        titulo.grid(column=0, row=0, sticky="ew", columnspan=2, pady=(0, 10))  # Añadimos un espaciado vertical
+
+        texto = tk.Label(
+            contenedorcarrito, 
+            text=str(self.carrito),
+            wraplength=600,
+            font=("Arial", 15, "bold"), 
+            justify="left"
+        )
+        texto.grid(column=0, row=1, sticky="ew", columnspan=2)
+
+                # Etiquetas y campos de entrada
+       
     def verElCarrito(self):
         pass #Agregar lógica para esta opción
 
@@ -309,7 +349,7 @@ class App:
         opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo()])
         opcion1.grid(row= 1, column= 1, padx= 10, pady= 10)
 
-        opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= self.eliminarProductosDelCarrito())
+        opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.eliminarProductosDelCarrito(ventana_principal)])
         opcion2.grid(row= 2, column= 1, padx= 10, pady= 10)
 
         opcion3 = tk.Button(frameCarrito, text= "Ver el carrito", command= self.verElCarrito())
@@ -407,6 +447,75 @@ class App:
 
     def ayuda(self):
         messagebox.showinfo("Ayuda", "Desarrolladores:\nTomás Aristizábal Gómez\nSantiago Barrientos Medina\nJosé Alejandro Castro Rey\nJuan Nicolás Chaparro Rodríguez\nSimón David Díaz Rojas")
+    def instanciar(self):
+        producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
+        producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
+        producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
+        inventario = Inventario([producto1], [producto3], [producto2], [], [], [])
+        comprador = Comprador("Juan", None, None)
+        cuenta = CuentaBancaria(comprador)
+        comprador.setCuentaBancaria(cuenta)
+        carrito = CarritoCompras(comprador, inventario)
+        carrito.añadirProducto(producto1)
+        carrito.añadirProducto(producto2, 5)
+        carrito.añadirProducto(producto3, 2)
+        comprador.setCarritoCompras(carrito)
+        vendedor = Vendedor("pedro", None, inventario, None)
+        cuenta2 = CuentaBancaria(vendedor)
+        vendedor.setCuentaBancaria(cuenta2)
+        test = MainMenu(comprador, vendedor, inventario)
+        self.comprador=comprador
+        self.carrito=carrito
+
+        # Productos creados
+        categorias = list(Producto.Categoria)
+        
+        nombresTecnologia = ["Celular", "Laptop", "Tableta", "Audifonos", "Camara", "Smartwatch", "Teclado", 
+            "Mouse", "Monitor", "Drone", "Impresor", "Router", "Smart TV", "Cargador", "Auriculares", "Memoria Flash", 
+            "Bafle", "Reproductor Blu-ray", "Consola Gamium", "Proyector HD"] 
+        
+        nombresAseo = ["Jabon Liquido", "Shampoo", "Cepillo Dental", "Pasta Dental", "Desinfectante", "Esponja", 
+            "Toallas", "Gel Antibacterial", "Cera de Piso", "Limpiavidrios", "Desodorante", "Hilo Dental", "Enjuague Bucal", "Lavaplatos",
+            "Detergente", "Ambientador", "Papel Higienico", "Toallas", "Cepillo", "Clorox"]
+        
+        nombresComida = ["Manzana", "Queso", "Leche", "Yogur", "Pan", "Aceite", "Cereal", 
+            "Galletas", "Mantequilla", "Pasta", "Miel", "Jugo de Naranja", "Avena", "Mermelada", 
+            "Agua", "Frijoles", "Atun", "Sopa de Pollo", "Barra de Granola", "Palomitas"]
+        
+        nombresPapeleria = ["Cuaderno A4", "Lapiz HB", "Boligrafo Azul", "Borrador Magico", "Libreta", "Carpeta", "Borrador", "Tijeras",
+            "Pegamento", "Cinta", "Regla", "Marcadores", "Lapices", "Bloc de Dibujo", "Corrector",
+            "Papel de Colores", "Grapadora", "Perforadora", "Cartulina", "Compas"]
+        
+        nombresJugueteria = ["Muñeca", "Auto Rayo", "Pelota Saltarina", "Lego", "Puzzle", "Figura de Accion", "Bicicleta",
+            "Patinete", "Dron Junior", "Set de Tren", "Juguete de Cocina", "Castillo de Princesa", "Helicoptero RC", "Avion de Pasajeros", "Torre de Bloques",
+            "Rompecabezas", "Bate de beisbol", "Robot Interactivo", "Tabla de Skate", "Cubo Rubik"]
+        
+        nombresDeportes = ["Balon de Futbol", "Raqueta de Tenis", "Gorra de Running", "Tennis", "Guantes de Boxeo", "Pesa Kettlebell", "Bolsa de Deporte",
+            "Gafas de Natacion", "Bicicleta de Montaña", "Patineta Freestyle", "Mancuerna Ajustable", "Camiseta de futbol", "Pantalon de Yoga", "Protector Bucal", "Cuerda para Saltar",
+            "Banco de Pesas", "Chaleco Reflectivo", "Casco de Ciclismo", "Balon de Baloncesto", "Reloj Deportivo"]
+        
+        nombresCategorias = [nombresTecnologia, nombresAseo, nombresComida, nombresPapeleria, nombresJugueteria, nombresDeportes]
+        
+        id = 1
+
+        for i in range(len(categorias)): 
+            categoria = categorias[i]
+            nombres = nombresCategorias[i]
+
+            for j in range(len(nombres)):
+                cantidad = id * 5  # Ejemplo de valor para cantidad
+                cantidadAlerta = id * 2  # Ejemplo de cantidad alerta
+                precio = 10 + id * 3  # Ejemplo de precio
+                retornable = (id % 2 == 0)  # Alterna retornabilidad
+
+                producto = Producto(cantidad, cantidadAlerta, 0, 0, categoria, id, nombres[j], precio, retornable)
+
+                # Crear el producto y agregarlo al inventario
+                inventario.añadirProducto(producto)
+
+                id += 1
+
+        return inventario
 
 class FieldFrame(tk.Frame):
     def __init__(self, parent, tituloCriterios, criterios, tituloValores, valores=None, habilitado=None):
@@ -468,7 +577,6 @@ class FieldFrame(tk.Frame):
             messagebox.showwarning("Campos Vacíos", f"Por favor, complete los siguientes campos: {', '.join(campos_faltantes)}")
             return False
         return True
-
 
 if __name__ == "__main__":
     App()
