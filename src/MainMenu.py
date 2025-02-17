@@ -499,37 +499,10 @@ class MainMenu:
             except ValueError:
                 print("ERROR. Ingrese un valor válido.")
 
-    def cuentaBancariaDisplay(self):
-        while True:
-            print("========= CUENTA BANCARIA =========")
-            print("¿Que deseas hacer con tu cuenta bancaria?")
-            print("1. Recargar cuenta")
-            print("2. Consultar saldo")
-            print("3. Volver al menú comprador\n")
-            
-            try:
-                opcion = int(input("Seleccione una opción: "))
-                if opcion < 1 or opcion > 3:
-                    print("ERROR. Por favor seleccione una opción válida.")
-                elif opcion == 1:
-                    try:
-                        monto = int(input("Ingrese el monto a recargar: "))
-                        if monto < 500:
-                            print("Lo sentimos, la menor cantidad posible para recargar es de 500. Por favor intente nuevamente.")
-                        elif monto > 10000:
-                            print("Lo sentimos, el monto máximo a recargar es de un valor de 10000. Por favor intente nuevamente.")
-                        else:
-                            self.comprador.getCuentaBancaria().recargarCuenta(monto)
-                            print(f"Recarga exitosa. Su saldo actual es de: {self.comprador.getCuentaBancaria().getSaldo()}")
-                    except ValueError:
-                        print("ERROR. Por favor ingrese un valor válido.")
-                elif opcion == 2:
-                    print(self.comprador.consultarCuentaBancaria())
-                elif opcion == 3:
-                    print("Volviendo al Menú del Comprador...")
-                    break
-            except ValueError:
-                print("ERROR. Por favor ingrese un valor válido.")
+    def cuentaBancariaDisplay(self, monto):
+        self.comprador.getCuentaBancaria().recargarCuenta(monto)
+        mensaje = f"Recarga exitosa. Su saldo actual es de: {self.comprador.getCuentaBancaria().getSaldo()}"
+        return mensaje
 
     def getComprador(self):
         return self.comprador

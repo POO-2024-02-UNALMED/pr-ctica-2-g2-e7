@@ -415,6 +415,44 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
 
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+    def menuCuentaBancaria(self, ventana, tipoUsuario):
+        if tipoUsuario == "comprador":
+            respuesta = messagebox.askyesno("Recargar saldo", "¿Desea recargar saldo en su cuenta bancaria?")
+            if not respuesta:
+                mensaje = self.main_menu.getComprador().consultarCuentaBancaria()
+                label = tk.Label(ventana, text= mensaje, bg= "white", font=("Arial", 16, "bold"))
+                label.pack(pady = 150)
+            else:
+                criterios = ["Valor a recargar"]
+                valores_iniciales = [None]
+                titulo = tk.Label(ventana, text= "Consultar Cuenta Bancaria", font=("Arial", 16, "bold"))
+                titulo.pack(pady=(100, 5))
+                descripcion = tk.Label(ventana, text= "Por favor ingrese el valor correspondiente que usted desea recargar para su cuenta", font=("Arial", 12, "bold"))
+                descripcion.pack(pady= (5, 0))
+                ff = FieldFrame(ventana, "Criterios", criterios, "Valores", valores_iniciales, funcion_llamado = self.actualizar_saldos)
+                ff.pack(pady= 10)
+        else:
+            mensaje = self.main_menu.getVendedor().consultarCuentaBancaria()
+            label = tk.Label(ventana, text= mensaje, bg= "white", font=("Arial", 16, "bold"))
+            label.pack(pady = 150)
+    
+    def actualizar_saldos(self, valores):
+        try:
+            monto = float(valores["Valor a recargar"])
+            if monto < 500:
+                messagebox.showwarning("Monto menor al aceptado", "Lo sentimos. Por favor introduzca un monto mayor a 500.")
+            elif monto > 10000:
+                messagebox.showwarning("Monto mayor al aceptado", "Lo sentimos. El monto máximo a recargar es de 10000, por favor intente nuevamente.")
+            else:
+                mensaje = self.main_menu.cuentaBancariaDisplay(monto)
+                messagebox.showinfo("Recarga exitosa", mensaje)
+        except ValueError:
+            messagebox.showerror("ERROR", "Por favor ingrese un valor unicamente numerico.")
+
+
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
         if ventana_inicio != None:
@@ -435,7 +473,7 @@ class App:
         menu_proceso_consultas.add_cascade(label= "2. Menú Vendedor", menu= submenu_vendedor)
         submenu_comprador.add_command(label= "1. Gestionar Carrito/Ver Catálogo", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCarrito(menu_bar)])
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "2. Consultar cuenta bancaria")
+        submenu_comprador.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "comprador")])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "3. Realizar Devolución", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuDevolucion(menu_bar)])
         submenu_comprador.add_separator()
@@ -449,7 +487,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_vendedor.add_command(label= "1. Generar reporte de ventas")
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria")
+        submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
         submenu_vendedor.add_separator()
         submenu_vendedor.add_command(label= "3. Ver notificaciones")
         menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
