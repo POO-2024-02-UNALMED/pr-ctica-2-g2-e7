@@ -139,13 +139,23 @@ class App:
     def descripcion(self): #este metodoe es el asociado a la opcion "descripcion"
         messagebox.showinfo("Descripcion de la tienda","Este es el sistema de gestion de una tienda , aqui puedes segun tu cargo con la tienda , administrarla o ser un comprador, con acceso a todo lo que se puede hacer en cualquier tienda, con algunos beneficios")
     def menu(self): #metodo que crea la barra de menu donde estara descripcion y salir
-        menubar=tk.Menu(self.window)
+        menubar = tk.Menu(self.window)
         self.window.config(menu=menubar)
-        menu1=tk.Menu(menubar,tearoff=0)
-        menubar.add_cascade(label="Inicio",menu=menu1,command=self.nada)
-        menu1.add_command(label="Descripcion",command=self.descripcion)
+
+        # Crear los submenús
+        menu1 = tk.Menu(menubar, tearoff=0)
+        menu2 = tk.Menu(menubar, tearoff=0)
+
+        # Agregar opciones a los submenús
+        menu1.add_command(label="Descripción", command=self.descripcion)
         menu1.add_separator()
-        menu1.add_command(label="Salir",command=self.salir)
+        menu1.add_command(label="Salir", command=self.salir)
+
+        menu2.add_command(label="Desarrolladores", command=self.ayuda)
+
+        # Agregar los submenús a la barra de menú
+        menubar.add_cascade(label="Inicio", menu=menu1)
+        menubar.add_cascade(label="Ayuda", menu=menu2)
     ''
     def cargar_imagen_nosotros(self):
        
