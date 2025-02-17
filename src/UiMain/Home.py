@@ -340,7 +340,7 @@ class App:
         pass #Agregar lógica para esta opción
 
     def regresar(self):
-        pass
+        pass #Agregar lógica para esta opción
 
 
     def menuCarrito(self, menu_bar):
@@ -373,9 +373,10 @@ class App:
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
+        
 
     def menuDevolucion(self, menu_bar):
-
+    
         respuesta = messagebox.askyesno("Devolver producto", "¿Conoce el ID de la factura y del producto a devolver?")
         if not respuesta:
             messagebox.showinfo("Ayuda", "Por favor, consiga la información necesaria en el numeral 6 del MENÚ COMPRADOR")
@@ -397,8 +398,17 @@ class App:
             valores_iniciales = [None, None, None]
             habilitados = [True, True, True]
 
-            field_frame = FieldFrame(frameDevolucion, "Criterios", criterios, "Valores", valores_iniciales, habilitados)
+            field_frame = FieldFrame(frameDevolucion, "Criterios", criterios, "Valores", valores_iniciales, funcion_llamado=self.realizarDevolucion)
             field_frame.pack(padx=10, pady=10)
+    
+    def realizarDevolucion(self, valores):
+        id_factura = valores["ID Factura"]
+        id_producto = valores["ID Producto"]
+        cantidad_retornar = valores["Cantidad a devolver"]
+
+        mensaje = test.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
+        messagebox.showinfo("Devolución de Producto", mensaje)
+
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
@@ -531,9 +541,7 @@ class App:
 
                 id += 1
 
-        return inventario
-
-    
+        return inventario 
 
 if __name__ == "__main__":
     App()

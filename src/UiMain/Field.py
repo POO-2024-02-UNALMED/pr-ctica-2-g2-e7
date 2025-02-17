@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
 class FieldFrame(tk.Frame):
-    def __init__(self, parent, tituloCriterios, criterios, tituloValores, valores=None, habilitado=None):
+    def __init__(self, parent, tituloCriterios, criterios, tituloValores, valores=None, habilitado=None, funcion_llamado=None):
         super().__init__(parent)
         self.tituloCriterios = tituloCriterios
         self.criterios = criterios
         self.tituloValores = tituloValores
         self.valores = valores if valores else [None] * len(criterios)
         self.habilitado = habilitado if habilitado else [True] * len(criterios)
+        self.funcion_llamado = funcion_llamado #Función a llamar al presionar el botón aceptar
         
         self.entries = []  # Almacenar entradas para obtener sus valores después
         
@@ -66,5 +67,6 @@ class FieldFrame(tk.Frame):
         
         if campos_faltantes:
             messagebox.showwarning("Campos Vacíos", f"Por favor, complete los siguientes campos: {', '.join(campos_faltantes)}")
-            return False
-        return True
+            return
+        valores = {criterio: self.getValue(criterio) for criterio in self.criterios}
+        self.funcion_llamado(valores)
