@@ -144,18 +144,14 @@ class App:
 
         # Crear los submenús
         menu1 = tk.Menu(menubar, tearoff=0)
-        menu2 = tk.Menu(menubar, tearoff=0)
 
         # Agregar opciones a los submenús
         menu1.add_command(label="Descripción", command=self.descripcion)
         menu1.add_separator()
         menu1.add_command(label="Salir", command=self.salir)
 
-        menu2.add_command(label="Desarrolladores", command=self.ayuda)
-
         # Agregar los submenús a la barra de menú
         menubar.add_cascade(label="Inicio", menu=menu1)
-        menubar.add_cascade(label="Ayuda", menu=menu2)
     ''
     def cargar_imagen_nosotros(self):
        
