@@ -553,6 +553,14 @@ class FieldFrame(tk.Frame):
                 
             entry.grid(row=i+1, column=1, padx=5, pady=5)
             self.entries.append(entry)
+        
+        # Agregar botón para aceptar
+        boton_aceptar = tk.Button(self, text="Aceptar", command=self.validate_and_save)
+        boton_aceptar.grid(row=len(self.criterios)+1, column=0, padx=5, pady=5)
+        
+        # Agregar botón para borrar
+        boton_borrar = tk.Button(self, text="Borrar", command=self.limpiar_campos)
+        boton_borrar.grid(row=len(self.criterios)+1, column=1, padx=5, pady=5)
 
     def getValue(self, criterio):
         #Devuelve el valor del criterio solicitado
