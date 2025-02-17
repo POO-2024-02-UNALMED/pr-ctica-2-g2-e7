@@ -451,6 +451,9 @@ class App:
                 messagebox.showinfo("Recarga exitosa", mensaje)
         except ValueError:
             messagebox.showerror("ERROR", "Por favor ingrese un valor unicamente numerico.")
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
 
 
     # Método para crear la ventana principal de la aplicación
