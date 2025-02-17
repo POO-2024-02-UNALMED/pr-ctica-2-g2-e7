@@ -23,13 +23,14 @@ from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from MainMenu import MainMenu
+from App import instanciar
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
 from UiMain.Field import FieldFrame
 
 class App:
-    def __init__(self, ventana_principal = None):
+    def __init__(self, ventana_principal = None, mainMenu = None):
         # POR FAVOR NO BORRAR ESTO
         if ventana_principal != None:
             ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
@@ -37,7 +38,8 @@ class App:
         #Catálogo de productos a mostrar por pantalla
         #self.catalogo = catalogo = instanciar().crearCatalogo()
         
-        self.ventana_principal=ventana_principal
+        self.ventana_principal = ventana_principal
+        self.main_menu = mainMenu #Esta será la instancia del Main Menu con la cual todos trabajaremos 
         self.contador = 0
         self.imagen_tk = None
         self.imagen1 = None
@@ -406,7 +408,7 @@ class App:
         id_producto = valores["ID Producto"]
         cantidad_retornar = valores["Cantidad a devolver"]
 
-        mensaje = test.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
+        mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
         messagebox.showinfo("Devolución de Producto", mensaje)
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
@@ -489,7 +491,6 @@ class App:
         vendedor = Vendedor("pedro", None, inventario, None)
         cuenta2 = CuentaBancaria(vendedor)
         vendedor.setCuentaBancaria(cuenta2)
-        test = MainMenu(comprador, vendedor, inventario)
         self.comprador=comprador
         self.carrito=carrito
 
@@ -544,4 +545,17 @@ class App:
         return inventario 
 
 if __name__ == "__main__":
-    App()
+    inventario = instanciar()
+    comprador = Comprador("Juan", None, None)
+    cuenta = CuentaBancaria(comprador)
+    comprador.setCuentaBancaria(cuenta)
+    carrito = CarritoCompras(comprador, inventario)
+    comprador.setCarritoCompras(carrito)
+    vendedor = Vendedor("pedro", None, inventario, None)
+    cuenta2 = CuentaBancaria(vendedor)
+    vendedor.setCuentaBancaria(cuenta2)
+    test = MainMenu(comprador, vendedor, inventario)
+    App(None, test)
+    # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
+    # test = MainMenu()
+    #test.display()

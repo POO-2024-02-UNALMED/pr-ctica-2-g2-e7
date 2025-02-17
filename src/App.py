@@ -15,18 +15,6 @@ def instanciar():
     producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
 
     inventario = Inventario([producto1], [producto3], [producto2], [], [], [])
-    comprador = Comprador("Juan", None, None)
-    cuenta = CuentaBancaria(comprador)
-    comprador.setCuentaBancaria(cuenta)
-    carrito = CarritoCompras(comprador, inventario)
-    carrito.añadirProducto(producto1)
-    carrito.añadirProducto(producto2, 5)
-    carrito.añadirProducto(producto3, 2)
-    comprador.setCarritoCompras(carrito)
-    vendedor = Vendedor("pedro", None, inventario, None)
-    cuenta2 = CuentaBancaria(vendedor)
-    vendedor.setCuentaBancaria(cuenta2)
-    test = MainMenu(comprador, vendedor, inventario)
 
     # Productos creados
     categorias = list(Producto.Categoria)
