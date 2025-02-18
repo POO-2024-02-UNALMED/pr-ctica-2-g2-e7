@@ -73,7 +73,7 @@ class Inventario:
     def reabastecerProductos(self, cantidad, producto):
         producto.setCantidadVendida(producto.getCantidadVendida() - cantidad)
         producto.setCantidadDevuelta(producto.getCantidadDevuelta() + cantidad)
-        producto.reabastecerCantidad(cantidad)
+        producto.reabastecer_cantidad(cantidad)
 
     def añadirProducto(self, producto):
         self.productosTotal.append(producto)

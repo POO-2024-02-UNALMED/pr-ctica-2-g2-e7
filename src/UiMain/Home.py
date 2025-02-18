@@ -484,7 +484,7 @@ class App:
         titulo.pack(pady=10)
 
         # Crear tabla con ttk.Treeview
-        columnas = ("ID Compra", "Producto", "ID Producto", "Cantidad", "Total")
+        columnas = ("ID Compra", "Producto", "ID Producto", "Cantidad", "Retornable", "Total")
         self.tabla = ttk.Treeview(frameHistorial, columns=columnas, show="headings")
 
         #Encabezados
@@ -502,14 +502,14 @@ class App:
         for compra in historial:
             id_compra, productos, total = compra
 
-            primer_producto, primer_id, primera_cantidad = productos[0]
-            parent_id = self.tabla.insert("", "end", values=(id_compra, primer_producto, primer_id, primera_cantidad, ""), open=True)
+            primer_producto, primer_id, primera_cantidad, primer_retornabilidad = productos[0]
+            parent_id = self.tabla.insert("", "end", values=(id_compra, primer_producto, primer_id, primera_cantidad, primer_retornabilidad, ""), open=True)
 
-            for producto, ID, cantidad in productos[1:]:
-                tabla.insert(parent_id, "end", values=("", producto, ID, cantidad))
-            tabla.insert("", "end", values=("", "", "", "Total de la compra:", total))
+            for producto, ID, cantidad, retornabilidad in productos[1:]:
+                tabla.insert(parent_id, "end", values=("", producto, ID, cantidad, retornabilidad))
+            tabla.insert("", "end", values=("", "", "", "", "Total de la compra:", total))
             
-            self.tabla.insert("", "end", values=("", "", "", "", ""), tags=("separador",))
+            self.tabla.insert("", "end", values=("", "", "", "", "", ""), tags=("separador",))
 
             self.tabla.tag_configure("separador", background="beige")
 
