@@ -33,5 +33,5 @@ class Notificacion:
     
     def mostrarResumen(self):
 
-        return f"Fecha: {self.fecha}\nDestinatario: {self.destinatario.getNombre()}\nAsunto: {self.asunto}\nMensaje: {self.mensaje[:80]}\n"
+        return (self.fecha, self.destinatario.getNombre(), self.asunto, self.mensaje)
     

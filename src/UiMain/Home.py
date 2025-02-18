@@ -532,7 +532,61 @@ class App:
     #    |    |    |    |    |    |    | 
     #    V    V    V    V    V    V    V 
 
+    def verNotificaciones(self, usuario):
+        frameNotificaciones = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
+        frameNotificaciones.pack(expand=True, fill="both")
     
+        titulo = tk.Label(frameNotificaciones, text="Notificaciones", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        columnas = ("Fecha", "Destinatario", "Asunto")
+        self.tabla = ttk.Treeview(frameNotificaciones, columns=columnas, show="headings")
+
+        for col in columnas:
+            self.tabla.heading(col, text=col)
+            self.tabla.column(col, width=100, anchor="center")
+
+        self.tabla.pack(side="left", expand=True, fill="both")
+
+        #campo de texto para mostrar el mensaje
+        self.texto_mensaje = tk.Text(frameNotificaciones, wrap="word", height=10, width=50)
+        self.texto_mensaje.pack(side="right", expand=True, fill="both", padx=10)
+
+        self.notificaciones = self.obtenerNotificaciones(usuario)
+
+        self.cargarNotificaciones(self.notificaciones, self.tabla, self.texto_mensaje)
+
+
+    def cargarNotificaciones(self, notificaciones, tabla, texto_mensaje):
+        for notificacion in notificaciones:
+            fecha, destinatario, asunto, mensaje = notificacion
+            tabla.insert("", "end", values=(fecha, destinatario, asunto))
+
+            self.tabla.bind("<<TreeviewSelect>>", lambda event: self.mostrarMensaje(event, mensaje))
+            
+    
+    def mostrarMensaje(self, evento, mensaje):
+        item_seleccionado = self.tabla.selection()
+        if item_seleccionado:
+            item = self.tabla.item(item_seleccionado[0])["values"]
+            if item:
+                fecha, destinatario, asunto = item
+                self.texto_mensaje.delete("1.0", tk.END)
+                self.texto_mensaje.insert(tk.END, f"Fecha: {fecha}\n")
+                self.texto_mensaje.insert(tk.END, f"Destinatario: {destinatario}\n")
+                self.texto_mensaje.insert(tk.END, f"Asunto: {asunto}\n\n")
+                self.texto_mensaje.insert(tk.END, f"Mensaje:\n{mensaje}")
+                     
+
+    def obtenerNotificaciones(self, usuario):
+        notificaciones = self.main_menu.ver_notificaciones(usuario)
+
+        if isinstance(notificaciones, str):
+            messagebox.showinfo("Lo sentimos", notificaciones)
+            return []
+        else: 
+            return notificaciones
+
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ        
     #    |    |    |    |    |    |    |    
@@ -674,7 +728,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "6. Ver historial de compras", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verHistorialCompras()])
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "7. Ver Notificaciones")
+        submenu_comprador.add_command(label= "7. Ver Notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.comprador)])
         submenu_comprador.add_separator()
         submenu_vendedor.add_command(label= "1. Generar reporte de ventas")
         submenu_vendedor.add_separator()

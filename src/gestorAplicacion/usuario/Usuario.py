@@ -57,12 +57,10 @@ class Usuario(ABC):
             pass
 
     def mostrarNotificaciones(self):
-        cont = 1
-        notificaciones = ""
+        lista_notificaciones = []
         for notificacion in self.notificaciones:
-            notificaciones += f"\n{cont}. {notificacion.mostrarResumen()}\n"
-            cont += 1
-        return notificaciones
+            lista_notificaciones.append(notificacion.mostrarResumen())
+        return lista_notificaciones
     
     def recibirNotificacion(self, mensaje, asunto):
         notificacion = Notificacion(mensaje, asunto, self)

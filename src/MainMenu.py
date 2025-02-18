@@ -331,9 +331,9 @@ class MainMenu:
 
     def ver_notificaciones(self, usuario):
         if len(usuario.getNotificaciones()) == 0:
-            print("Usted no tiene notificaciones...\n")
+            return "Usted no tiene notificaciones..."
         else: 
-            print(usuario.mostrarNotificaciones() + "\n")
+            return usuario.mostrarNotificaciones()
 
     def buyerMenuDisplay(self):
         while True:
