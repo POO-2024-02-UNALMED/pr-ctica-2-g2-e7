@@ -300,14 +300,17 @@ class App:
         frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
         frameCatalogo.pack(expand= True)
 
+        #Creación de los botones para seleccionar productos
+
         for fila in range(0, 5):
             for columna in range(0,6):
                 producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
-                                      command= lambda p=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(p)])
+                                      command= lambda producto=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
                 producto.grid(row= fila, column= columna, padx= 10, pady= 10)
 
     def seleccionarProducto(self, producto):
-        #print(producto.getNombre())
+
+        #Muestra la info del producto para añadir al carrito o regresar al menú
         
         frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
         frameProducto.pack(expand= True, fill= "both")
