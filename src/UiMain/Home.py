@@ -376,8 +376,26 @@ class App:
 
 
         
-    def verElCarrito(self):
-        pass #Agregar lógica para esta opción
+    def verElCarrito(self,ventana_principal):
+        tabla = ttk.Treeview(ventana_principal, columns=("Producto", "Cantidad"), show="headings")
+        tabla.heading("Producto", text="Producto")
+        tabla.heading("Cantidad", text="Cantidad")
+        tabla.pack(expand=True,side="top",fill="both")
+        carrito.calcularTotal()
+        total_label = tk.Label(
+            ventana_principal, 
+            text=f"Total: {carrito.getPrecioTotal()}", 
+            font=("Arial", 15, "bold"),
+            justify="right"
+        )
+        total_label.pack(expand=True,side="right")
+        # Añadir los productos al Treeview
+        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+            tabla.insert("", "end", values=(producto, cantidad))
+
+        # Ajustar las columnas del Treeview
+        for col in tabla["columns"]:
+            tabla.column(col, anchor="center")
 
     def regresar(self):
         pass #Agregar lógica para esta opción
@@ -388,7 +406,7 @@ class App:
         #Sin eliminarlo
 
         #Se le da un color al frame solo para verificar su tamaño, luego se borra
-        frameCarrito = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
+        frameCarrito = tk.Frame(ventana_principal,  width= 600, height= 400)
         frameCarrito.pack(expand= True)
 
         titulo = tk.Label(frameCarrito, text= "Menú Carrito", font= ("Arial", 10))
@@ -400,11 +418,10 @@ class App:
         opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.eliminarProductosDelCarrito(ventana_principal)])
         opcion2.grid(row= 2, column= 1, padx= 10, pady= 10)
 
-        opcion3 = tk.Button(frameCarrito, text= "Ver el carrito", command= self.verElCarrito())
+        opcion3 = tk.Button(frameCarrito, text= "Ver el carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.verElCarrito(ventana_principal)])
         opcion3.grid(row= 3, column= 1, padx= 10, pady= 10)
 
-        opcion4 = tk.Button(frameCarrito, text= "Regresar", command= self.regresar())
-        opcion4.grid(row= 4, column= 1, padx= 10, pady= 10)
+       
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |
