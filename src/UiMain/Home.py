@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from PIL import Image, ImageTk
 import os
 from tkinter import messagebox
@@ -306,10 +307,10 @@ class App:
     def seleccionarProducto(self):
         pass
     
-    def eliminarProductosDelCarrito(self,ventanappal):
+    def eliminarProductosDelCarrito(self, ventana_principal):
         alto = ventana_principal.winfo_height()
-        contenedorcarrito = tk.Frame(self.ventana_principal, height=alto*0.75)
-        contenedorcarrito.pack(side="top", fill="x", padx=10, pady=10)
+        contenedorcarrito = tk.Frame(ventana_principal, height=alto*0.90)
+        contenedorcarrito.pack(side="top", fill="x", padx=10, pady=20)
         contenedorcarrito.columnconfigure(0, weight=1)
         contenedorcarrito.rowconfigure(0, weight=1)
 
@@ -321,22 +322,34 @@ class App:
             justify="center"
         )
         titulo.grid(column=0, row=0, sticky="ew", columnspan=2, pady=(0, 10))  # Añadimos un espaciado vertical
-        
-        texto = tk.Label(
-            contenedorcarrito, 
-            text=str(self.carrito),
-            wraplength=600,
-            font=("Arial", 15, "bold"), 
-            justify="left"
-        )
-        texto.grid(column=0, row=1, sticky="ew", columnspan=2)
 
+        # Crear Treeview para mostrar el contenido del carrito
+        tree = ttk.Treeview(contenedorcarrito, columns=("Producto", "Cantidad"), show="headings")
+        tree.heading("Producto", text="Producto")
+        tree.heading("Cantidad", text="Cantidad")
+        tree.grid(column=0, row=1, sticky="nsew", columnspan=2)
+        carrito.calcularTotal()
+        total_label = tk.Label(
+            contenedorcarrito, 
+            text=f"Total: {carrito.getPrecioTotal()}", 
+            font=("Arial", 15, "bold"),
+            justify="right"
+        )
+        total_label.grid(column=0, row=2, sticky="e", columnspan=2, pady=(10, 0))
+        # Añadir los productos al Treeview
+        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+            tree.insert("", "end", values=(producto, cantidad))
+
+        # Ajustar las columnas del Treeview
+        for col in tree["columns"]:
+            tree.column(col, anchor="center")
+        
         criterios = ["Producto a eliminar", "Cantidad"]
         valores = [None, "1"]  # Valor inicial para "Cantidad" es 1
         habilitado = [True, True]  # Ambos campos son editables
 
         # Crear el FieldFrame
-        field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado,funcion_llamado=self.elimina)
+        field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.elimina)
         field_frame.pack(padx=20, pady=20, expand=True, ipadx=10, ipady=10)
     def elimina(self,valores):
         Producto=valores["Producto a eliminar"]
