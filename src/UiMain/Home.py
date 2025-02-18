@@ -304,7 +304,6 @@ class App:
             for columna in range(0,6):
                 producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
                                       command= lambda p=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(p)])
-                #lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verHistorialCompras()]
                 producto.grid(row= fila, column= columna, padx= 10, pady= 10)
 
     def seleccionarProducto(self, producto):
