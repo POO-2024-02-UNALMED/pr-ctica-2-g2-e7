@@ -495,7 +495,43 @@ class App:
             if respuesta == True:
                 if len(self.main_menu.getComprador().getValorCupones()) == 0:
                     messagebox.showerror("Cupones insuficientes", "ERROR. No cuentas con cupones suficientes.")
-                # Aun no esta terminado
+                else:
+                    cuadro_texto = tk.Text(ventana, height= 10, width= 40)
+                    cuadro_texto.insert(tk.END, f"Actualmente usted cuenta con {len(self.main_menu.getComprador().getValorCupones())} cupones de descuento. Estos cupones son los siguientes:\n{self.main_menu.getComprador().mostrarCupones()}")
+                    cuadro_texto.config(state= tk.DISABLED)
+                    cuadro_texto.pack(pady= (70, 10))
+
+                    label = tk.Label(ventana, text= "Por favor escribe en el recuadro de abajo tu selección", font=("Arial", 14, "bold"))
+                    label.pack(pady=(0, 10))
+
+                    entry = tk.Entry(ventana, width= 40)
+                    entry.pack(pady=(0, 10))
+
+                    frame_botones = tk.Frame(ventana)
+                    frame_botones.pack()
+
+                    boton_aceptar = tk.Button(frame_botones, text="Aceptar", command=lambda: obtener_cupon(entry))
+                    boton_aceptar.grid(row=0, column=0, padx=10)
+
+                    boton_borrar = tk.Button(frame_botones, text="Borrar", command=lambda: eliminar_texto(entry))
+                    boton_borrar.grid(row=0, column=1, padx=10)
+
+                    def obtener_cupon(entrada_evaluar):
+                        entrada = entrada_evaluar.get()
+                        try:
+                            cupon = int(entrada)
+                            if cupon > len(self.main_menu.getComprador().getValorCupones()) or cupon < 1:
+                                messagebox.showerror("Cupón no valido", "ERROR. El cupón que seleccionaste no existe, intenta nuevamente (solo debes de poner el número del cupón que quieres usar, por ejemplo si quieres usar el primero pon 1)")
+                            else:
+                                pass
+                        except ValueError:
+                            messagebox.showerror("Opción no válida", "ERROR. Por favor introduzca un valor númerico.")
+                    def eliminar_texto(entrada_evaluar):
+                        entrada_evaluar.delete(0, tk.END)
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
+
 
 
     # Método para crear la ventana principal de la aplicación
@@ -637,6 +673,7 @@ if __name__ == "__main__":
     inventario = instanciar()
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
+    cuenta.recargarCuenta(2000)
     comprador.setCuentaBancaria(cuenta)
     carrito = CarritoCompras(comprador, inventario)
     ######################################
