@@ -139,7 +139,13 @@ class CarritoCompras:
             if self.listaItems[i].getID()== idProducto:
                 return self.listaItems[i]
         return None   
-    
+    def busqueda(self,nombre):
+       
+        for producto in self.listaItems:
+            if producto.getNombre().lower() == nombre.lower():
+                return producto
+        return None
+
 
     def __str__(self):
         sb = []
@@ -160,15 +166,16 @@ class CarritoCompras:
         self.cantidadPorProducto.pop(indice)
         return "proceso exitoso"
     @multimethod
-    def eliminarProducto(self, producto : Producto , cantidad: int):#aqui usamos el multimethos para simular cuando si le entregamos alguna cantidad 
-        indice = self. listaItems.index(producto)
-        cantidadproducto= self.cantidadPorProducto[indice]
+    def eliminarProducto(self, producto : Producto , cantidad: int,listaItems,cantidadPorProducto):#aqui usamos el multimethos para simular cuando si le entregamos alguna cantidad 
+        
+        indice =  listaItems.index(producto)
+        cantidadproducto= cantidadPorProducto[indice]
         if cantidadproducto > cantidad:
-            self.cantidadPorProducto[indice]-=cantidad
-            return f"La cantidad del producto ahora es {self.cantidadPorProducto[indice]}"
+            cantidadPorProducto[indice]-=cantidad
+            return f"La cantidad del producto ahora es {cantidadPorProducto[indice]}"
         elif cantidadproducto==cantidad:
-            self.cantidadPorProducto.pop(indice)
-            self.listaItems.pop(indice)
+            cantidadPorProducto.pop(indice)
+            listaItems.pop(indice)
             return f"El producto ha sido eliminado en su totalidad"
         else:
             return "ERROR: la cantidad que deseas eliminar es mayor que la disponible "

@@ -104,6 +104,35 @@ class MainMenu:
             
             elif opcion == 4:
                 print("Volviendo al menú del carrito...")
+    def eliminacion(self,producto, cantidad,comprador):
+        
+        
+                    
+        
+        eliminar= producto
+        count = cantidad
+        
+        while True:
+                       
+                            if count > 0:
+                                break
+                            else:
+                                return("La cantidad debe ser mayor que 0.")
+                        
+                    
+        producto = comprador.getCarritoCompras().busqueda(eliminar)
+       
+        if producto is None:
+                        return(f"El producto '{eliminar}' no se encuentra en el carrito.")
+        else:
+                        resultado = self.comprador.getCarritoCompras().eliminarProducto(producto, count,comprador.getCarritoCompras().getListaItems(),comprador.getCarritoCompras().getCantidadPorProducto())
+                        return(resultado)
+                
+            
+                       
+                
+            
+      
     def productSelectionProcess(self):
         scanner = input
 

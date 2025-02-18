@@ -42,7 +42,7 @@ class Comprador(Usuario):
         return "FacturaInvalida"
     
     def getCarritoCompras(self):
-        return self.carritoComprascarritoCompras
+        return self.carritoCompras
     
     def setCarritoCompras(self, carritoCompras):
        self.carritoCompras = carritoCompras
