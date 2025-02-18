@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from PIL import Image, ImageTk
 import os
 from tkinter import messagebox
@@ -65,6 +66,7 @@ class App:
         self.p4.after(100, self.cargar_imagen_inicial)
         self.p4.bind("<Enter>", self.imagenes)
         Inventario=self.instanciar()
+        
         
         
         self.window.mainloop()
@@ -306,10 +308,10 @@ class App:
     def seleccionarProducto(self):
         pass
     
-    def eliminarProductosDelCarrito(self,ventanappal):
+    def eliminarProductosDelCarrito(self, ventana_principal):
         alto = ventana_principal.winfo_height()
-        contenedorcarrito = tk.Frame(self.ventana_principal, height=alto*0.75)
-        contenedorcarrito.pack(side="top", fill="x", padx=10, pady=10)
+        contenedorcarrito = tk.Frame(ventana_principal, height=alto*0.90)
+        contenedorcarrito.pack(side="top", fill="x", padx=10, pady=20)
         contenedorcarrito.columnconfigure(0, weight=1)
         contenedorcarrito.rowconfigure(0, weight=1)
 
@@ -322,23 +324,47 @@ class App:
         )
         titulo.grid(column=0, row=0, sticky="ew", columnspan=2, pady=(0, 10))  # Añadimos un espaciado vertical
 
-        texto = tk.Label(
+        # Crear Treeview para mostrar el contenido del carrito
+        tree = ttk.Treeview(contenedorcarrito, columns=("Producto", "Cantidad"), show="headings")
+        tree.heading("Producto", text="Producto")
+        tree.heading("Cantidad", text="Cantidad")
+        tree.grid(column=0, row=1, sticky="nsew", columnspan=2)
+        carrito.calcularTotal()
+        total_label = tk.Label(
             contenedorcarrito, 
-            text=str(self.carrito),
-            wraplength=600,
-            font=("Arial", 15, "bold"), 
-            justify="left"
+            text=f"Total: {carrito.getPrecioTotal()}", 
+            font=("Arial", 15, "bold"),
+            justify="right"
         )
-        texto.grid(column=0, row=1, sticky="ew", columnspan=2)
+        total_label.grid(column=0, row=2, sticky="e", columnspan=2, pady=(10, 0))
+        # Añadir los productos al Treeview
+        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+            tree.insert("", "end", values=(producto, cantidad))
 
+        # Ajustar las columnas del Treeview
+        for col in tree["columns"]:
+            tree.column(col, anchor="center")
+        
         criterios = ["Producto a eliminar", "Cantidad"]
         valores = [None, "1"]  # Valor inicial para "Cantidad" es 1
         habilitado = [True, True]  # Ambos campos son editables
 
         # Crear el FieldFrame
-        field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado)
-        field_frame.pack(padx=10, pady=10)
-       
+        field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.elimina)
+        field_frame.pack(padx=20, pady=20, expand=True, ipadx=10, ipady=10)
+    def elimina(self,valores):
+        Producto=valores["Producto a eliminar"]
+        cantidad=int(valores["Cantidad"])
+    
+        mensaje=self.main_menu.eliminacion(Producto,cantidad,self.comprador)
+        messagebox.showinfo("Eliminacion",mensaje)
+        self.ejecutar_ambas()
+    def ejecutar_ambas(self):
+        self.limpiar_ventana(ventana_principal, menu_bar)
+        self.eliminarProductosDelCarrito(ventana_principal)
+
+
+        
     def verElCarrito(self):
         pass #Agregar lógica para esta opción
 
@@ -509,7 +535,43 @@ class App:
             if respuesta == True:
                 if len(self.main_menu.getComprador().getValorCupones()) == 0:
                     messagebox.showerror("Cupones insuficientes", "ERROR. No cuentas con cupones suficientes.")
-                # Aun no esta terminado
+                else:
+                    cuadro_texto = tk.Text(ventana, height= 10, width= 40)
+                    cuadro_texto.insert(tk.END, f"Actualmente usted cuenta con {len(self.main_menu.getComprador().getValorCupones())} cupones de descuento. Estos cupones son los siguientes:\n{self.main_menu.getComprador().mostrarCupones()}")
+                    cuadro_texto.config(state= tk.DISABLED)
+                    cuadro_texto.pack(pady= (70, 10))
+
+                    label = tk.Label(ventana, text= "Por favor escribe en el recuadro de abajo tu selección", font=("Arial", 14, "bold"))
+                    label.pack(pady=(0, 10))
+
+                    entry = tk.Entry(ventana, width= 40)
+                    entry.pack(pady=(0, 10))
+
+                    frame_botones = tk.Frame(ventana)
+                    frame_botones.pack()
+
+                    boton_aceptar = tk.Button(frame_botones, text="Aceptar", command=lambda: obtener_cupon(entry))
+                    boton_aceptar.grid(row=0, column=0, padx=10)
+
+                    boton_borrar = tk.Button(frame_botones, text="Borrar", command=lambda: eliminar_texto(entry))
+                    boton_borrar.grid(row=0, column=1, padx=10)
+
+                    def obtener_cupon(entrada_evaluar):
+                        entrada = entrada_evaluar.get()
+                        try:
+                            cupon = int(entrada)
+                            if cupon > len(self.main_menu.getComprador().getValorCupones()) or cupon < 1:
+                                messagebox.showerror("Cupón no valido", "ERROR. El cupón que seleccionaste no existe, intenta nuevamente (solo debes de poner el número del cupón que quieres usar, por ejemplo si quieres usar el primero pon 1)")
+                            else:
+                                pass
+                        except ValueError:
+                            messagebox.showerror("Opción no válida", "ERROR. Por favor introduzca un valor númerico.")
+                    def eliminar_texto(entrada_evaluar):
+                        entrada_evaluar.delete(0, tk.END)
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
+
 
 
     # Método para crear la ventana principal de la aplicación
@@ -518,7 +580,7 @@ class App:
             ventana_inicio.destroy() # Se destruye la ventana de inicio
         global ventana_principal
         ventana_principal = tk.Tk()
-        
+        global menu_bar
         ventana_principal.geometry("800x600")
         ventana_principal.title("Kartera") #Se crea una nueva ventana
         menu_bar = tk.Menu(ventana_principal) # Se crea el menú para esta ventana principal
@@ -651,6 +713,7 @@ if __name__ == "__main__":
     inventario = instanciar()
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
+    cuenta.recargarCuenta(2000)
     comprador.setCuentaBancaria(cuenta)
     carrito = CarritoCompras(comprador, inventario)
     ######################################
@@ -665,6 +728,6 @@ if __name__ == "__main__":
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)
     App(None, test)
-    # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
-    # test = MainMenu()
+    #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
+    #test = MainMenu()
     #test.display()

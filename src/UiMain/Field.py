@@ -25,7 +25,7 @@ class FieldFrame(tk.Frame):
         # Crear los campos de entrada según los criterios
         for i, criterio in enumerate(self.criterios):
             label = tk.Label(self, text=criterio)
-            label.grid(row=i+1, column=0, padx=5, pady=5, sticky='w')
+            label.grid(row=i+1, column=0, padx=5, pady=5, sticky='nsew')
             
             entry = tk.Entry(self)
             if self.valores[i]:
@@ -45,6 +45,8 @@ class FieldFrame(tk.Frame):
         # Agregar botón para borrar
         boton_borrar = tk.Button(self, text="Borrar", command=self.limpiar_campos)
         boton_borrar.grid(row=len(self.criterios)+1, column=1, padx=5, pady=5)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
     def getValue(self, criterio):
         #Devuelve el valor del criterio solicitado

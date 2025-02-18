@@ -71,5 +71,5 @@ class Producto:
     def set_categoria(self, categoria):
         self.categoria = categoria
     def __str__(self):
-       return f"Producto: {self.nombre}\nPrecio unitario: {self.precio}"
+       return f"{self.nombre}"
 
