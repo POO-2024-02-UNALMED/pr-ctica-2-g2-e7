@@ -2,7 +2,7 @@ from ..tienda.Producto import Producto
 import random
 
 class Inventario:
-    listaCategorias=[]
+    
     def __init__(self, categoriaTecnologia, categoriaAseo, categoriaComida, categoriaPapeleria, categoriaJugueteria, categoriaDeportes):
         self.categoriaTecnologia = categoriaTecnologia
         self.categoriaAseo = categoriaAseo
@@ -11,12 +11,13 @@ class Inventario:
         self.categoriaJugueteria = categoriaJugueteria
         self.categoriaDeportes = categoriaDeportes
         self.productosTotal = []
-        Inventario.listaCategorias.append(categoriaTecnologia)
-        Inventario.listaCategorias.append(categoriaAseo)
-        Inventario.listaCategorias.append(categoriaComida)
-        Inventario.listaCategorias.append(categoriaPapeleria)
-        Inventario.listaCategorias.append(categoriaJugueteria)
-        Inventario.listaCategorias.append(categoriaDeportes)
+        self.listaCategorias=[]
+        self.listaCategorias.append(categoriaTecnologia)
+        self.listaCategorias.append(categoriaAseo)
+        self.listaCategorias.append(categoriaComida)
+        self.listaCategorias.append(categoriaPapeleria)
+        self.listaCategorias.append(categoriaJugueteria)
+        self.listaCategorias.append(categoriaDeportes)
 
     def verificarProducto(self, producto, unidades):
         categoria = producto.getCategoria()
@@ -92,23 +93,23 @@ class Inventario:
         if categoria == Producto.Categoria.DEPORTES:
             self.categoriaDeportes.append(producto)
 
-    def crearCatalogo(self):
-        #creamos una matriz para que almacene los productos 
-        catalogo = [[None] * 6] * 5
+    import random
 
-        fila=0
-        columna=0
-        for i in range(0,30,1):
-           random_generator = random.Random()
-           if i>=16:
-               catalogo[fila][columna] = self.listaCategorias[random.randint(0, 5)][i - 16]
-           else:
-               catalogo[fila][columna] = self.listaCategorias[random.randint(0, 5)][i]
-           if columna !=6:
-               columna+=1
-           else:
-               columna=0
-               if fila!=4:
-                   fila+=1
+    def crearCatalogo(self):
+        # Creamos una matriz de 5x6 usando list comprehension
+        catalogo = [[None] * 6 for _ in range(5)]
+
+        for i in range(30):
+            fila = i // 6  # Divide en filas (cada 6 elementos pasa a la siguiente fila)
+            columna = i % 6  # Asegura que las columnas sean de 0 a 5
+        
+            # Selecciona una categoría aleatoria (asegúrate de que tiene suficientes elementos)
+            categoria = random.randint(0, 5)
+        
+            # Accede al elemento correspondiente dentro de la categoría
+            indice = i - 16 if i >= 16 else i
+            catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+
         return catalogo
+
                 

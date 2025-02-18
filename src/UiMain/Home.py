@@ -292,7 +292,8 @@ class App:
     #    V    V    V    V    V    V    V    V
 
     def mostrarCatalogo(self):
-        
+
+        catalogo = instanciar().crearCatalogo()        
 
         frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
         frameCatalogo.pack(expand= True)

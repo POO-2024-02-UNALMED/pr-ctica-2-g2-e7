@@ -64,6 +64,7 @@ def instanciar():
 
             id += 1
 
+    
     return inventario
     
     # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
