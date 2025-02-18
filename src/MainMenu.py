@@ -391,109 +391,78 @@ class MainMenu:
             return True
         
     
-    def buyProcessDisplay(self):
-        while True:
-            print("================")
-            print("¿Desea usted aplicar un cupón de descuento en su compra?")
-            print("1. Si")
-            print("2. No")
-            print("3. Regresar al menú del comprador")
+    def buyProcessDisplay(self, aplica_o_no, cupon = None):
+        mensaje = ""
+        if aplica_o_no == True:
+            precioTotal = self.comprador.getCarritoCompras().getPrecioTotal() #Se obtiene el precio total de la compra (sin el descuento generado por el cupón).
+            descuento = self.comprador.getValorCupones()[cupon - 1] / 100 # Se calcula el descuento que se le aplicará al precio total de la compra.
+            precioConDescuento = precioTotal - (precioTotal * descuento) # Se calcula el precio total de la compra con el descuento aplicado.
+            self.comprador.getCarritoCompras().setDescuentoAplicadoCompra(cupon - 1) # guarda el descuento aplicado a la compra en el carrito de compras.
+            mensaje += f"El precio total de la compra es de: {precioTotal}. Pero con descuento queda en: {precioConDescuento}. Ahora se prosigue con el pago.\n"
+            self.comprador.getCarritoCompras().setPrecioTotal(precioConDescuento) # Se actualiza el precio total de la compra en el carrito de compras.
+            self.comprador.getCarritoCompras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
+            # Espacio para lo de las membresias (para que Santiago lo implemente)
 
-            try:
-                opcion = int(input("Seleccione una opción: "))
-                if opcion == 1:
-                    if len(self.comprador.getValorCupones()) == 0:
-                        print("ERROR. No cuentas con cupones disponibles")
-                    else:
-                        print(f"Actualmente usted cuenta con {len(self.comprador.getValorCupones())} cuponesde descuento. Estos cupones son los siguientes:")
-                        print(self.comprador.mostrarCupones()) #Se muestra por pantalla y en orden los cupones disponibles.
+            self.comprador.pago(self.comprador, self.vendedor, precioConDescuento, "compra") #Se inicia el proceso de pago.
+            self.comprador.getValorCupones().pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
+            self.comprador.cantidadCupones-= 1 # Se disminuye la cantidad de cupones en 1.
+            mensaje += "============COMPRA===========\n"
+            mensaje += "Resumen de la compra:\n"
+            mensaje += f"{self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))}\n" # Se muestra por pantalla la factura.
+            mensaje += "¡Muchas gracias por su compra!\n"
+            if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
+                mensaje += f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.\n"
+                self.comprador.cantidadCupones += 1
+            mensaje += f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}\n"
 
-                        try:
-                            cupon = int(input("Seleccione el cupón que usted desea aplicar: "))
-                            if cupon > len(self.comprador.getValorCupones()) or cupon < 1:
-                                print("ERROR. Por favor seleccione un cupón válido.")
-                            else:
-                                precioTotal = self.comprador.getCarritoCompras().getPrecioTotal() #Se obtiene el precio total de la compra (sin el descuento generado por el cupón).
-                                descuento = self.comprador.getValorCupones()[cupon - 1] / 100 # Se calcula el descuento que se le aplicará al precio total de la compra.
-                                precioConDescuento = precioTotal - (precioTotal * descuento) # Se calcula el precio total de la compra con el descuento aplicado.
-                                self.comprador.getCarritoCompras().setDescuentoAplicadoCompra(cupon - 1) # guarda el descuento aplicado a la compra en el carrito de compras.
+            self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
 
-                                print(f"El precio total de la compra es de: {precioTotal}. Pero con descuento queda en: {precioConDescuento}. Ahora se prosigue con el pago.")
-                                self.comprador.getCarritoCompras().setPrecioTotal(precioConDescuento) # Se actualiza el precio total de la compra en el carrito de compras.
-                                self.comprador.getCarritoCompras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
+            self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
+
+            cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
+            for producto in self.comprador.getCarritoCompras().getListaItems():
+                verificacion = producto.verificarCantidadProductos()
+                cantidadProductos.append(verificacion)
+                producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
+
+            for i in range(len(cantidadProductos)):
+                if cantidadProductos[i] == True:
+                    self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
                                 
-                                # Espacio para lo de las membresias (para que Santiago lo implemente)
+            self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
+        
+        elif aplica_o_no == False:
+            self.comprador.getCarritoCompras().restarProductosAlComprar()
+            self.comprador.pago(self.comprador, self.vendedor, self.comprador.getCarritoCompras().getPrecioTotal(), "compra") #Se inicia el proceso de pago.
 
-                                self.comprador.pago(self.comprador, self.vendedor, precioConDescuento, "compra") #Se inicia el proceso de pago.
-                                self.comprador.getValorCupones().pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
-                                self.comprador.cantidadCupones-= 1 # Se disminuye la cantidad de cupones en 1.
-                                print("============COMPRA===========")
-                                print("Resumen de la compra:")
-                                print(self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))) # Se muestra por pantalla la factura.
-                                print("¡Muchas gracias por su compra!")
-                                if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
-                                    print(f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.")
-                                    self.comprador.cantidadCupones += 1
-                                print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
-                                
-                                self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
+            # Espacio para lo de las membresias (para que Santiago lo implemente)
 
-                                self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
+            mensaje += f"El precio total de la compra es de: {self.comprador.getCarritoCompras().getPrecioTotal()}. Ahora se prosigue con el pago.\n"
+            mensaje += "============COMPRA===========\n"
+            mensaje += "Resumen de la compra:\n"
+            mensaje += f"{self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))}\n" # Se muestra por pantalla la factura.
+            mensaje += "¡Muchas gracias por su compra!\n"
+            if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
+                mensaje += f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.\n"
+                self.comprador.cantidadCupones += 1
+            mensaje += f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}\n"
 
-                                cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
-                                for producto in self.comprador.getCarritoCompras().getListaItems():
-                                    verificacion = producto.verificarCantidadProductos()
-                                    cantidadProductos.append(verificacion)
-                                    producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
+            self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
 
-                                for i in range(len(cantidadProductos)):
-                                    if cantidadProductos[i] == True:
-                                        self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
-                                
-                                self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
-                                break
-                        except ValueError:
-                            print("ERROR. Ingrese un valor válido.")
-                        break
-                elif opcion == 2:
-                    self.comprador.getCarritoCompras().restarProductosAlComprar()
-                    self.comprador.pago(self.comprador, self.vendedor, self.comprador.getCarritoCompras().getPrecioTotal(), "compra") #Se inicia el proceso de pago.
+            self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
 
-                    # Espacio para lo de las membresias (para que Santiago lo implemente)
+            cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
+            for producto in self.comprador.getCarritoCompras().getListaItems():
+                verificacion = producto.verificarCantidadProductos()
+                cantidadProductos.append(verificacion)
+                producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
 
-                    print(f"El precio total de la compra es de: {self.comprador.getCarritoCompras().getPrecioTotal()}. Ahora se prosigue con el pago.")
-                    print("============COMPRA===========")
-                    print("Resumen de la compra:")
-                    print(self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))) # Se muestra por pantalla la factura.
-                    print("¡Muchas gracias por su compra!")
-                    if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
-                        print(f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.")
-                        self.comprador.cantidadCupones += 1
-                    print(f"Saldo restante en su cuenta: {self.comprador.getCuentaBancaria().getSaldo()}")
+            for i in range(len(cantidadProductos)):
+                if cantidadProductos[i] == True:
+                    self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
 
-                    self.comprador.recibirNotificacion(f"Se le informa que su compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()} ha sido realizada con éxito.", "¡Compra realizada exitosamente!") # Se envía la notificacion al comprador.
-
-                    self.vendedor.recibirNotificacion(f"Se le informa que el usuario {self.comprador.getNombre()} ha realizado una compra por un valor de {self.comprador.getCarritoCompras().getPrecioTotal()}.", "Se le informa de una nueva compra") # Se envía la notificacion al vendedor.
-
-                    cantidadProductos = [] #Esta lista guarda la informacion de se hay productos por agotarse o no para luego enviar una notificación al vendedor.
-                    for producto in self.comprador.getCarritoCompras().getListaItems():
-                        verificacion = producto.verificarCantidadProductos()
-                        cantidadProductos.append(verificacion)
-                        producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
-
-                    for i in range(len(cantidadProductos)):
-                        if cantidadProductos[i] == True:
-                            self.vendedor.recibirNotificacion(f"Se le informa que el producto {self.comprador.getCarritoCompras().getListaItems()[i].getNombre()} está por agotarse.", "Producto por agotarse") # Se envía la notificacion al vendedor.
-
-                    self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
-                    break
-                elif opcion == 3:
-                    print("Regresando al menú del comprador...")
-                    break
-                else:
-                    print("ERROR. Por favor ingrese alguna de las opciones mostradas")
-            except ValueError:
-                print("ERROR. Ingrese una cantidad válida.")
+            self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
+        return mensaje
 
 
     def voucherMenuDisplay(self):

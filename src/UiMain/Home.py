@@ -562,7 +562,7 @@ class App:
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
-    def menuCompra(self, ventana):
+    def menuCompra(self, ventana, menu_bar):
         if len(self.main_menu.getComprador().getCarritoCompras().getListaItems()) == 0:
             messagebox.showerror("Carrito de compras vacío", "ERROR. Por favor verifique que su carrito de compras no este vacío.")
         elif self.main_menu.verificacionCompra() == False:
@@ -601,14 +601,27 @@ class App:
                             if cupon > len(self.main_menu.getComprador().getValorCupones()) or cupon < 1:
                                 messagebox.showerror("Cupón no valido", "ERROR. El cupón que seleccionaste no existe, intenta nuevamente (solo debes de poner el número del cupón que quieres usar, por ejemplo si quieres usar el primero pon 1)")
                             else:
-                                pass
+                                self.realizarCompra(ventana, menu_bar, True, cupon)
                         except ValueError:
                             messagebox.showerror("Opción no válida", "ERROR. Por favor introduzca un valor númerico.")
                     def eliminar_texto(entrada_evaluar):
                         entrada_evaluar.delete(0, tk.END)
+            elif respuesta == False:
+                self.realizarCompra(ventana, menu_bar, False, None)
+    
+    def realizarCompra(self, ventana, menu_bar, aplica_o_no = None, cupon = None):
+        self.limpiar_ventana(ventana, menu_bar)
+        label = tk.Label(ventana, text= "Resumen de la compra", font=("Arial", 16, "bold"))
+        label.pack()
+        cuadro_texto = tk.Text(ventana, height= 20, width= 50)
+        cuadro_texto.insert(tk.END, self.main_menu.buyProcessDisplay(aplica_o_no, cupon))
+        cuadro_texto.config(state= tk.DISABLED)
+        cuadro_texto.pack()
+        label2 = tk.Label(ventana, text= "¡Muchas gracias por su compra!", font=("Arial", 16, "bold"))
+        label2.pack()
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
-    # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
+    # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
 
 
 
@@ -636,7 +649,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "3. Realizar Devolución", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuDevolucion(menu_bar)])
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "4. Realizar Compra", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCompra(ventana_principal)])
+        submenu_comprador.add_command(label= "4. Realizar Compra", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCompra(ventana_principal, menu_bar)])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "5. Gestionar cupones")
         submenu_comprador.add_separator()
