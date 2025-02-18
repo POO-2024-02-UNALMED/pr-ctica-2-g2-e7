@@ -10,9 +10,6 @@ class Producto:
         JUGUETERIA = "Jugueteria"
         DEPORTES = "Deportes"
 
-        def __init__(self, nombre):
-            self._nombre = nombre
-
 
     def __init__(self, cantidad, cantidadAlerta, cantidadVendida, cantidadDevuelta, categoria, ID, nombre, precio, retornable):
         self.cantidad = cantidad
@@ -79,8 +76,14 @@ class Producto:
         self.categoria = categoria
 
     def __str__(self):
-       return f"{self.nombre}"
+       return f"Producto seleccionado: {self.nombre}\n \
+                ID: {self.ID}\n \
+                Retornable: {'Sí' if self.retornable else 'No'}\n \
+                Categoría: {self.categoria.value} \n \
+                Precio: {self.precio}\n \
+                Cantidad disponible: {self.cantidad}"
     
     def isRetornable(self):
         return self.retornable
 
+        

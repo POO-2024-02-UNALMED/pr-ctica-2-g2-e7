@@ -291,23 +291,49 @@ class App:
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
 
-    def mostrarCatalogo(self):
+    def mostrarCatalogo(self, menu_bar):
+        #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
+        #sin eliminarlo
 
         catalogo = instanciar().crearCatalogo()        
 
         frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
         frameCatalogo.pack(expand= True)
 
-        titulo = tk.Label(frameCatalogo, text= "tuki", font= ("Arial", 10))
-        titulo.pack(expand = True)
+        for fila in range(0, 5):
+            for columna in range(0,6):
+                producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda p=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(p)])
+                #lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verHistorialCompras()]
+                producto.grid(row= fila, column= columna, padx= 10, pady= 10)
 
-      #  for fila in range(0, 4):
-       #     for columna in range(0,5):
-        #        producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), command= self.seleccionarProducto())
-         #       producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+    def seleccionarProducto(self, producto):
+        #print(producto.getNombre())
+        
+        frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+        frameProducto.pack(expand= True, fill= "both")
 
-    def seleccionarProducto(self):
-        pass
+        infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+        infoProducto.pack(pady= 10)
+
+        frameBotones = tk.Frame(frameProducto, bg= "red", width= 500, height= 200)
+        frameBotones.pack()
+
+        botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+        botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+        botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+        botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+        
+
+    #FALTA POR IMPLEMENTAR
+    def agregarAlCarrito(self, producto, menu_bar):
+        frameAgregar = tk.Frame(ventana_principal, bg= "lightblue")
+        frameAgregar.pack(expand= True, fill= "both")
+
+        mensaje = tk.Label(frameAgregar, text= "Agregar al carrito", font= ("Arial", 70, "bold"))
+        mensaje.pack(expand= True)
     
     def eliminarProductosDelCarrito(self, ventana_principal):
     
@@ -355,6 +381,8 @@ class App:
         # Crear el FieldFrame
         field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.elimina)
         field_frame.pack(padx=20, pady=20, expand=True, ipadx=10, ipady=10)
+
+
     def elimina(self,valores):
         Producto=valores["Producto a eliminar"]
         cantidad=int(valores["Cantidad"])
@@ -413,7 +441,7 @@ class App:
         titulo = tk.Label(frameCarrito, text= "Menú Carrito", font= ("Arial", 10))
         titulo.grid(row= 0, column= 1, columnspan=2, padx= 10, pady= 10)
 
-        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo()])
+        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo(menu_bar)])
         opcion1.grid(row= 1, column= 1, padx= 10, pady= 10)
 
         opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.eliminarProductosDelCarrito(ventana_principal)])
