@@ -316,7 +316,7 @@ class App:
         infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
         infoProducto.pack(pady= 10)
 
-        frameBotones = tk.Frame(frameProducto, bg= "red", width= 500, height= 200)
+        frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
         frameBotones.pack()
 
         botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
