@@ -703,6 +703,52 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
 
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+    def menuCupones(self, ventana, menu_bar, mainMenu):
+        main_menu = mainMenu
+        def eliminar_cupones(valores):
+            try:
+                cupon_eliminar = int(valores["Cupón"])
+                if cupon_eliminar < 1 or cupon_eliminar > len(main_menu.getComprador().getValorCupones()):
+                    messagebox.showerror("Opción no válida", "ERROR. Por favor seleccionar solo una de las opciones disponibles.")
+                else:
+                    mensaje = main_menu.voucherMenuDisplay(cupon_eliminar)
+                    messagebox.showinfo("Cupón eliminado", mensaje)
+                    self.limpiar_ventana(ventana, menu_bar)
+            except ValueError:
+                messagebox.showerror("Input incorrecto", "ERROR. Por favor introduzca un valor númerico.")
+
+        if len(self.main_menu.getComprador().getValorCupones()) == 0:
+            messagebox.showwarning("No hay cupones", "Lo sentimos. Actualmente no dispones de cupones, si tienes suerte ganarás alguno durante una compra.")
+        else:
+            respuesta = messagebox.askyesno("Eliminar cupón", "¿Deseas eliminar algún cupón?")
+            if respuesta == True:
+                titulo = tk.Label(ventana, text= "Eliminar cupones", font=("Arial", 16, "bold"))
+                titulo.pack(pady=(40, 5))
+                descripcion = tk.Label(ventana, text= "Por favor ingrese el valor correspondiente al cupón que usted desea eliminar", font=("Arial", 12, "bold"))
+                descripcion.pack(pady= (5, 10))
+                cuadro_texto = tk.Text(ventana, height= 10, width= 50)
+                cuadro_texto.insert(tk.END, f"Cupones disponibles:\n{self.main_menu.getComprador().mostrarCupones()}")
+                cuadro_texto.config(state= tk.DISABLED)
+                cuadro_texto.pack(pady=(0, 5))
+
+                criterios = ["Cupón"]
+                valores_iniciales = [None]
+                ff = FieldFrame(ventana, "Criterios", criterios, "Valores", valores_iniciales, funcion_llamado = eliminar_cupones)
+                ff.pack()
+            else:
+                titulo = tk.Label(ventana, text= "Cupones", font=("Arial", 16, "bold"))
+                titulo.pack(pady=(40, 5))
+                cuadro_texto = tk.Text(ventana, height= 10, width= 50)
+                cuadro_texto.insert(tk.END, f"Cupones disponibles:\n{self.main_menu.getComprador().mostrarCupones()}")
+                cuadro_texto.config(state= tk.DISABLED)
+                cuadro_texto.pack(pady=(0, 5))
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
+    #    |    |    |    |    |    |    |    |    |
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES
+
 
 
     # Método para crear la ventana principal de la aplicación
@@ -731,7 +777,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "4. Realizar Compra", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCompra(ventana_principal, menu_bar)])
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "5. Gestionar cupones")
+        submenu_comprador.add_command(label= "5. Gestionar cupones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCupones(ventana_principal, menu_bar, self.main_menu)])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "6. Ver historial de compras", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verHistorialCompras()])
         submenu_comprador.add_separator()
