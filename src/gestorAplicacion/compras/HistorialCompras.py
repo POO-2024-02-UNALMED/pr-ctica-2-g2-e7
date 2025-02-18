@@ -30,14 +30,14 @@ class HistorialCompras:
         return None
 
     def mostrar_factura(self):
-        # (101, [("Laptop",1, 1), ("Mouse",2, 2)], "$1080"),
+        # (101, [("Laptop",1, 1, True), ("Mouse",2, 3, False)], "$1080"). (ESTE ES EL FORMATO DE RETORNO)
         lista_facturas = []
         for factura in self.facturas:
             lista_items = []
             for i in range(len(factura.getCarritoCompras().getListaItems())):
                 item = factura.getCarritoCompras().getListaItems()[i]
                 cantidad = factura.getCarritoCompras().getCantidadPorProducto()[i]
-                lista_items.append((item.getNombre(),item.getID(), cantidad))
+                lista_items.append((item.getNombre(),item.getID(), cantidad, item.isRetornable()))
             lista_facturas.append((factura.getIDFactura(), lista_items, factura.getCarritoCompras().getPrecioTotal()))
         return lista_facturas
     

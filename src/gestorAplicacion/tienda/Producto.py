@@ -48,6 +48,13 @@ class Producto:
     def setCantidadVendida(self, value):
         self.cantidadVendida = value
     
+    def setCantidadDevuelta(self, cantidadDevuelta):
+        self.cantidadDevuelta = cantidadDevuelta
+
+    def getCantidadDevuelta(self):
+        return self.cantidadDevuelta
+
+    
     def verificarCantidadProductos(self):
         if self.cantidad <= self.cantidadAlerta:
             return True
@@ -70,6 +77,10 @@ class Producto:
 
     def set_categoria(self, categoria):
         self.categoria = categoria
+
     def __str__(self):
        return f"{self.nombre}"
+    
+    def isRetornable(self):
+        return self.retornable
 
