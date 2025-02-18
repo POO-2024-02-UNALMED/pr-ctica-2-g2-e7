@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import os
 from tkinter import messagebox
+from tkinter import ttk
 import sys
 import os
 
@@ -415,6 +416,45 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
 
+    # MÉTODOS PRESENTES PARA HISTORIAL DE COMPRAS
+    #    |    |    |    |    |    |    |    |    
+    #    V    V    V    V    V    V    V    V    
+
+    def verHistorialCompras(self):
+        # Crear un frame para la tabla
+        frameHistorial = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
+        frameHistorial.pack(expand=True, fill="both")
+
+        titulo = tk.Label(frameHistorial, text="Historial de Compras", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        # Crear tabla con ttk.Treeview
+        columnas = ("ID Compra", "Producto", "Cantidad", "Fecha", "Total")
+        self.tabla = ttk.Treeview(frameHistorial, columns=columnas, show="headings")
+
+        #Encabezados
+        for col in columnas:
+            self.tabla.heading(col, text=col)
+            self.tabla.column(col, width=100, anchor="center")
+
+        self.tabla.pack(expand=True, fill="both")
+
+        historial = self.obtenerHistorialCompras()
+        for compra in historial:
+            self.tabla.insert("", "end", values=compra)
+
+    def obtenerHistorialCompras(self):
+        # Simulación de datos (agregar logica)
+        return [
+            (101, "Laptop", 1, "2025-02-15", "$1000"),
+            (102, "Mouse", 2, "2025-02-10", "$40"),
+            (103, "Teclado", 1, "2025-02-08", "$80"),
+        ]
+
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
+    #    |    |    |    |    |    |    |    |    
+    # MÉTODOS PRESENTES PARA HISTORIAL DE COMPRAS
+
     # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
@@ -500,7 +540,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "5. Gestionar cupones")
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "6. Ver historial de compras")
+        submenu_comprador.add_command(label= "6. Ver historial de compras", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verHistorialCompras()])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "7. Ver Notificaciones")
         submenu_comprador.add_separator()
