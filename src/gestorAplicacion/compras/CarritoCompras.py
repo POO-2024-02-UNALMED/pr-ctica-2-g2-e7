@@ -56,8 +56,10 @@ class CarritoCompras:
                 maseconomico=producto
         return maseconomico
     def calcularTotal(self):
+        self.precioTotal=0
         for i in range(len(self.listaItems)):
             self.precioTotal += self.listaItems[i].getPrecio() * self.cantidadPorProducto[i]
+            
         
         if self.descuentoAplicadoCompra != 0:
       
@@ -155,7 +157,7 @@ class CarritoCompras:
         for i in range(len(self.listaItems)):
             sb.append(f"{self.listaItems[i]} cantidad: {self.cantidadPorProducto[i]}\n\n")
         
-        self.calcularTotal()
+        
         sb.append(f"total: {self.precioTotal}\n")
         
         return "".join(sb)

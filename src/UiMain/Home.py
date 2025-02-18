@@ -308,6 +308,7 @@ class App:
         pass
     
     def eliminarProductosDelCarrito(self, ventana_principal):
+    
         alto = ventana_principal.winfo_height()
         contenedorcarrito = tk.Frame(ventana_principal, height=alto*0.90)
         contenedorcarrito.pack(side="top", fill="x", padx=10, pady=20)
@@ -324,6 +325,7 @@ class App:
         titulo.grid(column=0, row=0, sticky="ew", columnspan=2, pady=(0, 10))  # Añadimos un espaciado vertical
 
         # Crear Treeview para mostrar el contenido del carrito
+        global tree
         tree = ttk.Treeview(contenedorcarrito, columns=("Producto", "Cantidad"), show="headings")
         tree.heading("Producto", text="Producto")
         tree.heading("Cantidad", text="Cantidad")
@@ -347,7 +349,7 @@ class App:
         criterios = ["Producto a eliminar", "Cantidad"]
         valores = [None, "1"]  # Valor inicial para "Cantidad" es 1
         habilitado = [True, True]  # Ambos campos son editables
-
+       
         # Crear el FieldFrame
         field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.elimina)
         field_frame.pack(padx=20, pady=20, expand=True, ipadx=10, ipady=10)
@@ -355,12 +357,21 @@ class App:
         Producto=valores["Producto a eliminar"]
         cantidad=int(valores["Cantidad"])
     
-        mensaje=self.main_menu.eliminacion(Producto,cantidad,self.comprador)
+        mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
         messagebox.showinfo("Eliminacion",mensaje)
         self.ejecutar_ambas()
     def ejecutar_ambas(self):
+        self.actualizar_treeview()
         self.limpiar_ventana(ventana_principal, menu_bar)
+        
         self.eliminarProductosDelCarrito(ventana_principal)
+    def actualizar_treeview(self):
+        # Limpiar el Treeview antes de actualizar
+        for item in tree.get_children():
+            tree.delete(item)
+        # Repoblar el Treeview con los productos actualizados
+        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+            tree.insert("", "end", values=(producto, cantidad))
 
 
         
