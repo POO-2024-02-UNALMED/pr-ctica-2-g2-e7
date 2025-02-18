@@ -468,6 +468,22 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
 
+    # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+    def menuCompra(self, ventana):
+        if len(self.main_menu.getComprador().getCarritoCompras().getListaItems()) == 0:
+            messagebox.showerror("Carrito de compras vacío", "ERROR. Por favor verifique que su carrito de compras no este vacío.")
+        elif self.main_menu.verificacionCompra() == False:
+            messagebox.showerror("Saldo insuficiente", "ERROR. No cuentas con saldo suficiente para realizar la compra.")
+        else:
+            self.main_menu.getComprador().getCarritoCompras().calcularTotal()
+            respuesta = messagebox.askyesno("Aplicar Cupón", "¿Desea aplicar un cupón de descuento durante la compra?")
+            if respuesta == True:
+                if len(self.main_menu.getComprador().getValorCupones()) == 0:
+                    messagebox.showerror("Cupones insuficientes", "ERROR. No cuentas con cupones suficientes.")
+                # Aun no esta terminado
+
 
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
@@ -493,7 +509,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "3. Realizar Devolución", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuDevolucion(menu_bar)])
         submenu_comprador.add_separator()
-        submenu_comprador.add_command(label= "4. Realizar Compra")
+        submenu_comprador.add_command(label= "4. Realizar Compra", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.menuCompra(ventana_principal)])
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "5. Gestionar cupones")
         submenu_comprador.add_separator()
@@ -599,11 +615,23 @@ class App:
         return inventario 
 
 if __name__ == "__main__":
+    ########################################################
+    #Esto es de prueba, no borrar hasta que Nicolás diga
+    producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
+    producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
+    producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
+    ########################################################
     inventario = instanciar()
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
     comprador.setCuentaBancaria(cuenta)
     carrito = CarritoCompras(comprador, inventario)
+    ######################################
+    #Esto es de prueba, no borrar hasta que Nicolás diga
+    carrito.añadirProducto(producto1)
+    carrito.añadirProducto(producto2, 5)
+    carrito.añadirProducto(producto3, 2)
+    ######################################
     comprador.setCarritoCompras(carrito)
     vendedor = Vendedor("pedro", None, inventario, None)
     cuenta2 = CuentaBancaria(vendedor)
