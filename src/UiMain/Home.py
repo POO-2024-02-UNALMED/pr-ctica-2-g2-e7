@@ -30,13 +30,13 @@ from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
 from UiMain.Field import FieldFrame
+from baseDatos.Serializador import serializar
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
         # POR FAVOR NO BORRAR ESTO
         if ventana_principal != None:
             ventana_principal.destroy() # Esto es para destruir la nueva ventana principal
-        
         #Catálogo de productos a mostrar por pantalla
         #self.catalogo = catalogo = instanciar().crearCatalogo()
         
@@ -792,7 +792,7 @@ class App:
         menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
         menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
         menu_archivo.add_separator()
-        menu_archivo.add_command(label= "Salir", command= lambda: App(ventana_principal)) # Se crea una nueva ventana de inicio y se destruye esta ventana principal
+        menu_archivo.add_command(label= "Salir", command= lambda: [self.serializar_main_menu(), App(ventana_principal, self.main_menu)]) # Se crea una nueva ventana de inicio y se destruye esta ventana principal
         menu_bar.add_cascade(label= "Procesos y consultas", menu= menu_proceso_consultas)
         menu_bar.add_cascade(label= "Ayuda", menu= menu_ayuda)
         menu_ayuda.add_command(label= "Desarrolladores", command= self.ayuda)
@@ -879,6 +879,10 @@ class App:
                 id += 1
 
         return inventario 
+    
+    def serializar_main_menu(self):
+        serializar(self.main_menu)
+
 
 if __name__ == "__main__":
     ########################################################
@@ -905,6 +909,8 @@ if __name__ == "__main__":
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)
     App(None, test)
-    #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
-    #test = MainMenu()
-    #test.display()
+    #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java), es decir comentan ela variable que dice test de arriba 
+    # y la creación de App de arriba y descomentan lo de abajo. Para que funcione la serialización deben de salirse desde la misma interfaz y no cerrarla con el botón de la x.
+    #Si tienen dudas de este nuevo proceso no duden en preguntarle a Nicolás.
+    # test = MainMenu()
+    # App(None, test)
