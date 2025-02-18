@@ -556,26 +556,33 @@ class App:
 
         self.cargarNotificaciones(self.notificaciones, self.tabla, self.texto_mensaje)
 
+        self.tabla.bind("<<TreeviewSelect>>", self.mostrarMensaje)
 
     def cargarNotificaciones(self, notificaciones, tabla, texto_mensaje):
         for notificacion in notificaciones:
             fecha, destinatario, asunto, mensaje = notificacion
             tabla.insert("", "end", values=(fecha, destinatario, asunto))
 
-            self.tabla.bind("<<TreeviewSelect>>", lambda event: self.mostrarMensaje(event, mensaje))
             
+
     
-    def mostrarMensaje(self, evento, mensaje):
+    def mostrarMensaje(self, evento):
         item_seleccionado = self.tabla.selection()
         if item_seleccionado:
             item = self.tabla.item(item_seleccionado[0])["values"]
             if item:
                 fecha, destinatario, asunto = item
+                mensaje = next(noti[3] for noti in self.notificaciones if noti[:3] == tuple(item))
+
+                self.texto_mensaje.config(state="normal")
+
                 self.texto_mensaje.delete("1.0", tk.END)
                 self.texto_mensaje.insert(tk.END, f"Fecha: {fecha}\n")
                 self.texto_mensaje.insert(tk.END, f"Destinatario: {destinatario}\n")
                 self.texto_mensaje.insert(tk.END, f"Asunto: {asunto}\n\n")
                 self.texto_mensaje.insert(tk.END, f"Mensaje:\n{mensaje}")
+
+                self.texto_mensaje.config(state="disabled")
                      
 
     def obtenerNotificaciones(self, usuario):
