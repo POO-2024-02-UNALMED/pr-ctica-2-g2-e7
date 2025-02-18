@@ -322,7 +322,20 @@ class MainMenu:
                             categoria_producto_reemplazar.append(reemplazo)
 
                             print("Producto reemplazado en la lista de recomendaciones.")
-                
+    
+    def ver_historial_compras(self):
+        if len(self.comprador.getHistorialCompras().getFacturas()) == 0:
+            print("Usted no ha realizado compras hasta el momento.\n")
+        else:
+            print("Historial de compras: ")
+            print(self.comprador.mostrarHistorialCompras())
+
+    def ver_notificaciones(self, usuario):
+        if len(usuario.getNotificaciones()) == 0:
+            print("Usted no tiene notificaciones...\n")
+        else: 
+            print(usuario.mostrarNotificaciones() + "\n")
+
     def buyerMenuDisplay(self):
         while True:
             print("===== MENÚ COMPRADOR =====")
@@ -355,16 +368,9 @@ class MainMenu:
                 elif opcion == 5:
                     self.voucherMenuDisplay()
                 elif opcion == 6:
-                    if len(self.comprador.getHistorialCompras().getFacturas()) == 0:
-                        print("Usted no ha realizado compras hasta el momento.\n")
-                    else:
-                        print("Historial de compras: ")
-                        print(self.comprador.mostrarHistorialCompras())
+                    self.ver_historial_compras()
                 elif opcion == 7:
-                    if len(self.comprador.getNotificaciones()) == 0:
-                        print("Usted no tiene notificaciones...\n")
-                    else: 
-                        print(self.comprador.mostrarNotificaciones() + "\n")
+                    self.ver_notificaciones(self.comprador)
                 elif opcion == 8:
                     print("Volviendo al Menú Principal...")
                     break
@@ -596,10 +602,7 @@ class MainMenu:
                     print("========= CUENTA BANCARIA =========")
                     print(self.vendedor.consultarCuentaBancaria())
                 elif opcion == 3:
-                    if len(self.vendedor.getNotificaciones()) == 0:
-                        print("Usted no tiene notificaciones...\n")
-                    else: 
-                        print(self.vendedor.mostrarNotificaciones() + "\n")
+                    self.ver_notificaciones(self.vendedor)
                 elif opcion == 4:
                     print("Volviendo al Menú Principal...")
                     break

@@ -492,6 +492,16 @@ class App:
     #    |    |    |    |    |    |    |    |    
     # MÉTODOS PRESENTES PARA HISTORIAL DE COMPRAS
 
+    # MÉTODOS PRESENTES PARA NOTIFICACIONES
+    #    |    |    |    |    |    |    | 
+    #    V    V    V    V    V    V    V 
+
+    
+
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ        
+    #    |    |    |    |    |    |    |    
+    # MÉTODOS PRESENTES PARA NOTIFICACIONES
+
     # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
