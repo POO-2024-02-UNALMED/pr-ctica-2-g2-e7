@@ -325,10 +325,9 @@ class MainMenu:
     
     def ver_historial_compras(self):
         if len(self.comprador.getHistorialCompras().getFacturas()) == 0:
-            print("Usted no ha realizado compras hasta el momento.\n")
+            return "Usted no ha realizado compras hasta el momento."
         else:
-            print("Historial de compras: ")
-            print(self.comprador.mostrarHistorialCompras())
+            return self.comprador.mostrarHistorialCompras()
 
     def ver_notificaciones(self, usuario):
         if len(usuario.getNotificaciones()) == 0:

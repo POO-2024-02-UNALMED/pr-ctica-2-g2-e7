@@ -483,7 +483,7 @@ class App:
         titulo.pack(pady=10)
 
         # Crear tabla con ttk.Treeview
-        columnas = ("ID Compra", "Producto", "Cantidad", "Fecha", "Total")
+        columnas = ("ID Compra", "Producto", "ID Producto", "Cantidad", "Total")
         self.tabla = ttk.Treeview(frameHistorial, columns=columnas, show="headings")
 
         #Encabezados
@@ -494,16 +494,34 @@ class App:
         self.tabla.pack(expand=True, fill="both")
 
         historial = self.obtenerHistorialCompras()
+        
+        self.cargar_historial(historial, self.tabla)
+
+    def cargar_historial(self, historial, tabla):
         for compra in historial:
-            self.tabla.insert("", "end", values=compra)
+            id_compra, productos, total = compra
+
+            primer_producto, primer_id, primera_cantidad = productos[0]
+            parent_id = self.tabla.insert("", "end", values=(id_compra, primer_producto, primer_id, primera_cantidad, ""), open=True)
+
+            for producto, ID, cantidad in productos[1:]:
+                tabla.insert(parent_id, "end", values=("", producto, ID, cantidad))
+            tabla.insert("", "end", values=("", "", "", "Total de la compra:", total))
+            
+            self.tabla.insert("", "end", values=("", "", "", "", ""), tags=("separador",))
+
+            self.tabla.tag_configure("separador", background="beige")
 
     def obtenerHistorialCompras(self):
-        # Simulación de datos (agregar logica)
-        return [
-            (101, "Laptop", 1, "2025-02-15", "$1000"),
-            (102, "Mouse", 2, "2025-02-10", "$40"),
-            (103, "Teclado", 1, "2025-02-08", "$80"),
-        ]
+        
+        historial = self.main_menu.ver_historial_compras()
+
+        if isinstance(historial, str):
+            messagebox.showinfo("Lo sentimos", historial)
+            return []
+
+        else: 
+            return historial
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |    
@@ -778,6 +796,8 @@ if __name__ == "__main__":
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)
+    test.comprador.getCarritoCompras().calcularTotal()
+    test.buyProcessDisplay()
     App(None, test)
     #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
     #test = MainMenu()

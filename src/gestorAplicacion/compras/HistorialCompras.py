@@ -30,16 +30,18 @@ class HistorialCompras:
         return None
 
     def mostrar_factura(self):
-        factura_str = ""
+        # (101, [("Laptop",1, 1), ("Mouse",2, 2)], "$1080"),
+        lista_facturas = []
         for factura in self.facturas:
-            factura_str += f"ID factura: {factura.getIDFactura()}\n"
-            factura_str += "{:<20} {:<20} {:<20}\n".format("Producto", "Cantidad", "ID Producto")
+            lista_items = []
             for i in range(len(factura.getCarritoCompras().getListaItems())):
                 item = factura.getCarritoCompras().getListaItems()[i]
                 cantidad = factura.getCarritoCompras().getCantidadPorProducto()[i]
-                factura_str += "{:<20} {:<20} {:<20}\n".format(item.getNombre(), cantidad, item.getID())
-            factura_str += f"\nPrecio Total de la Compra: {factura.getCarritoCompras().getPrecioTotal()}\n\n"
-        return factura_str
+                lista_items.append((item.getNombre(),item.getID(), cantidad))
+            lista_facturas.append((factura.getIDFactura(), lista_items, factura.getCarritoCompras().getPrecioTotal()))
+        return lista_facturas
+    
+
 
     def mostrar_factura_por_id(self, id_factura):
         factura = self.facturas[id_factura - 1]
