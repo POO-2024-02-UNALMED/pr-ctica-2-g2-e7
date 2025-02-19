@@ -87,5 +87,10 @@ class Producto:
     
     def isRetornable(self):
         return self.retornable
+    
+    #Necesario para las recomendaciones
+    @classmethod
+    def getListaCategorias(cls):
+        return list(Producto.Categoria)
 
         

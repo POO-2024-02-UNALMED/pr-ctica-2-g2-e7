@@ -134,5 +134,32 @@ class Inventario:
             catalogo[fila][columna] = self.listaCategorias[categoria][indice]
 
         return catalogo
+    
+    def crearCatalogoRecomendaciones(self, historialCompra):
+        
+        # Creamos una matriz de 5x6 usando list comprehension
+        catalogo = [[None] * 6 for _ in range(5)]
+
+        categoriaRecomendada1 = None
+        categoriaRecomendada2 = None
+        categoriaRecomendada3 = None
+
+        productosRecomendados1 = []
+        productosRecomendados2 = []
+        productosRecomendados3 = []
+
+        categorias = 0
+        #Revisa cuántas categorías hay almacenadas en categoriasMas compradas
+        #ejemplo: puede que guarde [TECNOLOGIA, None, None] porque solo se han
+        #comprado productos de la categoría TECNOLOGIA
+
+        for i in range(3):
+            if historialCompra.getCategoriasMasCompradas()[i] != None:
+                categorias += 1
+
+        if categorias == 1:
+
+            categoriaRecomendada = historialCompra.getCategoriasMasCompradas()[0]
+            productosRecomendados = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada)]
 
                 
