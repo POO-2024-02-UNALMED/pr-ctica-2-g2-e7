@@ -817,7 +817,7 @@ class App:
         submenu_vendedor.add_separator()
         submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "3. Ver notificaciones")
+        submenu_vendedor.add_command(label= "3. Ver notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.vendedor)])
         menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
         menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
         menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
