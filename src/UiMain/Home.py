@@ -779,7 +779,24 @@ class App:
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES
 
+    # MÉTODOS PRESENTES EN EL MENÚ DE VENDEDOR
+    #    |    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V    V
+    def generarReporteVentas(self, menu_bar):
 
+        inventario = instanciar()  
+        reporte = inventario.generar_reporte()
+
+        frameReporte = tk.Frame(ventana_principal, bg="lightblue", width=600, height=400)
+        frameReporte.pack(expand=True)
+
+        texto_reporte = tk.Text(frameReporte, wrap="word", width=70, height=20)
+        texto_reporte.insert("1.0", reporte)
+        texto_reporte.config(state="disabled")  # Para que el usuario no pueda modificarlo
+        texto_reporte.pack(padx=10, pady=10)
+
+        boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
+        boton_volver.pack(pady=10)
 
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
@@ -813,7 +830,7 @@ class App:
         submenu_comprador.add_separator()
         submenu_comprador.add_command(label= "7. Ver Notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.comprador)])
         submenu_comprador.add_separator()
-        submenu_vendedor.add_command(label= "1. Generar reporte de ventas")
+        submenu_vendedor.add_command(label= "1. Generar reporte de ventas", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.generarReporteVentas(menu_bar)])
         submenu_vendedor.add_separator()
         submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
         submenu_vendedor.add_separator()

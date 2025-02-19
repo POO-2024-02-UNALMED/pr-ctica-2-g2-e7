@@ -19,6 +19,24 @@ class Inventario:
         self.listaCategorias.append(categoriaJugueteria)
         self.listaCategorias.append(categoriaDeportes)
 
+    def generar_reporte_por_categoria(self, nombre_categoria, categoria):
+        reporte = [f"{nombre_categoria}:\n"]
+        for producto in categoria:
+            estado = f"Vendido: {producto.cantidadVendida} unidades" if producto.cantidadVendida > 0 else "No vendido"
+            estado_dev = f"Devuelto {producto.cantidadDevuelta} unidades" if producto.cantidadDevuelta > 0 else "Sin devoluciones"
+            reporte.append(f"- {producto.nombre} | Estado: {estado} | Cantidad en stock: {producto.cantidad} | Cantidad de Devoluciones: {estado_dev}\n")
+        return "".join(reporte)
+    
+    def generar_reporte(self):
+        reporte = ["Reporte de Inventario:\n"]
+        reporte.append(self.generar_reporte_por_categoria("Tecnología", self.categoriaTecnologia))
+        reporte.append(self.generar_reporte_por_categoria("Aseo", self.categoriaAseo))
+        reporte.append(self.generar_reporte_por_categoria("Comida", self.categoriaComida))
+        reporte.append(self.generar_reporte_por_categoria("Papelería", self.categoriaPapeleria))
+        reporte.append(self.generar_reporte_por_categoria("Juguetería", self.categoriaJugueteria))
+        reporte.append(self.generar_reporte_por_categoria("Deportes", self.categoriaDeportes))
+        return "".join(reporte)
+
     def verificarProducto(self, producto, unidades):
         categoria = producto.getCategoria()
         nombreCategoria = categoria.value
