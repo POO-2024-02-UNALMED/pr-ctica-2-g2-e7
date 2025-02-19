@@ -297,7 +297,7 @@ class App:
         #sin eliminarlo
         
 
-        catalogo = instanciar().crearCatalogo()        
+        catalogo = self.instanciar().crearCatalogo()        
 
         frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
         frameCatalogo.pack(expand= True)
@@ -363,7 +363,7 @@ class App:
     def añadir(self,valores):
         cantidad=int(valores["Cantidad"])
         
-        o=self.main_menu.añada(tuc,cantidad,comprador)
+        o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
         messagebox.showinfo("Añadir",o)
         self.ejecutar_ambas2()
 
@@ -445,16 +445,16 @@ class App:
         tabla.heading("Producto", text="Producto")
         tabla.heading("Cantidad", text="Cantidad")
         tabla.pack(expand=True,side="top",fill="both")
-        carrito.calcularTotal()
+        self.main_menu.getComprador().getCarritoCompras().calcularTotal()
         total_label = tk.Label(
             ventana_principal, 
-            text=f"Total: {carrito.getPrecioTotal()}", 
+            text=f"Total: {self.main_menu.getComprador().getCarritoCompras().getPrecioTotal()}", 
             font=("Arial", 15, "bold"),
             justify="right"
         )
         total_label.pack(expand=True,side="right")
         # Añadir los productos al Treeview
-        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+        for producto, cantidad in zip(self.main_menu.getComprador().getCarritoCompras().getListaItems(), self.main_menu.getComprador().getCarritoCompras().getCantidadPorProducto()):
             tabla.insert("", "end", values=(producto.getNombre(), cantidad))
 
         # Ajustar las columnas del Treeview
@@ -977,14 +977,14 @@ class App:
 if __name__ == "__main__":
     ########################################################
     #Esto es de prueba, no borrar hasta que Nicolás diga
-    producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
-    producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
-    producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
+    # producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
+    # producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
+    # producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
     ########################################################
     inventario = instanciar()
-    inventario.añadirProducto(producto1)
-    inventario.añadirProducto(producto2)
-    inventario.añadirProducto(producto3)
+    # inventario.añadirProducto(producto1)
+    # inventario.añadirProducto(producto2)
+    # inventario.añadirProducto(producto3)
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
     cuenta.recargarCuenta(2000)
@@ -992,9 +992,9 @@ if __name__ == "__main__":
     carrito = CarritoCompras(comprador, inventario)
     ######################################
     #Esto es de prueba, no borrar hasta que Nicolás diga
-    carrito.añadirProducto(producto1)
-    carrito.añadirProducto(producto2, 5)
-    carrito.añadirProducto(producto3, 2)
+    # carrito.añadirProducto(producto1)
+    # carrito.añadirProducto(producto2, 5)
+    # carrito.añadirProducto(producto3, 2)
     ######################################
     comprador.setCarritoCompras(carrito)
     vendedor = Vendedor("pedro", None, inventario, None)
