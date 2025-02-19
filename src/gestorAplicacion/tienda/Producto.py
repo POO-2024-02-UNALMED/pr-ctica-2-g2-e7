@@ -82,6 +82,8 @@ class Producto:
                 Categoría: {self.categoria.value} \n \
                 Precio: {self.precio}\n \
                 Cantidad disponible: {self.cantidad}"
+    def otrostr(self):
+        return self.nombre
     
     def isRetornable(self):
         return self.retornable
