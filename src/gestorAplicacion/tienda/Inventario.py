@@ -22,8 +22,8 @@ class Inventario:
     def generar_reporte_por_categoria(self, nombre_categoria, categoria):
         reporte = [f"{nombre_categoria}:\n"]
         for producto in categoria:
-            estado = f"Vendido: {producto.cantidadVendida} unidades" if producto.cantidadVendida > 0 else "No vendido"
-            estado_dev = f"Devuelto {producto.cantidadDevuelta} unidades" if producto.cantidadDevuelta > 0 else "Sin devoluciones"
+            estado = f"Vendido: {producto.getCantidadVendida()} unidades" if producto.getCantidadVendida() > 0 else "No vendido"
+            estado_dev = f"Devuelto {producto.getCantidadDevuelta()} unidades" if producto.getCantidadDevuelta() > 0 else "Sin devoluciones"
             reporte.append(f"- {producto.nombre} | Estado: {estado} | Cantidad en stock: {producto.cantidad} | Cantidad de Devoluciones: {estado_dev}\n")
         return "".join(reporte)
     
@@ -115,6 +115,31 @@ class Inventario:
             self.categoriaJugueteria.append(producto)
         if categoria == Producto.Categoria.DEPORTES:
             self.categoriaDeportes.append(producto)
+
+    def buscarCategoria(self, nombre):
+        if nombre == "Tecnologia":
+            return self.categoriaTecnologia
+        elif nombre == "Aseo":
+            return self.categoriaAseo
+        elif nombre == "Comida":
+            return self.categoriaComida
+        elif nombre == "Papeleria":
+            return self.categoriaPapeleria
+        elif nombre == "Jugueteria":
+            return self.categoriaJugueteria
+        elif nombre == "Deportes":
+            return self.categoriaDeportes
+    
+    def ajusteProductos(self, producto, accion):
+        categoriaNombre = producto.getCategoria().value
+        categoria = self.buscarCategoria(categoriaNombre)
+
+        for producto2 in categoria:
+            if producto2.getID() == producto.getID():
+                producto2.setCantidad(producto.getCantidad())
+                producto2.setCantidadVendida(producto.getCantidadVendida())
+                if accion == "devolucion":
+                    producto2.setCantidadDevuelta(producto.getCantidadDevuelta())
 
     import random
 

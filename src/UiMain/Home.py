@@ -297,7 +297,7 @@ class App:
         #sin eliminarlo
         
 
-        catalogo = instanciar().crearCatalogo()        
+        catalogo = self.instanciar().crearCatalogo()        
 
         frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
         frameCatalogo.pack(expand= True)
@@ -977,14 +977,14 @@ class App:
 if __name__ == "__main__":
     ########################################################
     #Esto es de prueba, no borrar hasta que Nicolás diga
-    producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
-    producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
-    producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
+    # producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
+    # producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
+    # producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
     ########################################################
     inventario = instanciar()
-    inventario.añadirProducto(producto1)
-    inventario.añadirProducto(producto2)
-    inventario.añadirProducto(producto3)
+    # inventario.añadirProducto(producto1)
+    # inventario.añadirProducto(producto2)
+    # inventario.añadirProducto(producto3)
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
     cuenta.recargarCuenta(2000)
@@ -992,9 +992,9 @@ if __name__ == "__main__":
     carrito = CarritoCompras(comprador, inventario)
     ######################################
     #Esto es de prueba, no borrar hasta que Nicolás diga
-    carrito.añadirProducto(producto1)
-    carrito.añadirProducto(producto2, 5)
-    carrito.añadirProducto(producto3, 2)
+    # carrito.añadirProducto(producto1)
+    # carrito.añadirProducto(producto2, 5)
+    # carrito.añadirProducto(producto3, 2)
     ######################################
     comprador.setCarritoCompras(carrito)
     vendedor = Vendedor("pedro", None, inventario, None)

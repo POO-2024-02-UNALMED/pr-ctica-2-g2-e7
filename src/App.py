@@ -10,11 +10,7 @@ from gestorAplicacion.usuario.Vendedor import Vendedor
 
 
 def instanciar():
-    producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
-    producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
-    producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
-
-    inventario = Inventario([producto1], [producto3], [producto2], [], [], [])
+    inventario = Inventario([], [], [], [], [], [])
 
     # Productos creados
     categorias = list(Producto.Categoria)
