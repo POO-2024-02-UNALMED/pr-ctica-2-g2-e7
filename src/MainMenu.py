@@ -463,7 +463,27 @@ class MainMenu:
             self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
         return mensaje
 
+    def añada(self,producto,cantidad,comprador):
+       
 
+       
+                
+                try:
+                    numerico = int(cantidad)
+                    if numerico not in [1, 2, 3, 4, 5]:
+                        cantidad= "1"
+                        return("Cantidad inválida, se te asignó una por default que es 1")
+                except ValueError:
+                    cantidad = "1"
+                    return("Entrada inválida, se asignará 1 por defecto")
+
+                if producto.getCantidad() <= 0:
+                    return("Error. No hay más productos disponibles.")
+                    
+                else:
+                    mensaje =comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
+                    return(mensaje)
+                    
     def voucherMenuDisplay(self, cuponEliminar = None):
         if cuponEliminar != None:
             self.comprador.eliminarCupones(cuponEliminar)

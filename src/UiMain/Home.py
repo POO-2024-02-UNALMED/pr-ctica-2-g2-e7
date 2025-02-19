@@ -295,6 +295,7 @@ class App:
     def mostrarCatalogo(self, menu_bar):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
         #sin eliminarlo
+        
 
         catalogo = instanciar().crearCatalogo()        
 
@@ -302,7 +303,7 @@ class App:
         frameCatalogo.pack(expand= True)
 
         #Creación de los botones para seleccionar productos
-
+        
         for fila in range(0, 5):
             for columna in range(0,6):
                 producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
@@ -330,11 +331,39 @@ class App:
 
     #FALTA POR IMPLEMENTAR
     def agregarAlCarrito(self, producto, menu_bar):
-        frameAgregar = tk.Frame(ventana_principal, bg= "lightblue")
-        frameAgregar.pack(expand= True, fill= "both")
+    # Crear un marco con bordes
+        f1 = tk.Frame(ventana_principal, bd=5, relief="groove")
+        
+        # Crear y empacar el título
+        titulo = tk.Label(
+            f1, 
+            text="AGREGAR AL CARRITO \n por favor indique la cantidad a añadir",
+            font=("Arial", 15, "bold"),
+            justify="center"
+        )
+        titulo.pack(expand=True, padx=20, pady=20)
+        
+        # Definir criterios, valores y habilitación
+        criterios = ["Producto", "Cantidad"]
+        valores = [producto.getNombre(), "1"]  # Valor inicial para "Cantidad" es 1
+        habilitado = [False, True]  # El campo "Cantidad" es editable
+        
+        global tuc
+        tuc = producto
+        
+        # Crear y empacar el FieldFrame
+        field_frame = FieldFrame(f1, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.añadir)
+        field_frame.pack(padx=20, pady=20, expand=True, ipadx=50, ipady=50)
+        
+        # Empacar el marco principal
+        f1.pack(padx=10, pady=10, expand=True)
+    def añadir(self,valores):
+        cantidad=int(valores["Cantidad"])
+        
+        o=self.main_menu.añada(tuc,cantidad,comprador)
+        messagebox.showinfo("Añadir",o)
+        self.ejecutar_ambas2()
 
-        mensaje = tk.Label(frameAgregar, text= "Agregar al carrito", font= ("Arial", 70, "bold"))
-        mensaje.pack(expand= True)
     
     def eliminarProductosDelCarrito(self, ventana_principal):
     
@@ -390,7 +419,10 @@ class App:
         mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
         messagebox.showinfo("Eliminacion",mensaje)
         self.ejecutar_ambas()
-
+    def ejecutar_ambas2(self):
+        self.limpiar_ventana(ventana_principal, menu_bar)
+        
+        self.verElCarrito(ventana_principal)
     def ejecutar_ambas(self):
         self.actualizar_treeview()
         self.limpiar_ventana(ventana_principal, menu_bar)
