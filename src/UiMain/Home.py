@@ -287,6 +287,7 @@ class App:
          if widget != menu_bar:
             widget.destroy()
 
+
     # MÉTODOS PRESENTES EN EL MENÚ DEL CARRITO
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
@@ -326,8 +327,6 @@ class App:
 
         botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
         botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
-
-        
 
     #FALTA POR IMPLEMENTAR
     def agregarAlCarrito(self, producto, menu_bar):
@@ -384,7 +383,6 @@ class App:
         field_frame = FieldFrame(ventana_principal, "Criterio", criterios, "Valor", valores, habilitado, funcion_llamado=self.elimina)
         field_frame.pack(padx=20, pady=20, expand=True, ipadx=10, ipady=10)
 
-
     def elimina(self,valores):
         Producto=valores["Producto a eliminar"]
         cantidad=int(valores["Cantidad"])
@@ -392,11 +390,13 @@ class App:
         mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
         messagebox.showinfo("Eliminacion",mensaje)
         self.ejecutar_ambas()
+
     def ejecutar_ambas(self):
         self.actualizar_treeview()
         self.limpiar_ventana(ventana_principal, menu_bar)
         
         self.eliminarProductosDelCarrito(ventana_principal)
+
     def actualizar_treeview(self):
         # Limpiar el Treeview antes de actualizar
         for item in tree.get_children():
@@ -404,9 +404,7 @@ class App:
         # Repoblar el Treeview con los productos actualizados
         for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
             tree.insert("", "end", values=(producto.getNombre(), cantidad))
-
-
-        
+ 
     def verElCarrito(self,ventana_principal):
         tabla = ttk.Treeview(ventana_principal, columns=("Producto", "Cantidad"), show="headings")
         tabla.heading("Producto", text="Producto")
@@ -452,17 +450,16 @@ class App:
         opcion3 = tk.Button(frameCarrito, text= "Ver el carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.verElCarrito(ventana_principal)])
         opcion3.grid(row= 3, column= 1, padx= 10, pady= 10)
 
-       
-
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DEL CARRITO
+
 
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
         
-
+    # Parte grafica del proceso de reembolso
     def menuDevolucion(self, menu_bar):
     
         respuesta = messagebox.askyesno("Devolver producto", "¿Conoce el ID de la factura y del producto a devolver?")
@@ -489,6 +486,7 @@ class App:
             field_frame = FieldFrame(frameDevolucion, "Criterios", criterios, "Valores", valores_iniciales, funcion_llamado=self.realizarDevolucion)
             field_frame.pack(padx=10, pady=10)
     
+    # Llamada a la logica para realizar el reembolso
     def realizarDevolucion(self, valores):
         try:
             id_factura = int(valores["ID Factura"])
@@ -503,16 +501,17 @@ class App:
 
         except ValueError:
             messagebox.showerror("Error de entrada", "Por favor, ingrese solo números enteros positivos.")
-       
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE DEVOLUCIONES
 
+
     # MÉTODOS PRESENTES PARA HISTORIAL DE COMPRAS
     #    |    |    |    |    |    |    |    |    
     #    V    V    V    V    V    V    V    V    
 
+    # Parte grafica del proceso para ver el historial de compras
     def verHistorialCompras(self):
         # Crear un frame para la tabla
         frameHistorial = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
@@ -536,6 +535,7 @@ class App:
         
         self.cargar_historial(historial, self.tabla)
 
+    # Se encarga de hacer visible graficamente el historial en la tabla
     def cargar_historial(self, historial, tabla):
         for compra in historial:
             id_compra, productos, total = compra
@@ -551,6 +551,7 @@ class App:
 
             self.tabla.tag_configure("separador", background="beige")
 
+    # Llamada a la logica para obtener el historial de compras
     def obtenerHistorialCompras(self):
         
         historial = self.main_menu.ver_historial_compras()
@@ -566,10 +567,12 @@ class App:
     #    |    |    |    |    |    |    |    |    
     # MÉTODOS PRESENTES PARA HISTORIAL DE COMPRAS
 
+
     # MÉTODOS PRESENTES PARA NOTIFICACIONES
     #    |    |    |    |    |    |    | 
     #    V    V    V    V    V    V    V 
 
+    # Parte grafica del proceso para ver las notificaciones de cada usuario
     def verNotificaciones(self, usuario):
         frameNotificaciones = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
         frameNotificaciones.pack(expand=True, fill="both")
@@ -596,14 +599,13 @@ class App:
 
         self.tabla.bind("<<TreeviewSelect>>", self.mostrarMensaje)
 
+    # Se encarga de hacer visible graficamente las notificaciones en la tabla 
     def cargarNotificaciones(self, notificaciones, tabla, texto_mensaje):
         for notificacion in notificaciones:
             fecha, destinatario, asunto, mensaje = notificacion
             tabla.insert("", "end", values=(fecha, destinatario, asunto))
 
-            
-
-    
+    # Se encarga de hacer visible graficamente el mensaje de la notificacion 
     def mostrarMensaje(self, evento):
         item_seleccionado = self.tabla.selection()
         if item_seleccionado:
@@ -622,7 +624,7 @@ class App:
 
                 self.texto_mensaje.config(state="disabled")
                      
-
+    # Llamada a la logica para obtener las notificaciones de cada usuario
     def obtenerNotificaciones(self, usuario):
         notificaciones = self.main_menu.ver_notificaciones(usuario)
 
@@ -632,7 +634,6 @@ class App:
         else: 
             return notificaciones
 
-
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ        
     #    |    |    |    |    |    |    |    
     # MÉTODOS PRESENTES PARA NOTIFICACIONES
@@ -640,6 +641,8 @@ class App:
     # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
     #    |    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V    V
+
+    # Parte grafica del proceso relacionado a la cuenta bancaria
     def menuCuentaBancaria(self, ventana, tipoUsuario):
         if tipoUsuario == "comprador":
             respuesta = messagebox.askyesno("Recargar saldo", "¿Desea recargar saldo en su cuenta bancaria?")
@@ -661,6 +664,7 @@ class App:
             label = tk.Label(ventana, text= mensaje, bg= "white", font=("Arial", 16, "bold"))
             label.pack(pady = 150)
     
+    # Llamada a la logica para recargar la cuenta
     def actualizar_saldos(self, valores):
         try:
             monto = float(valores["Valor a recargar"])
@@ -673,13 +677,16 @@ class App:
                 messagebox.showinfo("Recarga exitosa", mensaje)
         except ValueError:
             messagebox.showerror("ERROR", "Por favor ingrese un valor unicamente numerico.")
+
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
     # MÉTODOS PRESENTES EN EL MENÚ DE CUENTA BANCARIA
 
+
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
-    #    |    |    |    |    |    |    |    |    |
-    #    V    V    V    V    V    V    V    V    V
+    #    |    |    |    |    |    |    |    |
+    #    V    V    V    V    V    V    V    V   
+
     def menuCompra(self, ventana, menu_bar):
         if len(self.main_menu.getComprador().getCarritoCompras().getListaItems()) == 0:
             messagebox.showerror("Carrito de compras vacío", "ERROR. Por favor verifique que su carrito de compras no este vacío.")
@@ -737,13 +744,16 @@ class App:
         cuadro_texto.pack()
         label2 = tk.Label(ventana, text= "¡Muchas gracias por su compra!", font=("Arial", 16, "bold"))
         label2.pack()
-    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
-    #    |    |    |    |    |    |    |    |    |
+        
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
+    #    |    |    |    |    |    |    |    |  
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
 
+
     # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES
-    #    |    |    |    |    |    |    |    |    |
-    #    V    V    V    V    V    V    V    V    V
+    #    |    |    |    |    |    |    |    |   
+    #    V    V    V    V    V    V    V    V 
+       
     def menuCupones(self, ventana, menu_bar, mainMenu):
         main_menu = mainMenu
         def eliminar_cupones(valores):
@@ -783,13 +793,16 @@ class App:
                 cuadro_texto.insert(tk.END, f"Cupones disponibles:\n{self.main_menu.getComprador().mostrarCupones()}")
                 cuadro_texto.config(state= tk.DISABLED)
                 cuadro_texto.pack(pady=(0, 5))
-    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
-    #    |    |    |    |    |    |    |    |    |
-    # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES
+
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
+    #    |    |    |    |    |    |    |    |    
+    # MÉTODOS PRESENTES EN EL MENÚ DE CUPONES 
+
 
     # MÉTODOS PRESENTES EN EL MENÚ DE VENDEDOR
-    #    |    |    |    |    |    |    |    |    |
-    #    V    V    V    V    V    V    V    V    V
+    #    |    |    |    |    |    |    |    |    
+    #    V    V    V    V    V    V    V    V    
+
     def generarReporteVentas(self, menu_bar):
 
         inventario = instanciar()  
@@ -805,6 +818,10 @@ class App:
 
         boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
         boton_volver.pack(pady=10)
+    
+    #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
+    #    |    |    |    |    |    |    |    |    
+    # MÉTODOS PRESENTES EN EL MENÚ DE VENDEDOR 
 
     # Método para crear la ventana principal de la aplicación
     def crear_ventana_principal(self, ventana_inicio = None):
