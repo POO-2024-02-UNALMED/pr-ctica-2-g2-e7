@@ -370,7 +370,7 @@ class App:
         total_label.grid(column=0, row=2, sticky="e", columnspan=2, pady=(10, 0))
         # Añadir los productos al Treeview
         for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
-            tree.insert("", "end", values=(producto, cantidad))
+            tree.insert("", "end", values=(producto.getNombre(), cantidad))
 
         # Ajustar las columnas del Treeview
         for col in tree["columns"]:
@@ -403,7 +403,7 @@ class App:
             tree.delete(item)
         # Repoblar el Treeview con los productos actualizados
         for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
-            tree.insert("", "end", values=(producto, cantidad))
+            tree.insert("", "end", values=(producto.getNombre(), cantidad))
 
 
         
@@ -422,7 +422,7 @@ class App:
         total_label.pack(expand=True,side="right")
         # Añadir los productos al Treeview
         for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
-            tabla.insert("", "end", values=(producto, cantidad))
+            tabla.insert("", "end", values=(producto.getNombre(), cantidad))
 
         # Ajustar las columnas del Treeview
         for col in tabla["columns"]:
