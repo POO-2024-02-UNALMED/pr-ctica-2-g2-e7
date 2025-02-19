@@ -292,7 +292,7 @@ class App:
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
 
-    def mostrarCatalogo(self, menu_bar):
+    def mostrarCatalogo(self, menu_bar, historialCompras = None):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
         #sin eliminarlo
         
@@ -309,6 +309,9 @@ class App:
                 producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
                                       command= lambda producto=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
                 producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+    
+    def mostrarCatalogoRecomendaciones(historialCompras):
+        pass
 
     def seleccionarProducto(self, producto):
 

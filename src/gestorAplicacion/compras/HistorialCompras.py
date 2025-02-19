@@ -14,7 +14,7 @@ class HistorialCompras:
         self.cantidadJugueteria = 0
         self.cantidadDeportes = 0
 
-        self.caegoriasMasCompradas = []
+        self.caegoriasMasCompradas = [None, None, None]
 
 
     def getFacturas(self):
