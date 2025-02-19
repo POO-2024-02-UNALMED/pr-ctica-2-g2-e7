@@ -363,7 +363,7 @@ class App:
     def añadir(self,valores):
         cantidad=int(valores["Cantidad"])
         
-        o=self.main_menu.añada(tuc,cantidad,comprador)
+        o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
         messagebox.showinfo("Añadir",o)
         self.ejecutar_ambas2()
 
@@ -445,16 +445,16 @@ class App:
         tabla.heading("Producto", text="Producto")
         tabla.heading("Cantidad", text="Cantidad")
         tabla.pack(expand=True,side="top",fill="both")
-        carrito.calcularTotal()
+        self.main_menu.getComprador().getCarritoCompras().calcularTotal()
         total_label = tk.Label(
             ventana_principal, 
-            text=f"Total: {carrito.getPrecioTotal()}", 
+            text=f"Total: {self.main_menu.getComprador().getCarritoCompras().getPrecioTotal()}", 
             font=("Arial", 15, "bold"),
             justify="right"
         )
         total_label.pack(expand=True,side="right")
         # Añadir los productos al Treeview
-        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+        for producto, cantidad in zip(self.main_menu.getComprador().getCarritoCompras().getListaItems(), self.main_menu.getComprador().getCarritoCompras().getCantidadPorProducto()):
             tabla.insert("", "end", values=(producto.getNombre(), cantidad))
 
         # Ajustar las columnas del Treeview
