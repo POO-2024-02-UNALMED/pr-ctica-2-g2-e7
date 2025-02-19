@@ -494,10 +494,6 @@ class MainMenu:
     def returnMenuDisplay(self, idFactura, idProducto, cantidadRetornar):
         while True:
 
-            idFactura = int(idFactura)
-            idProducto = int(idProducto)
-            cantidadRetornar = int(cantidadRetornar)
-
             resultado = self.comprador.devolverProducto(idFactura, idProducto, cantidadRetornar, self.vendedor) # Proceso de reembolso en si
             
             if resultado == "FacturaInvalida":

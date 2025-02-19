@@ -40,7 +40,6 @@ class Comprador(Usuario):
                 return "DevolucionExitosa"
             return "ProductoInvalido"
         return "FacturaInvalida"
-    
     def getCarritoCompras(self):
         return self.carritoCompras
     

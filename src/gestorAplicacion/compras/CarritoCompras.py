@@ -134,7 +134,7 @@ class CarritoCompras:
         self.cantidadPorProducto[indice]-=cantidad
         if self.cantidadPorProducto[indice] == 0:
             self.listaItems.pop(indice)
-            self.cantidadPorProducto.remove(indice)
+            self.cantidadPorProducto.pop(indice)
         self.calcularTotal()
 
     def buscarProducto(self , idProducto):

@@ -490,12 +490,20 @@ class App:
             field_frame.pack(padx=10, pady=10)
     
     def realizarDevolucion(self, valores):
-        id_factura = valores["ID Factura"]
-        id_producto = valores["ID Producto"]
-        cantidad_retornar = valores["Cantidad a devolver"]
+        try:
+            id_factura = int(valores["ID Factura"])
+            id_producto = int(valores["ID Producto"])
+            cantidad_retornar = int(valores["Cantidad a devolver"])
 
-        mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
-        messagebox.showinfo("Devolución de Producto", mensaje)
+            if id_factura < 0 or id_producto < 0 or cantidad_retornar < 0:
+                raise ValueError("Los valores deben ser números positivos.")
+
+            mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
+            messagebox.showinfo("Devolución de Producto", mensaje)
+
+        except ValueError:
+            messagebox.showerror("Error de entrada", "Por favor, ingrese solo números enteros positivos.")
+       
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
