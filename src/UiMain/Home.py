@@ -299,7 +299,7 @@ class App:
 
         catalogo = instanciar().crearCatalogo()        
 
-        frameCatalogo = tk.Frame(ventana_principal, bg="lightblue", width= 600, height= 400)
+        frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
         frameCatalogo.pack(expand= True)
 
         #Creación de los botones para seleccionar productos
@@ -321,7 +321,7 @@ class App:
         frameProducto.pack(expand= True, fill= "both")
 
         infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
-        infoProducto.pack(pady= 10)
+        infoProducto.pack(pady= 10,expand=True,ipadx=20,ipady=20)
 
         frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
         frameBotones.pack()
