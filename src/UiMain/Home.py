@@ -699,7 +699,7 @@ class App:
                 if len(self.main_menu.getComprador().getValorCupones()) == 0:
                     messagebox.showerror("Cupones insuficientes", "ERROR. No cuentas con cupones suficientes.")
                 else:
-                    cuadro_texto = tk.Text(ventana, height= 10, width= 40)
+                    cuadro_texto = tk.Text(ventana, height= 10, width= 40, wrap= "word")
                     cuadro_texto.insert(tk.END, f"Actualmente usted cuenta con {len(self.main_menu.getComprador().getValorCupones())} cupones de descuento. Estos cupones son los siguientes:\n{self.main_menu.getComprador().mostrarCupones()}")
                     cuadro_texto.config(state= tk.DISABLED)
                     cuadro_texto.pack(pady= (70, 10))
@@ -738,7 +738,7 @@ class App:
         self.limpiar_ventana(ventana, menu_bar)
         label = tk.Label(ventana, text= "Resumen de la compra", font=("Arial", 16, "bold"))
         label.pack()
-        cuadro_texto = tk.Text(ventana, height= 20, width= 50)
+        cuadro_texto = tk.Text(ventana, height= 20, width= 50, wrap= "word")
         cuadro_texto.insert(tk.END, self.main_menu.buyProcessDisplay(aplica_o_no, cupon))
         cuadro_texto.config(state= tk.DISABLED)
         cuadro_texto.pack()
@@ -777,7 +777,7 @@ class App:
                 titulo.pack(pady=(40, 5))
                 descripcion = tk.Label(ventana, text= "Por favor ingrese el valor correspondiente al cupón que usted desea eliminar", font=("Arial", 12, "bold"))
                 descripcion.pack(pady= (5, 10))
-                cuadro_texto = tk.Text(ventana, height= 10, width= 50)
+                cuadro_texto = tk.Text(ventana, height= 10, width= 50, wrap= "word")
                 cuadro_texto.insert(tk.END, f"Cupones disponibles:\n{self.main_menu.getComprador().mostrarCupones()}")
                 cuadro_texto.config(state= tk.DISABLED)
                 cuadro_texto.pack(pady=(0, 5))
@@ -789,7 +789,7 @@ class App:
             else:
                 titulo = tk.Label(ventana, text= "Cupones", font=("Arial", 16, "bold"))
                 titulo.pack(pady=(40, 5))
-                cuadro_texto = tk.Text(ventana, height= 10, width= 50)
+                cuadro_texto = tk.Text(ventana, height= 10, width= 50, wrap= "word")
                 cuadro_texto.insert(tk.END, f"Cupones disponibles:\n{self.main_menu.getComprador().mostrarCupones()}")
                 cuadro_texto.config(state= tk.DISABLED)
                 cuadro_texto.pack(pady=(0, 5))
@@ -805,7 +805,7 @@ class App:
 
     def generarReporteVentas(self, menu_bar):
 
-        inventario = instanciar()  
+        inventario = self.main_menu.getInventario() 
         reporte = inventario.generar_reporte()
 
         frameReporte = tk.Frame(ventana_principal, bg="lightblue", width=600, height=400)
@@ -884,24 +884,7 @@ class App:
     def ayuda(self):
         messagebox.showinfo("Ayuda", "Desarrolladores:\nTomás Aristizábal Gómez\nSantiago Barrientos Medina\nJosé Alejandro Castro Rey\nJuan Nicolás Chaparro Rodríguez\nSimón David Díaz Rojas")
     def instanciar(self):
-        producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
-        producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
-        producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
-        inventario = Inventario([producto1], [producto3], [producto2], [], [], [])
-        comprador = Comprador("Juan", None, None)
-        cuenta = CuentaBancaria(comprador)
-        comprador.setCuentaBancaria(cuenta)
-        carrito = CarritoCompras(comprador, inventario)
-        carrito.añadirProducto(producto1)
-        carrito.añadirProducto(producto2, 5)
-        carrito.añadirProducto(producto3, 2)
-        comprador.setCarritoCompras(carrito)
-        vendedor = Vendedor("pedro", None, inventario, None)
-        cuenta2 = CuentaBancaria(vendedor)
-        vendedor.setCuentaBancaria(cuenta2)
-        self.comprador=comprador
-        self.carrito=carrito
-
+        inventario = Inventario([], [], [], [], [], [])
         # Productos creados
         categorias = list(Producto.Categoria)
         
@@ -964,6 +947,9 @@ if __name__ == "__main__":
     producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
     ########################################################
     inventario = instanciar()
+    inventario.añadirProducto(producto1)
+    inventario.añadirProducto(producto2)
+    inventario.añadirProducto(producto3)
     comprador = Comprador("Juan", None, None)
     cuenta = CuentaBancaria(comprador)
     cuenta.recargarCuenta(2000)

@@ -67,6 +67,11 @@ class Inventario:
                 if (p.getNombre() == producto.getNombre()) and (p.getCantidad() >= unidades):
                     verificacion = True
                     break
+        elif nombreCategoria == "Jugueteria":
+            for p in self.categoriaJugueteria:
+                if (p.getNombre() == producto.getNombre()) and (p.getCantidad() >= unidades):
+                    verificacion = True
+                    break
         return verificacion
     
     def buscarProductoMaseconomico(self):
