@@ -43,12 +43,26 @@ class App:
         self.ventana_principal = ventana_principal
         self.main_menu = mainMenu #Esta será la instancia del Main Menu con la cual todos trabajaremos 
         self.contador = 0
+        self.indice_imagenes = 0
         self.imagen_tk = None
         self.imagen1 = None
         self.imagen2 = None
         self.imagen3 = None
         self.imagen4 = None
 
+        # Datos de los desarrolladores
+        self.desarrolladores = [
+            {"nombre": "Tomás Aristizábal Gómez", "bio": "Desarrollador especializado en arquitectura de software y sistemas empresariales.",
+             "imagenes": ["src/UiMain/imagenes/tomas1.jpg", "src/UiMain/imagenes/tomas2.jpg", "src/UiMain/imagenes/tomas3.jpg", "src/UiMain/imagenes/tomas4.jpg"]},
+            {"nombre": "Santiago Barrientos Medina", "bio": "Full Stack Developer con experiencia en Python y desarrollo web.",
+             "imagenes": ["src/UiMain/imagenes/santiago1.jpg", "src/UiMain/imagenes/santiago2.jpg", "src/UiMain/imagenes/santiago3.jpg", "src/UiMain/imagenes/santiago4.jpg"]},
+            {"nombre": "Juan Nicolás Chaparro Rodríguez", "bio": "Desarrollador en Inteligencia Artificial y Ciencia de Datos.",
+             "imagenes": ["src/UiMain/imagenes/juan1.jpg", "src/UiMain/imagenes/juan2.jpg", "src/UiMain/imagenes/juan3.jpg", "src/UiMain/imagenes/juan4.jpg"]},
+            {"nombre": "Simón David Díaz Rojas", "bio": "Especialista en ciberseguridad y redes informáticas.",
+             "imagenes": ["src/UiMain/imagenes/simon1.jpg", "src/UiMain/imagenes/simon2.jpg", "src/UiMain/imagenes/simon3.jpg", "src/UiMain/imagenes/simon4.jpg"]},
+            {"nombre": "José Alejandro Castro Rey", "bio": "Ingeniero de software con experiencia en videojuegos y desarrollo móvil.",
+             "imagenes": ["src/UiMain/imagenes/jose1.jpg", "src/UiMain/imagenes/jose2.jpg", "src/UiMain/imagenes/jose3.jpg", "src/UiMain/imagenes/jose4.jpg"]}
+        ]
 
         # Crear ventana principal
         self.window = tk.Tk()
@@ -61,10 +75,9 @@ class App:
         self.menu()
         
         self.etiqueta.config(image=self.imagen_tk)
-        self.p6.after(100,self.cargar_imagen_nosotros)
-        self.p5.bind("<Button-1>",self.actualizar_imagenes)
         self.p4.after(100, self.cargar_imagen_inicial)
         self.p4.bind("<Enter>", self.imagenes)
+        self.p6.after(100, self.mostrar_hoja_de_vida_y_fotos)
         Inventario=self.instanciar()
         
         
@@ -93,7 +106,7 @@ class App:
     def crear_frames(self): 
         #frames principales
         self.p1 = tk.Frame(self.window)
-        self.p2 = tk.Frame(self.window, bg="red")
+        self.p2 = tk.Frame(self.window)
 
         self.p1.grid(row=1, column=1, sticky="nsew")
         self.p2.grid(row=1, column=3, sticky="nsew")
@@ -117,7 +130,7 @@ class App:
         self.p5 = tk.Frame(self.p2, bg="purple")
         self.p5.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
         
-        self.p6 = tk.Frame(self.p2, bg="orange")
+        self.p6 = tk.Frame(self.p2)
         self.p6.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
         self.p6.grid_propagate(False)
         
@@ -146,14 +159,21 @@ class App:
         #el label que va a contener las imagenes asociadas al sistema
         self.etiqueta = tk.Label(self.p4)
         self.etiqueta.grid(column=0, row=0, sticky="nsew")
-        self.etiqueta1=tk.Label(self.p6)
-        self.etiqueta1.grid(column=0,row=0,sticky="nsew")
-        self.etiqueta2 = tk.Label(self.p6,background="red")
-        self.etiqueta2.grid(column=1,row=0,sticky="nsew")
-        self.etiqueta3 = tk.Label(self.p6,background="green")
-        self.etiqueta3.grid(column=0,row=1,sticky="nsew")
-        self.etiqueta4 = tk.Label(self.p6,background="black")
-        self.etiqueta4.grid(column=1,row=1,sticky="nsew")
+        self.label_bio = tk.Label(self.p5, padx=10, pady=10)
+        self.label_bio.pack(fill="both", expand=True)
+        self.label_bio.bind("<Button-1>", self.cambiar_hoja_de_vida)
+        self.etiquetas_imagenes = [
+            tk.Label(self.p6, borderwidth=10, relief="groove", bg="white"),
+            tk.Label(self.p6, borderwidth=10, relief="groove", bg="white"),
+            tk.Label(self.p6, borderwidth=10, relief="groove", bg="white"),
+            tk.Label(self.p6, borderwidth=10, relief="groove", bg="white"),
+        ]
+
+
+        # Posicionar con grid()
+        for i, etiqueta in enumerate(self.etiquetas_imagenes):
+            etiqueta.grid(row=i // 2, column=i % 2, padx=10, pady=10)
+
     def salir(self): #este metodo nos saca del sistema
         self.window.destroy()
     def nada(self):
@@ -174,83 +194,39 @@ class App:
 
         # Agregar los submenús a la barra de menú
         menubar.add_cascade(label="Inicio", menu=menu1)
-    ''
-    def cargar_imagen_nosotros(self):
-       
-        directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        ruta1 = os.path.join(directorio_actual, "imagenes", "imagen1.jpg")
-        imagen1 = Image.open(ruta1)
-        
-        
-        ruta2 = os.path.join(directorio_actual, "imagenes", "imagen2.jpg")
-        imagen2= Image.open(ruta2)
-        ruta3 = os.path.join(directorio_actual, "imagenes", "imagen3.jpg")
-        imagen3 = Image.open(ruta3)
-        ruta4 = os.path.join(directorio_actual, "imagenes", "imagen4.jpg")
-        imagen4= Image.open(ruta4)
-        self.window.update_idletasks()#este metodo actualiza las medidad del frame
-        ancho = self.p6.winfo_width()
-        alto = self.p6.winfo_height()
-        imagen1 = imagen1.resize((ancho//2, alto//2))
-        self.imagen_tk1= ImageTk.PhotoImage(imagen1)
-        self.etiqueta1.config(image=self.imagen_tk1)
-        self.etiqueta1.imagen = self.imagen_tk1
-        imagen2 = imagen2.resize((ancho//2, alto//2))
-        self.imagen_tk2= ImageTk.PhotoImage(imagen2)
-        self.etiqueta2.config(image=self.imagen_tk2)
-        self.etiqueta2.imagen = self.imagen_tk2
-        imagen3 = imagen3.resize((ancho//2, alto//2))
-        self.imagen_tk3= ImageTk.PhotoImage(imagen3)
-        self.etiqueta3.config(image=self.imagen_tk3)
-        self.etiqueta3.imagen = self.imagen_tk3
-        imagen4 = imagen4.resize((ancho//2, alto//2))
-        self.imagen_tk4= ImageTk.PhotoImage(imagen4)
-        self.etiqueta4.config(image=self.imagen_tk4)
-        self.etiqueta4.imagen = self.imagen_tk4
-        self.imagen1=imagen1
-        self.imagen2=imagen2
-        self.imagen3=imagen3
-        self.imagen4=imagen4
-
-
     
-    def actualizar_imagenes(self, evento):
-        """Intercambia las imágenes entre las etiquetas"""
-        
-        # Obtener las dimensiones del frame (p6)
-        ancho_imagen = self.p6.winfo_width()
-        alto_imagen = self.p6.winfo_height()
+    def cambiar_hoja_de_vida(self, event):
+        #cambia al siguiente desarrollador al hacer clic en la hoja de vida
+        self.indice_imagenes = (self.indice_imagenes + 1) % len(self.desarrolladores)
+        self.mostrar_hoja_de_vida_y_fotos()
 
-        # Redimensionar las imágenes antes de rotarlas
-        imagen1_redimensionada = self.imagen1.resize((ancho_imagen//2, alto_imagen), Image.Resampling.LANCZOS)
-        imagen2_redimensionada = self.imagen2.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
-        imagen3_redimensionada = self.imagen3.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
-        imagen4_redimensionada = self.imagen4.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
+    def mostrar_hoja_de_vida_y_fotos(self):
+        #actualiza la hoja de vida y las imgenes del desarrollador actual
+        desarrollador = self.desarrolladores[self.indice_imagenes]
 
-        # Convertir las imágenes redimensionadas a formato PhotoImage de Tkinter
-        self.imagen_tk1 = ImageTk.PhotoImage(imagen1_redimensionada)
-        self.imagen_tk2 = ImageTk.PhotoImage(imagen2_redimensionada)
-        self.imagen_tk3 = ImageTk.PhotoImage(imagen3_redimensionada)
-        self.imagen_tk4 = ImageTk.PhotoImage(imagen4_redimensionada)
+        # Actualizar la hoja de vida
+        self.label_bio.config(text=f"{desarrollador['nombre']}\n\n{desarrollador['bio']}")
 
-        # Rotar las imágenes
-        self.imagen_tk1, self.imagen_tk2, self.imagen_tk3, self.imagen_tk4 = (
-            self.imagen_tk2, self.imagen_tk3, self.imagen_tk4, self.imagen_tk1
-        )
+        # Obtener dimensiones del frame P6
+        ancho_imagen = self.p6.winfo_width() // 2
+        alto_imagen = self.p6.winfo_height() // 2
 
-        # Asignar las imágenes rotadas a las etiquetas
-        self.etiqueta1.config(image=self.imagen_tk1)
-        self.etiqueta2.config(image=self.imagen_tk2)
-        self.etiqueta3.config(image=self.imagen_tk3)
-        self.etiqueta4.config(image=self.imagen_tk4)
+        self.imagenes_tk = [] 
 
-        # Actualizar el frame de la ventana
-        self.window.update_idletasks()
+        for i, img_path in enumerate(desarrollador["imagenes"]):
+            imagen = Image.open(img_path)
+            imagen_redimensionada = imagen.resize((ancho_imagen, alto_imagen), Image.Resampling.LANCZOS)
+            imagen_tk = ImageTk.PhotoImage(imagen_redimensionada)
+            self.imagenes_tk.append(imagen_tk)
+
+            # Asignar la imagen a su etiqueta correspondiente
+            self.etiquetas_imagenes[i].config(image=imagen_tk)
+
 
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        ruta = os.path.join(directorio_actual, "imagenes", "imagen2.jpg")
+        ruta = os.path.join(directorio_actual, "imagenes", "imagen5.jpg")
         imagen = Image.open(ruta)
 
         ancho = 500
@@ -259,6 +235,7 @@ class App:
         self.imagen_tk = ImageTk.PhotoImage(imagen)
         self.etiqueta.config(image=self.imagen_tk)
         self.etiqueta.imagen = self.imagen_tk
+
     #este es el metodo que va cambiando las imagenes conforme el usuario pasa el mouse
     def imagenes(self, evento):
 
