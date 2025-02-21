@@ -5,6 +5,7 @@ from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.tienda.Inventario import Inventario
+from excepciones.DatoNoExistenteError import DatoNoExistenteError
 from multimethod import multimethod
 from baseDatos.Serializador import serializar
 from baseDatos.Deserializador import deserializar
@@ -519,11 +520,9 @@ class MainMenu:
             resultado = self.comprador.devolverProducto(idFactura, idProducto, cantidadRetornar, self.vendedor) # Proceso de reembolso en si
             
             if resultado == "FacturaInvalida":
-                return "La factura ingresada no fue encontrada, intente nuevamente."
-                break
+                raise DatoNoExistenteError(f"La factura con ID {idFactura} no existe.")
             elif resultado == "ProductoInvalido":
-                return "El producto ingresado no cumple con los requisitos para devolución.\n" + "Razones posibles:\n" + "- No se encontró en la factura.\n" + "- No es un producto retornable.\n" + "- La cantidad especificada para devolver no es válida."
-                break
+                return "El producto ingresado no cumple con los requisitos para devolución.\n" + "Razones posibles:\n" + "- No es un producto retornable.\n" + "- La cantidad especificada para devolver no es válida."
             else:
                 return "La devolución se ha procesado correctamente, en sus notificaciones encontrará más información.\n"
 

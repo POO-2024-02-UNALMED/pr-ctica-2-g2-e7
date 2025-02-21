@@ -31,6 +31,7 @@ from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
 from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
+from excepciones.DatoNoExistenteError import DatoNoExistenteError
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
@@ -226,7 +227,8 @@ class App:
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        ruta = os.path.join(directorio_actual, "imagenes", "imagen5.jpg")
+        directorio_padre = os.path.dirname(directorio_actual)
+        ruta = os.path.join(directorio_padre, "imagenes", "imagen5.jpg")
         imagen = Image.open(ruta)
 
         ancho = 500
@@ -244,8 +246,9 @@ class App:
         alto = self.p4.winfo_height()
 
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
+        directorio_padre = os.path.dirname(directorio_actual)
         rutas = ["imagen1.jpg", "imagen2.jpg", "imagen3.jpg", "imagen4.jpg", "imagen5.jpg"] #este contiene las direcciones de las imagenes
-        ruta = os.path.join(directorio_actual, "imagenes", rutas[self.contador])
+        ruta = os.path.join(directorio_padre, "imagenes", rutas[self.contador])
         
         imagen = Image.open(ruta)
         imagen = imagen.resize((ancho, alto))
@@ -552,10 +555,15 @@ class App:
                 raise ValueError("Los valores deben ser números positivos.")
 
             mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
+
             messagebox.showinfo("Devolución de Producto", mensaje)
 
         except ValueError:
             messagebox.showerror("Error de entrada", "Por favor, ingrese solo números enteros positivos.")
+
+        except DatoNoExistenteError as e:
+            messagebox.showerror("Dato No Existente", str(e))
+
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
