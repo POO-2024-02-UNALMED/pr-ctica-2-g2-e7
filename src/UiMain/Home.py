@@ -269,26 +269,69 @@ class App:
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
 
-    def mostrarCatalogo(self, menu_bar, historialCompras = None):
+    #RECOMENDACIONES EN PROGRESO(ATT. SIMÓN)
+
+    def mostrarCatalogo(self, menu_bar, historialCompras):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
         #sin eliminarlo
-        
 
-        catalogo = self.instanciar().crearCatalogo()        
-
+        catalogo = None
         frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
         frameCatalogo.pack(expand= True)
+
+        #FUNICIONES AUXILIARES PARA EL BUEN FUNCIONAMIENTO DE LOS BOTONES
+
+        def actualizarCatalogo(historialCompras = None):
+            nonlocal catalogo
+
+            if historialCompras != None:
+                catalogo = self.instanciar().crearCatalogoRecomendaciones(historialCompras)
+            else:
+                catalogo = self.instanciar().crearCatalogo()
+              
+        #Funcion creada para cuando se deba volver a crear el frame,
+        # ya que se elimina al actualizar el catálogo
+
+        def crearFrameCatalogo():
+            nonlocal frameCatalogo
+            frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
+            frameCatalogo.pack(expand= True)
+
+        def rechazarRecomendaciones():
+            actualizarCatalogo()
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            crearFrameCatalogo()
+        
+        def confirmarRecomendaciones():
+            actualizarCatalogo(historialCompras)
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            crearFrameCatalogo()
+        
+        actualizarCatalogo()
+
+        
+        #if len(historialCompras.getFacturas()) != 0:
+         #   actualizarCatalogo()
+          # preguntaRecomendaciones.pack()
+
+           # botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
+            #botonConfirmarRecomendaciones.pack(expand= True)
+
+            #botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
+            #botonRechazarRecomendaciones.pack()
+        #else:
+           # actualizarCatalogo()
+        
 
         #Creación de los botones para seleccionar productos
         
         for fila in range(0, 5):
             for columna in range(0,6):
+                productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
                 producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
-                                      command= lambda producto=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
                 producto.grid(row= fila, column= columna, padx= 10, pady= 10)
     
-    def mostrarCatalogoRecomendaciones(historialCompras):
-        pass
 
     def seleccionarProducto(self, producto):
 
@@ -453,7 +496,7 @@ class App:
         titulo = tk.Label(frameCarrito, text= "Menú Carrito", font= ("Arial", 10))
         titulo.grid(row= 0, column= 1, columnspan=2, padx= 10, pady= 10)
 
-        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo(menu_bar)])
+        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo(menu_bar, self.main_menu.getComprador().getHistorialCompras())])
         opcion1.grid(row= 1, column= 1, padx= 10, pady= 10)
 
         opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.eliminarProductosDelCarrito(ventana_principal)])
