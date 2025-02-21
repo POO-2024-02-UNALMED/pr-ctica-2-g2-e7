@@ -29,7 +29,7 @@ from App import instanciar
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
-from UiMain.Field import FieldFrame
+from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
 
 class App:
