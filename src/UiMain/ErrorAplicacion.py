@@ -1,4 +1,4 @@
-class MiExcepcionPersonalizada(Exception):
+class ErrorAplicacion(Exception):
     
     def __init__(self, mensaje, codigo_error):
         super().__init__("Manejo de errores de la aplicacion")
