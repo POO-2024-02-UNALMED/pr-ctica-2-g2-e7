@@ -5,4 +5,4 @@ class ErrorAplicacion(Exception):
         self.codigo_error = codigo_error
         self.mensaje=mensaje
     def mostrar(self):
-        return (f"Manejo de errores de la aplicacion {self.mensaje} codigo de error: {self.codigo_error}")
+        return (f"Manejo de errores de la Aplicación {self.mensaje} codigo de error: {self.codigo_error}")

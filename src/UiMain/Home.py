@@ -53,15 +53,15 @@ class App:
         # Datos de los desarrolladores
         self.desarrolladores = [
             {"nombre": "Tomás Aristizábal Gómez", "bio": "Desarrollador especializado en arquitectura de software y sistemas empresariales.",
-             "imagenes": ["src/UiMain/imagenes/tomas1.jpg", "src/UiMain/imagenes/tomas2.jpg", "src/UiMain/imagenes/tomas3.jpg", "src/UiMain/imagenes/tomas4.jpg"]},
+             "imagenes": ["src/imagenes/tomas1.jpg", "src/imagenes/tomas2.jpg", "src/imagenes/tomas3.jpg", "src/imagenes/tomas4.jpg"]},
             {"nombre": "Santiago Barrientos Medina", "bio": "Full Stack Developer con experiencia en Python y desarrollo web.",
-             "imagenes": ["src/UiMain/imagenes/santiago1.jpg", "src/UiMain/imagenes/santiago2.jpg", "src/UiMain/imagenes/santiago3.jpg", "src/UiMain/imagenes/santiago4.jpg"]},
+             "imagenes": ["src/imagenes/santiago1.jpg", "src/imagenes/santiago2.jpg", "src/imagenes/santiago3.jpg", "src/imagenes/santiago4.jpg"]},
             {"nombre": "Juan Nicolás Chaparro Rodríguez", "bio": "Desarrollador en Inteligencia Artificial y Ciencia de Datos.",
-             "imagenes": ["src/UiMain/imagenes/juan1.jpg", "src/UiMain/imagenes/juan2.jpg", "src/UiMain/imagenes/juan3.jpg", "src/UiMain/imagenes/juan4.jpg"]},
+             "imagenes": ["src/imagenes/juan1.jpg", "src/imagenes/juan2.jpg", "src/imagenes/juan3.jpg", "src/imagenes/juan4.jpg"]},
             {"nombre": "Simón David Díaz Rojas", "bio": "Especialista en ciberseguridad y redes informáticas.",
-             "imagenes": ["src/UiMain/imagenes/simon1.jpg", "src/UiMain/imagenes/simon2.jpg", "src/UiMain/imagenes/simon3.jpg", "src/UiMain/imagenes/simon4.jpg"]},
+             "imagenes": ["src/imagenes/simon1.jpg", "src/imagenes/simon2.jpg", "src/imagenes/simon3.jpg", "src/imagenes/simon4.jpg"]},
             {"nombre": "José Alejandro Castro Rey", "bio": "Ingeniero de software con experiencia en videojuegos y desarrollo móvil.",
-             "imagenes": ["src/UiMain/imagenes/jose1.jpg", "src/UiMain/imagenes/jose2.jpg", "src/UiMain/imagenes/jose3.jpg", "src/UiMain/imagenes/jose4.jpg"]}
+             "imagenes": ["src/imagenes/jose1.jpg", "src/imagenes/jose2.jpg", "src/imagenes/jose3.jpg", "src/imagenes/jose4.jpg"]}
         ]
 
         # Crear ventana principal
