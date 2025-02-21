@@ -33,6 +33,8 @@ from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
 from excepciones.DatoNoExistenteError import DatoNoExistenteError
 from excepciones.CantidadInvalidaError import CantidadInvalidaError
+from excepciones.CarritoComprasVacio import CarritoComprasVacio
+from excepciones.SaldoInsuficienteError import SaldoInsuficienteError
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
@@ -752,11 +754,9 @@ class App:
     #    V    V    V    V    V    V    V    V   
 
     def menuCompra(self, ventana, menu_bar):
-        if len(self.main_menu.getComprador().getCarritoCompras().getListaItems()) == 0:
-            messagebox.showerror("Carrito de compras vacío", "ERROR. Por favor verifique que su carrito de compras no este vacío.")
-        elif self.main_menu.verificacionCompra() == False:
-            messagebox.showerror("Saldo insuficiente", "ERROR. No cuentas con saldo suficiente para realizar la compra.")
-        else:
+        try:
+            self.comprobarCarrito(self.main_menu.getComprador().getCarritoCompras().getListaItems())
+            self.comprobarSaldo(self.main_menu)
             self.main_menu.getComprador().getCarritoCompras().calcularTotal()
             respuesta = messagebox.askyesno("Aplicar Cupón", "¿Desea aplicar un cupón de descuento durante la compra?")
             if respuesta == True:
@@ -797,6 +797,10 @@ class App:
                         entrada_evaluar.delete(0, tk.END)
             elif respuesta == False:
                 self.realizarCompra(ventana, menu_bar, False, None)
+        except SaldoInsuficienteError as error_saldo:
+            messagebox.showerror("Saldo Insuficiente", error_saldo)
+        except CarritoComprasVacio as error_carrito:
+            messagebox.showerror("Carrito de Compras Vacío", error_carrito)
     
     def realizarCompra(self, ventana, menu_bar, aplica_o_no = None, cupon = None):
         self.limpiar_ventana(ventana, menu_bar)
@@ -809,6 +813,13 @@ class App:
         label2 = tk.Label(ventana, text= "¡Muchas gracias por su compra!", font=("Arial", 16, "bold"))
         label2.pack()
         
+    def comprobarCarrito(self, listaItems):
+        if len(listaItems) == 0:
+            raise CarritoComprasVacio("ERROR. Por favor verifique que su carrito de compras no este vacío.")
+    def comprobarSaldo(self, main_menu):
+        estado = main_menu.verificacionCompra()
+        if estado == False:
+            raise SaldoInsuficienteError("ERROR. No cuentas con saldo suficiente para realizar la compra.")
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |  
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
