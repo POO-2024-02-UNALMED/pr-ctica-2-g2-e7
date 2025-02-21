@@ -1,4 +1,4 @@
-from ExceptionC1 import ExceptionC1
+from excepciones.ExceptionC1 import ExceptionC1
 
 class ExceptionInventada1(ExceptionC1):
     def __init__(self):

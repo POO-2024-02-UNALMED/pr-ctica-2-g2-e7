@@ -32,6 +32,7 @@ from gestorAplicacion.usuario.Vendedor import Vendedor
 from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
 from excepciones.DatoNoExistenteError import DatoNoExistenteError
+from excepciones.CantidadInvalidaError import CantidadInvalidaError
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
@@ -552,14 +553,14 @@ class App:
             cantidad_retornar = int(valores["Cantidad a devolver"])
 
             if id_factura < 0 or id_producto < 0 or cantidad_retornar < 0:
-                raise ValueError("Los valores deben ser números positivos.")
+                raise CantidadInvalidaError("Los valores deben ser números positivos.")
 
             mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
 
             messagebox.showinfo("Devolución de Producto", mensaje)
 
-        except ValueError:
-            messagebox.showerror("Error de entrada", "Por favor, ingrese solo números enteros positivos.")
+        except CantidadInvalidaError as e:
+            messagebox.showerror("Cantidad Invalida", str(e))
 
         except DatoNoExistenteError as e:
             messagebox.showerror("Dato No Existente", str(e))

@@ -1,4 +1,4 @@
-from ExceptionC2 import ExceptionC2
+from excepciones.ExceptionC2 import ExceptionC2
 
 class ExceptionSugerida2(ExceptionC2):
     def __init__(self):
