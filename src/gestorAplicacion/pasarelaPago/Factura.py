@@ -1,4 +1,6 @@
 from .Cupon import Cupon
+from excepciones.DatoNoExistenteError import DatoNoExistenteError
+from excepciones.CantidadInvalidaError import CantidadInvalidaError
 
 class Factura(Cupon):
 
@@ -21,7 +23,9 @@ class Factura(Cupon):
                 cantidadVendida = self.carritoCompras.getCantidadPorProductos(producto)
                 if(cantidadVendida >= cantidadRetornar and cantidadRetornar > 0):
                     return producto
-        return None
+                raise CantidadInvalidaError("La cantidad a devolver no es valida")
+            return None
+        raise DatoNoExistenteError(f"El producto con ID {idproducto} no existe.")
     
     def modificarFactura(self, producto, cantidad, accion):
         if accion.casefold() == "eliminar":

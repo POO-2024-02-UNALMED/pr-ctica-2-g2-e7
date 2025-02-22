@@ -29,8 +29,13 @@ from App import instanciar
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
-from UiMain.Field import FieldFrame
+from gestorAplicacion.fabrica.Fabrica import Fabrica
+from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
+from excepciones.DatoNoExistenteError import DatoNoExistenteError
+from excepciones.CantidadInvalidaError import CantidadInvalidaError
+from excepciones.CarritoComprasVacio import CarritoComprasVacio
+from excepciones.SaldoInsuficienteError import SaldoInsuficienteError
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
@@ -53,15 +58,15 @@ class App:
         # Datos de los desarrolladores
         self.desarrolladores = [
             {"nombre": "Tomás Aristizábal Gómez", "bio": "Desarrollador especializado en arquitectura de software y sistemas empresariales.",
-             "imagenes": ["src/UiMain/imagenes/tomas1.jpg", "src/UiMain/imagenes/tomas2.jpg", "src/UiMain/imagenes/tomas3.jpg", "src/UiMain/imagenes/tomas4.jpg"]},
+             "imagenes": ["src/imagenes/tomas1.jpg", "src/imagenes/tomas2.jpg", "src/imagenes/tomas3.jpg", "src/imagenes/tomas4.jpg"]},
             {"nombre": "Santiago Barrientos Medina", "bio": "Full Stack Developer con experiencia en Python y desarrollo web.",
-             "imagenes": ["src/UiMain/imagenes/santiago1.jpg", "src/UiMain/imagenes/santiago2.jpg", "src/UiMain/imagenes/santiago3.jpg", "src/UiMain/imagenes/santiago4.jpg"]},
+             "imagenes": ["src/imagenes/santiago1.jpg", "src/imagenes/santiago2.jpg", "src/imagenes/santiago3.jpg", "src/imagenes/santiago4.jpg"]},
             {"nombre": "Juan Nicolás Chaparro Rodríguez", "bio": "Desarrollador en Inteligencia Artificial y Ciencia de Datos.",
-             "imagenes": ["src/UiMain/imagenes/juan1.jpg", "src/UiMain/imagenes/juan2.jpg", "src/UiMain/imagenes/juan3.jpg", "src/UiMain/imagenes/juan4.jpg"]},
+             "imagenes": ["src/imagenes/juan1.jpg", "src/imagenes/juan2.jpg", "src/imagenes/juan3.jpg", "src/imagenes/juan4.jpg"]},
             {"nombre": "Simón David Díaz Rojas", "bio": "Especialista en ciberseguridad y redes informáticas.",
-             "imagenes": ["src/UiMain/imagenes/simon1.jpg", "src/UiMain/imagenes/simon2.jpg", "src/UiMain/imagenes/simon3.jpg", "src/UiMain/imagenes/simon4.jpg"]},
+             "imagenes": ["src/imagenes/simon1.jpg", "src/imagenes/simon2.jpg", "src/imagenes/simon3.jpg", "src/imagenes/simon4.jpg"]},
             {"nombre": "José Alejandro Castro Rey", "bio": "Ingeniero de software con experiencia en videojuegos y desarrollo móvil.",
-             "imagenes": ["src/UiMain/imagenes/jose1.jpg", "src/UiMain/imagenes/jose2.jpg", "src/UiMain/imagenes/jose3.jpg", "src/UiMain/imagenes/jose4.jpg"]}
+             "imagenes": ["src/imagenes/jose1.jpg", "src/imagenes/jose2.jpg", "src/imagenes/jose3.jpg", "src/imagenes/jose4.jpg"]}
         ]
 
         # Crear ventana principal
@@ -226,7 +231,8 @@ class App:
     #este metodo lo cree para que cuando el sistema se abra, se cargue una primera imagen 
     def cargar_imagen_inicial(self):
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
-        ruta = os.path.join(directorio_actual, "imagenes", "imagen5.jpg")
+        directorio_padre = os.path.dirname(directorio_actual)
+        ruta = os.path.join(directorio_padre, "imagenes", "imagen5.jpg")
         imagen = Image.open(ruta)
 
         ancho = 500
@@ -244,8 +250,9 @@ class App:
         alto = self.p4.winfo_height()
 
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
+        directorio_padre = os.path.dirname(directorio_actual)
         rutas = ["imagen1.jpg", "imagen2.jpg", "imagen3.jpg", "imagen4.jpg", "imagen5.jpg"] #este contiene las direcciones de las imagenes
-        ruta = os.path.join(directorio_actual, "imagenes", rutas[self.contador])
+        ruta = os.path.join(directorio_padre, "imagenes", rutas[self.contador])
         
         imagen = Image.open(ruta)
         imagen = imagen.resize((ancho, alto))
@@ -269,26 +276,79 @@ class App:
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
 
-    def mostrarCatalogo(self, menu_bar, historialCompras = None):
+    #RECOMENDACIONES EN PROGRESO(ATT. SIMÓN)
+
+    def mostrarCatalogo(self, menu_bar, historialCompras):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
         #sin eliminarlo
-        
 
-        catalogo = self.instanciar().crearCatalogo()        
-
+        catalogo = None
         frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
         frameCatalogo.pack(expand= True)
 
-        #Creación de los botones para seleccionar productos
+        #FUNICIONES AUXILIARES PARA EL BUEN FUNCIONAMIENTO DE LOS BOTONES
+
+        def actualizarCatalogo(historialCompras = None):
+            nonlocal catalogo
+
+            if historialCompras != None:
+                catalogo = self.instanciar().crearCatalogoRecomendaciones(historialCompras)
+            else:
+                catalogo = self.instanciar().crearCatalogo()
+              
+        #Funcion creada para cuando se deba volver a crear el frame,
+        # ya que se elimina al actualizar el catálogo
+
+        def crearFrameCatalogo():
+            nonlocal frameCatalogo
+            frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
+            frameCatalogo.pack(expand= True)
+
+        def rechazarRecomendaciones():
+            actualizarCatalogo()
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            crearFrameCatalogo()
+            crearBotonesProductos()
         
-        for fila in range(0, 5):
-            for columna in range(0,6):
-                producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
-                                      command= lambda producto=catalogo[fila][columna]: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
-                producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+        def confirmarRecomendaciones():
+            actualizarCatalogo(historialCompras)
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            crearFrameCatalogo()
+            crearBotonesProductos()
+        
+        def crearBotonesProductos():
+            #iteracion = 1 #BORRAR
+            for fila in range(0, 5):
+                for columna in range(0,6):
+                    productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                  #  prueba = (catalogo[fila][columna] != None) #BORRAR
+                   # print(prueba) #BORRAR
+                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                   # iteracion += 1 #BORRAR
+        
+        actualizarCatalogo()
+
+        
+        if len(historialCompras.getFacturas()) != 0:
+            
+            preguntaRecomendaciones = tk.Label(frameCatalogo, text= "¿Desea actualizar las recomendaciones?", font= ("Arial", 10))
+            preguntaRecomendaciones.pack()
+
+            botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
+            botonConfirmarRecomendaciones.pack(expand= True)
+
+            botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
+            botonRechazarRecomendaciones.pack()
+            actualizarCatalogo()
+        else:
+            actualizarCatalogo()
+            crearBotonesProductos()
+        
+        
+        
     
-    def mostrarCatalogoRecomendaciones(historialCompras):
-        pass
 
     def seleccionarProducto(self, producto):
 
@@ -298,10 +358,10 @@ class App:
         frameProducto.pack(expand= True, fill= "both")
 
         infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
-        infoProducto.pack(pady= 10,expand=True,ipadx=20,ipady=20)
+        infoProducto.pack(pady= 10,ipadx=20,ipady=20)
 
         frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
-        frameBotones.pack()
+        frameBotones.pack(side= "top")
 
         botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
         botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
@@ -309,7 +369,7 @@ class App:
         botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
         botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
 
-    #FALTA POR IMPLEMENTAR
+
     def agregarAlCarrito(self, producto, menu_bar):
     # Crear un marco con bordes
         f1 = tk.Frame(ventana_principal, bd=5, relief="groove")
@@ -453,7 +513,7 @@ class App:
         titulo = tk.Label(frameCarrito, text= "Menú Carrito", font= ("Arial", 10))
         titulo.grid(row= 0, column= 1, columnspan=2, padx= 10, pady= 10)
 
-        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo(menu_bar)])
+        opcion1 = tk.Button(frameCarrito, text= "Agregar productos/Ver catálogo", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.mostrarCatalogo(menu_bar, self.main_menu.getComprador().getHistorialCompras())])
         opcion1.grid(row= 1, column= 1, padx= 10, pady= 10)
 
         opcion2 = tk.Button(frameCarrito, text= "Eliminar productos del carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.eliminarProductosDelCarrito(ventana_principal)])
@@ -506,13 +566,18 @@ class App:
             cantidad_retornar = int(valores["Cantidad a devolver"])
 
             if id_factura < 0 or id_producto < 0 or cantidad_retornar < 0:
-                raise ValueError("Los valores deben ser números positivos.")
+                raise CantidadInvalidaError("Los valores deben ser números positivos.")
 
             mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
+
             messagebox.showinfo("Devolución de Producto", mensaje)
 
-        except ValueError:
-            messagebox.showerror("Error de entrada", "Por favor, ingrese solo números enteros positivos.")
+        except CantidadInvalidaError as e:
+            messagebox.showerror("Cantidad Invalida", str(e))
+
+        except DatoNoExistenteError as e:
+            messagebox.showerror("Dato No Existente", str(e))
+
 
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ
     #    |    |    |    |    |    |    |    |    |
@@ -700,11 +765,9 @@ class App:
     #    V    V    V    V    V    V    V    V   
 
     def menuCompra(self, ventana, menu_bar):
-        if len(self.main_menu.getComprador().getCarritoCompras().getListaItems()) == 0:
-            messagebox.showerror("Carrito de compras vacío", "ERROR. Por favor verifique que su carrito de compras no este vacío.")
-        elif self.main_menu.verificacionCompra() == False:
-            messagebox.showerror("Saldo insuficiente", "ERROR. No cuentas con saldo suficiente para realizar la compra.")
-        else:
+        try:
+            self.comprobarCarrito(self.main_menu.getComprador().getCarritoCompras().getListaItems())
+            self.comprobarSaldo(self.main_menu)
             self.main_menu.getComprador().getCarritoCompras().calcularTotal()
             respuesta = messagebox.askyesno("Aplicar Cupón", "¿Desea aplicar un cupón de descuento durante la compra?")
             if respuesta == True:
@@ -745,6 +808,10 @@ class App:
                         entrada_evaluar.delete(0, tk.END)
             elif respuesta == False:
                 self.realizarCompra(ventana, menu_bar, False, None)
+        except SaldoInsuficienteError as error_saldo:
+            messagebox.showerror("Saldo Insuficiente", error_saldo)
+        except CarritoComprasVacio as error_carrito:
+            messagebox.showerror("Carrito de Compras Vacío", error_carrito)
     
     def realizarCompra(self, ventana, menu_bar, aplica_o_no = None, cupon = None):
         self.limpiar_ventana(ventana, menu_bar)
@@ -757,6 +824,13 @@ class App:
         label2 = tk.Label(ventana, text= "¡Muchas gracias por su compra!", font=("Arial", 16, "bold"))
         label2.pack()
         
+    def comprobarCarrito(self, listaItems):
+        if len(listaItems) == 0:
+            raise CarritoComprasVacio("ERROR. Por favor verifique que su carrito de compras no este vacío.")
+    def comprobarSaldo(self, main_menu):
+        estado = main_menu.verificacionCompra()
+        if estado == False:
+            raise SaldoInsuficienteError("ERROR. No cuentas con saldo suficiente para realizar la compra.")
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |  
     # MÉTODOS PRESENTES EN EL MENÚ DE COMPRA
@@ -817,19 +891,47 @@ class App:
 
     def generarReporteVentas(self, menu_bar):
 
+        frameReporte = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
+        frameReporte.pack(expand=True, fill="both")
+
+        titulo = tk.Label(frameReporte, text="Reporte de Ventas", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        columnas = ("Categoría", "Nombre", "Estado", "Cantidad en stock", "Devoluciones")
+        tabla = ttk.Treeview(frameReporte, columns=columnas, show="headings")
+
+        for col in columnas:
+            tabla.heading(col, text=col)
+            tabla.column(col, width=150, anchor="center")
+            tabla.pack(expand=True, fill="both")
+        # Obtener datos
         inventario = self.main_menu.getInventario() 
         reporte = inventario.generar_reporte()
+        categoria_anterior = None
+        for producto in reporte:
+            if producto["Categoría"] != categoria_anterior:
+                if categoria_anterior is not None:
+                    tabla.insert("", "end", values=("", "", "", "", ""), tags=("separador"))
+            
+            tabla.insert("", "end", values=(producto["Categoría"], producto["Nombre"], producto["Estado"], producto["Cantidad en stock"], producto["Devoluciones"]))
+            
+            categoria_anterior = producto["Categoría"]
 
-        frameReporte = tk.Frame(ventana_principal, bg="lightblue", width=600, height=400)
-        frameReporte.pack(expand=True)
-
-        texto_reporte = tk.Text(frameReporte, wrap="word", width=70, height=20)
-        texto_reporte.insert("1.0", reporte)
-        texto_reporte.config(state="disabled")  # Para que el usuario no pueda modificarlo
-        texto_reporte.pack(padx=10, pady=10)
-
+        tabla.tag_configure("separador", background="beige")
+        
+        # Botón para volver
         boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
         boton_volver.pack(pady=10)
+
+        # Botón para generar orden de fabricación
+        boton_orden = tk.Button(frameReporte, text="Generar Orden de Fabricación", command=self.generarOrdenFabricacion)
+        boton_orden.pack(pady=10)
+        
+    def generarOrdenFabricacion(self):
+        inventario = self.main_menu.getInventario()
+        vendedor = self.main_menu.getVendedor()
+        mensaje = vendedor.crear_orden_fabricacion()
+        messagebox.showinfo("Orden de Fabricación", mensaje)
     
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |    
@@ -959,6 +1061,7 @@ if __name__ == "__main__":
     # producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
     ########################################################
     inventario = instanciar()
+    fabrica = Fabrica(inventario)
     # inventario.añadirProducto(producto1)
     # inventario.añadirProducto(producto2)
     # inventario.añadirProducto(producto3)
@@ -974,7 +1077,7 @@ if __name__ == "__main__":
     # carrito.añadirProducto(producto3, 2)
     ######################################
     comprador.setCarritoCompras(carrito)
-    vendedor = Vendedor("pedro", None, inventario, None)
+    vendedor = Vendedor("pedro", None, inventario, fabrica)
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)

@@ -5,6 +5,8 @@ from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.tienda.Inventario import Inventario
+from gestorAplicacion.fabrica.Fabrica import Fabrica
+from excepciones.DatoNoExistenteError import DatoNoExistenteError
 from multimethod import multimethod
 from baseDatos.Serializador import serializar
 from baseDatos.Deserializador import deserializar
@@ -512,6 +514,11 @@ class MainMenu:
         return self.inventario
     def setInventario(self, inventario):
         self.inventario = inventario
+    def getFabrica(self):
+        return self.fabrica
+
+    def setFabrica(self, fabrica):
+        self.fabrica = fabrica
     
     def returnMenuDisplay(self, idFactura, idProducto, cantidadRetornar):
         while True:
@@ -519,11 +526,9 @@ class MainMenu:
             resultado = self.comprador.devolverProducto(idFactura, idProducto, cantidadRetornar, self.vendedor) # Proceso de reembolso en si
             
             if resultado == "FacturaInvalida":
-                return "La factura ingresada no fue encontrada, intente nuevamente."
-                break
+                raise DatoNoExistenteError(f"La factura con ID {idFactura} no existe.")
             elif resultado == "ProductoInvalido":
-                return "El producto ingresado no cumple con los requisitos para devolución.\n" + "Razones posibles:\n" + "- No se encontró en la factura.\n" + "- No es un producto retornable.\n" + "- La cantidad especificada para devolver no es válida."
-                break
+                return "El producto ingresado no cumple con los requisitos para devolución.\n- No es un producto retornable."
             else:
                 return "La devolución se ha procesado correctamente, en sus notificaciones encontrará más información.\n"
 
@@ -541,18 +546,23 @@ class MainMenu:
                 opcion = int(input("Seleccione una opción: "))
                 if opcion == 1:
                     print(Inventario.generar_reporte())
-                    print("A continuación elija los productos que quiere crear en la fábrica para reponer en el inventario.\n- Primero elija el producto y posteriormente la cantidad, puede elegir otro producto y repite el proceso.\n- Asegúrese de que esté correcto el nombre y la cantidad de cada producto ya que si se equivoca tiene que ingresar todo de nuevo.\n- Seleccione un máximo de 50 unidades por orden.\nEscriba 'fin' para terminar la orden y enviarla o para salir")
+                    print("A continuación, elija los productos que quiere crear en la fábrica para reponer en el inventario.\n"
+                        "- Primero elija el producto y posteriormente la cantidad, puede elegir otro producto y repite el proceso.\n"
+                        "- Asegúrese de que esté correcto el nombre y la cantidad de cada producto ya que si se equivoca tiene que ingresar todo de nuevo.\n"
+                        "- Seleccione un máximo de 50 unidades por orden.\n"
+                        "Escriba 'fin' para terminar la orden y enviarla o para salir.")
 
-                    resultado = ""
-                    while not resultado.startswith("Orden creada con éxito.") and resultado != "No se seleccionaron productos. La orden no se creó.":
-                        resultado = Vendedor.crear_orden_fabricacion()
+                    while True:
+                        resultado = self.vendedor.crear_orden_fabricacion()
                         print(resultado)
+                        if resultado.startswith("Orden creada con éxito.") or resultado == "No se seleccionaron productos. La orden no se creó.":
+                            break
 
-                    if Vendedor.get_ordenes_pendientes():
-                        mensaje_fabrica_notif = "Se han entregado los productos "
-                        asunto_vendedor = "Orden De producción"
-                        Vendedor.recibir_notificacion(Notificacion(mensaje_fabrica_notif, asunto_vendedor, Vendedor))
-                        Vendedor.get_ordenes_pendientes().clear()
+                    if self.vendedor.get_ordenes_pendientes():
+                        mensaje_fabrica_notif = "Se han entregado los productos"
+                        asunto_Vendedor = "Orden De Producción"
+                        self.vendedor.recibir_notificacion(Notificacion(mensaje_fabrica_notif, asunto_Vendedor, self.vendedor))
+                        self.vendedor.get_ordenes_pendientes().clear()
                 elif opcion == 2:
                     print("========= CUENTA BANCARIA =========")
                     print(self.vendedor.consultarCuentaBancaria())
