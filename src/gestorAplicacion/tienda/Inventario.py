@@ -181,6 +181,8 @@ class Inventario:
         for i in range(3):
             if historialCompra.getCategoriasMasCompradas()[i] != None:
                 categorias += 1
+        print(historialCompra.getCategoriasMasCompradas())
+
 
         if categorias == 1:
 
@@ -189,6 +191,7 @@ class Inventario:
 
             for i in range (6):
                 catalogo[0][i] = productosRecomendados[i]
+                #print(productosRecomendados[i].getNombre()) #Borrar
             
             #Se añaden los productos al resto de la matriz
 

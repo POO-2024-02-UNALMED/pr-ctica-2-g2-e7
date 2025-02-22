@@ -307,36 +307,46 @@ class App:
             actualizarCatalogo()
             self.limpiar_ventana(ventana_principal, menu_bar)
             crearFrameCatalogo()
+            crearBotonesProductos()
         
         def confirmarRecomendaciones():
             actualizarCatalogo(historialCompras)
             self.limpiar_ventana(ventana_principal, menu_bar)
             crearFrameCatalogo()
+            crearBotonesProductos()
+        
+        def crearBotonesProductos():
+            #iteracion = 1 #BORRAR
+            for fila in range(0, 5):
+                for columna in range(0,6):
+                    productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                  #  prueba = (catalogo[fila][columna] != None) #BORRAR
+                   # print(prueba) #BORRAR
+                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                   # iteracion += 1 #BORRAR
         
         actualizarCatalogo()
 
         
-        #if len(historialCompras.getFacturas()) != 0:
-         #   actualizarCatalogo()
-          # preguntaRecomendaciones.pack()
+        if len(historialCompras.getFacturas()) != 0:
+            
+            preguntaRecomendaciones = tk.Label(frameCatalogo, text= "¿Desea actualizar las recomendaciones?", font= ("Arial", 10))
+            preguntaRecomendaciones.pack()
 
-           # botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
-            #botonConfirmarRecomendaciones.pack(expand= True)
+            botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
+            botonConfirmarRecomendaciones.pack(expand= True)
 
-            #botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
-            #botonRechazarRecomendaciones.pack()
-        #else:
-           # actualizarCatalogo()
+            botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
+            botonRechazarRecomendaciones.pack()
+            actualizarCatalogo()
+        else:
+            actualizarCatalogo()
+            crearBotonesProductos()
         
-
-        #Creación de los botones para seleccionar productos
         
-        for fila in range(0, 5):
-            for columna in range(0,6):
-                productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
-                producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
-                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
-                producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+        
     
 
     def seleccionarProducto(self, producto):
@@ -347,10 +357,10 @@ class App:
         frameProducto.pack(expand= True, fill= "both")
 
         infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
-        infoProducto.pack(pady= 10,expand=True,ipadx=20,ipady=20)
+        infoProducto.pack(pady= 10,ipadx=20,ipady=20)
 
         frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
-        frameBotones.pack()
+        frameBotones.pack(side= "top")
 
         botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
         botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
@@ -358,7 +368,7 @@ class App:
         botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
         botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
 
-    #FALTA POR IMPLEMENTAR
+
     def agregarAlCarrito(self, producto, menu_bar):
     # Crear un marco con bordes
         f1 = tk.Frame(ventana_principal, bd=5, relief="groove")
