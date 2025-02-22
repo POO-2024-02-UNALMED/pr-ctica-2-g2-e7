@@ -194,10 +194,95 @@ class Inventario:
         for i in range(3):
             if historialCompra.getCategoriasMasCompradas()[i] != None:
                 categorias += 1
+        print(historialCompra.getCategoriasMasCompradas())
+
 
         if categorias == 1:
 
             categoriaRecomendada = historialCompra.getCategoriasMasCompradas()[0]
             productosRecomendados = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada)]
+
+            for i in range (6):
+                catalogo[0][i] = productosRecomendados[i]
+                #print(productosRecomendados[i].getNombre()) #Borrar
+            
+            #Se añaden los productos al resto de la matriz
+
+            fila = 1
+            columna = 0
+
+            #Luego de agregar una fila de productos recomendados, quedan 24 espacios
+            #disponibles para productos no recomendados
+
+            for i in range(24):
+                fila = i // 6  # Divide en filas (cada 6 elementos pasa a la siguiente fila)
+                columna = i % 6  # Asegura que las columnas sean de 0 a 5
+
+                categoria = random.randint(0, 5)
+                indice = i - 16 if i >= 16 else i
+                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+
+            return catalogo
+        
+        if categorias == 2:
+            categoriaRecomendada1 = historialCompra.getCategoriasMasCompradas()[0]
+            categoriaRecomendada2 = historialCompra.getCategoriasMasCompradas()[1]
+
+            productosRecomendados1 = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada1)]
+            productosRecomendados2 = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada2)]
+
+            for i in range (6):
+                catalogo[0][i] = productosRecomendados1[i]
+                catalogo[1][i] = productosRecomendados2[i]
+            
+            #Se añaden los productos al resto de la matriz
+
+            fila = 2
+            columna = 0
+
+            #Luego de agregar dos filas de productos recomendados, quedan 18 espacios
+            #disponibles para productos no recomendados
+
+            for i in range(18):
+                fila = i // 6
+                columna = i % 6
+
+                categoria = random.randint(0, 5)
+                indice = i - 16 if i >= 16 else i
+                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+            
+            return catalogo
+        
+        if categorias == 3:
+            categoriaRecomendada1 = historialCompra.getCategoriasMasCompradas()[0]
+            categoriaRecomendada2 = historialCompra.getCategoriasMasCompradas()[1]
+            categoriaRecomendada3 = historialCompra.getCategoriasMasCompradas()[2]
+
+            productosRecomendados1 = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada1)]
+            productosRecomendados2 = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada2)]
+            productosRecomendados3 = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada3)]
+
+            for i in range (6):
+                catalogo[0][i] = productosRecomendados1[i]
+                catalogo[1][i] = productosRecomendados2[i]
+                catalogo[2][i] = productosRecomendados3[i]
+            
+            #Se añaden los productos al resto de la matriz
+
+            fila = 3
+            columna = 0
+
+            #Luego de agregar tres filas de productos recomendados, quedan 12 espacios
+            #disponibles para productos no recomendados
+
+            for i in range(12):
+                fila = i // 6
+                columna = i % 6
+
+                categoria = random.randint(0, 5)
+                indice = i - 16 if i >= 16 else i
+                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+            
+            return catalogo
 
                 

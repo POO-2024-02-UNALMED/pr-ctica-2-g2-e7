@@ -77,27 +77,29 @@ class HistorialCompras:
                 self.cantidadDeportes += factura.getCarritoCompras().getCantidadPorProductos(producto)
 
     def actualizarCategoriasMasCompradas(self):
-        #Se crea una lista con las cantidades compradas
-        cantidadesOrdenadas = [self.cantidadTecnologia, self.cantidadAseo, self.cantidadComida, self.cantidadPapeleria, self.cantidadJugueteria, self.cantidadDeportes]
+        # Lista con las cantidades compradas
+        cantidadesOrdenadas = [self.cantidadTecnologia, self.cantidadAseo, self.cantidadComida, 
+                            self.cantidadPapeleria, self.cantidadJugueteria, self.cantidadDeportes]
 
-        #Se crea una lista con las categorias
+        # Lista con las categorías (asumo que Producto.Categoria es una lista/enum ordenada correctamente)
         categoriasOrdenadas = list(Producto.Categoria)
 
-        #Ordenar ambas listas manteniendo la correspondencia entre índices
+        # Aplicar Bubble Sort para ordenar ambas listas de mayor a menor
+        n = len(cantidadesOrdenadas)
+        for i in range(n - 1):
+            for j in range(0, n - i - 1):
+                if cantidadesOrdenadas[j] < cantidadesOrdenadas[j + 1]:  # Orden descendente
+                    # Intercambiar cantidades
+                    cantidadesOrdenadas[j], cantidadesOrdenadas[j + 1] = cantidadesOrdenadas[j + 1], cantidadesOrdenadas[j]
 
-        for i in range (0, len(cantidadesOrdenadas)):
-            for j in range (1, len(cantidadesOrdenadas)):
-                if cantidadesOrdenadas[j] > cantidadesOrdenadas[i]:
-                    #Intercambiar cantidades
-                    tempCantidad = cantidadesOrdenadas[i]
-                    cantidadesOrdenadas[i] = cantidadesOrdenadas[j]
-                    cantidadesOrdenadas[j] = tempCantidad
+                    # Intercambiar categorías para mantener correspondencia
+                    categoriasOrdenadas[j], categoriasOrdenadas[j + 1] = categoriasOrdenadas[j + 1], categoriasOrdenadas[j]
+        
+        for i in range(3):
+            if cantidadesOrdenadas[i] != 0:
+                self.caegoriasMasCompradas[i] = categoriasOrdenadas[i]
 
-                    #Intercambiar categorías para mantener correspondencia
-                    tempCategoria = categoriasOrdenadas[i]
-                    categoriasOrdenadas[i] = categoriasOrdenadas[j]
-                    categoriasOrdenadas[j] = tempCategoria
-        pass
+        
 
     def getCantidadTecnologia(self):
         return self.cantidadTecnologia
@@ -116,3 +118,6 @@ class HistorialCompras:
     
     def getCantidadDeportes(self):
         return self.cantidadDeportes
+    
+    def getCategoriasMasCompradas(self):
+        return self.caegoriasMasCompradas
