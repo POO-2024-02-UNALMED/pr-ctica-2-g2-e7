@@ -7,6 +7,7 @@ from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.fabrica.Fabrica import Fabrica
 from excepciones.DatoNoExistenteError import DatoNoExistenteError
+from excepciones.CantidadInvalidaError import CantidadInvalidaError
 from multimethod import multimethod
 from baseDatos.Serializador import serializar
 from baseDatos.Deserializador import deserializar
@@ -467,29 +468,25 @@ class MainMenu:
             self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
         return mensaje
 
-    def añada(self,producto,cantidad,comprador):
-       
+  
 
-       
-                
-                try:
-                    numerico = int(cantidad)
-                    if numerico not in [1, 2, 3, 4, 5]:
-                        cantidad= "1"
-                        comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
-                        return("Cantidad inválida, se te asignó una por default que es 1")
-                except ValueError:
-                    cantidad = "1"
-                    comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
-                    return("Entrada inválida, se asignará 1 por defecto")
+    def añada(self, producto, cantidad, comprador):
+        try:
+            numerico = int(cantidad)
+            if numerico not in [1, 2, 3, 4, 5]:
+                raise CantidadInvalidaError("Cantidad inválida, se te asignó una por default que es 1")
+            else:
+                return comprador.getCarritoCompras().añadirProducto(producto, numerico)
+        except ValueError:
+            cantidad = "1"
+            comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
+            return "La cantidad ingresada no es un número válido, se te asignará una por default que es 1"
+        except CantidadInvalidaError as e:
+            cantidad = "1"
+            comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
+            return str(e)
 
-                if producto.getCantidad() <= 0:
-                    return("Error. No hay más productos disponibles.")
-                    
-                else:
-                    mensaje =comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
-                    return(mensaje)
-                    
+                   
     def voucherMenuDisplay(self, cuponEliminar = None):
         if cuponEliminar != None:
             self.comprador.eliminarCupones(cuponEliminar)

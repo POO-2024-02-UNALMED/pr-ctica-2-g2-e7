@@ -398,10 +398,14 @@ class App:
         # Empacar el marco principal
         f1.pack(padx=10, pady=10, expand=True)
     def añadir(self,valores):
-        cantidad=int(valores["Cantidad"])
+        cantidad=(valores["Cantidad"])
         
         o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
-        messagebox.showinfo("Añadir",o)
+        if o=="La cantidad ingresada no es un número válido, se te asignará una por default que es 1":
+            
+            messagebox.showerror("ERROR 101",o)
+        else:
+            messagebox.showinfo("Añadir",o)
         self.ejecutar_ambas2()
 
     
