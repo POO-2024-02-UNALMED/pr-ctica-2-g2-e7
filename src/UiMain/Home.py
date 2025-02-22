@@ -29,6 +29,7 @@ from App import instanciar
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
+from gestorAplicacion.fabrica.Fabrica import Fabrica
 from UiMain.Field import FieldFrame
 from baseDatos.Serializador import serializar
 
@@ -840,19 +841,49 @@ class App:
 
     def generarReporteVentas(self, menu_bar):
 
+        frameReporte = tk.Frame(ventana_principal, bg="brown", padx=20, pady=20)
+        frameReporte.pack(expand=True, fill="both")
+
+        titulo = tk.Label(frameReporte, text="Reporte de Ventas", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        columnas = ("Categoría", "Nombre", "Estado", "Cantidad en stock", "Devoluciones")
+        tabla = ttk.Treeview(frameReporte, columns=columnas, show="headings")
+
+        for col in columnas:
+            tabla.heading(col, text=col)
+            tabla.column(col, width=150, anchor="center")
+
+        tabla.pack(expand=True, fill="both")
+
+        # Obtener datos
         inventario = self.main_menu.getInventario() 
         reporte = inventario.generar_reporte()
+        categoria_anterior = None
+        for producto in reporte:
+            if producto["Categoría"] != categoria_anterior:
+                if categoria_anterior is not None:
+                    tabla.insert("", "end", values=("", "", "", "", ""), tags=("separador"))
+            
+            tabla.insert("", "end", values=(producto["Categoría"], producto["Nombre"], producto["Estado"], producto["Cantidad en stock"], producto["Devoluciones"]))
+            
+            categoria_anterior = producto["Categoría"]
 
-        frameReporte = tk.Frame(ventana_principal, bg="lightblue", width=600, height=400)
-        frameReporte.pack(expand=True)
-
-        texto_reporte = tk.Text(frameReporte, wrap="word", width=70, height=20)
-        texto_reporte.insert("1.0", reporte)
-        texto_reporte.config(state="disabled")  # Para que el usuario no pueda modificarlo
-        texto_reporte.pack(padx=10, pady=10)
-
+        tabla.tag_configure("separador", background="beige")
+        
+        # Botón para volver
         boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
         boton_volver.pack(pady=10)
+
+        # Botón para generar orden de fabricación
+        boton_orden = tk.Button(frameReporte, text="Generar Orden de Fabricación", command=self.generarOrdenFabricacion)
+        boton_orden.pack(pady=10)
+        
+    def generarOrdenFabricacion(self):
+        inventario = self.main_menu.getInventario()
+        vendedor = self.main_menu.getVendedor()
+        mensaje = vendedor.crear_orden_fabricacion()
+        messagebox.showinfo("Orden de Fabricación", mensaje)
     
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |    
@@ -982,6 +1013,7 @@ if __name__ == "__main__":
     # producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
     ########################################################
     inventario = instanciar()
+    fabrica = Fabrica(inventario)
     # inventario.añadirProducto(producto1)
     # inventario.añadirProducto(producto2)
     # inventario.añadirProducto(producto3)
@@ -997,7 +1029,7 @@ if __name__ == "__main__":
     # carrito.añadirProducto(producto3, 2)
     ######################################
     comprador.setCarritoCompras(carrito)
-    vendedor = Vendedor("pedro", None, inventario, None)
+    vendedor = Vendedor("pedro", None, inventario, fabrica)
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
     test = MainMenu(comprador, vendedor, inventario)

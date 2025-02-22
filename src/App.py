@@ -8,10 +8,8 @@ from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
 
 
-
 def instanciar():
     inventario = Inventario([], [], [], [], [], [])
-
     # Productos creados
     categorias = list(Producto.Categoria)
     

@@ -1,5 +1,8 @@
 from .Usuario import Usuario
+from tkinter import simpledialog
+from gestorAplicacion.usuario.Notificacion import Notificacion
 
+ordenes_pendientes = []
 class Vendedor(Usuario):
     def __init__(self, nombre, cuentaBancaria, inventario, fabrica):
         super().__init__(nombre, cuentaBancaria)
@@ -10,10 +13,11 @@ class Vendedor(Usuario):
     def crear_orden_fabricacion(self):
         productos_seleccionados = []
         cantidades = []
-        ordenes_pendientes = []
 
         while True:
-            nombre_producto = input().strip()
+            nombre_producto = simpledialog.askstring("Entrada", "Ingrese el nombre del producto:")
+            if not nombre_producto:
+                return "No se ingresó ningún producto."
             if nombre_producto.lower() == "fin":
                 break
 
@@ -21,8 +25,8 @@ class Vendedor(Usuario):
             if producto is None:
                 return f"Producto no encontrado: {nombre_producto}\nPor favor vuelva a ingresar todos los productos de nuevo"
 
-            entrada_cantidad = input().strip()
-            if not entrada_cantidad.isdigit() or int(entrada_cantidad) == 0:
+            entrada_cantidad = simpledialog.askinteger("Cantidad", "Ingrese la cantidad a fabricar:")
+            if  entrada_cantidad  <= 0:
                 return "Cantidad inválida.\nVuelva a ingresar todos los productos nuevamente con una cantidad válida"
 
             cantidad = int(entrada_cantidad)
@@ -37,12 +41,17 @@ class Vendedor(Usuario):
 
         if not productos_seleccionados:
             return "No se seleccionaron productos. La orden no se creó."
+        if len(ordenes_pendientes) > 0:
+            mensaje_fabrica_notif = "Se han entregado los productos"
+            asunto_vendedor = "Orden De Producción"
+            self.recibirNotificacion(mensaje_fabrica_notif, asunto_vendedor)
+            ordenes_pendientes.clear()
 
         mensaje_fabrica = self.fabrica.recibir_orden(productos_seleccionados, cantidades)
         return f"Orden creada con éxito. Productos seleccionados: {len(productos_seleccionados)}.\n{mensaje_fabrica}"
 
     def buscarProducto(self, nombre):
-        for producto in self.inventario.getProductosTotal():
+        for producto in self.inventario.productosTotal:
             if producto.getNombre() == nombre:
                 return producto
         return None
@@ -65,8 +74,8 @@ class Vendedor(Usuario):
         return f"Estado de tu cuenta bancaria:\nSaldo: {self.cuentaBancaria.getSaldo()}"
     
     def get_ordenes_pendientes(self):
-        return self.ordenes_pendientes
+        return ordenes_pendientes
 
     def actualizar_estado_orden(self, orden):
-        if orden in self.ordenes_pendientes:
-            self.ordenes_pendientes.remove(orden)
+        if orden in ordenes_pendientes:
+            ordenes_pendientes.remove(orden)
