@@ -476,9 +476,11 @@ class MainMenu:
                     numerico = int(cantidad)
                     if numerico not in [1, 2, 3, 4, 5]:
                         cantidad= "1"
+                        comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
                         return("Cantidad inválida, se te asignó una por default que es 1")
                 except ValueError:
                     cantidad = "1"
+                    comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
                     return("Entrada inválida, se asignará 1 por defecto")
 
                 if producto.getCantidad() <= 0:

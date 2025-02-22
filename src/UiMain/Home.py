@@ -59,7 +59,7 @@ class App:
         self.desarrolladores = [
             {"nombre": "Tomás Aristizábal Gómez", "bio": "Desarrollador especializado en arquitectura de software y sistemas empresariales.",
              "imagenes": ["src/imagenes/tomas1.jpg", "src/imagenes/tomas2.jpg", "src/imagenes/tomas3.jpg", "src/imagenes/tomas4.jpg"]},
-            {"nombre": "Santiago Barrientos Medina", "bio": "Full Stack Developer con experiencia en Python y desarrollo web.",
+            {"nombre": "Santiago Barrientos Medina", "bio": "18 años , Estudiante de ingenieria en sistemas,\n mis pasiones son la aeronáutica y la literatura ",
              "imagenes": ["src/imagenes/santiago1.jpg", "src/imagenes/santiago2.jpg", "src/imagenes/santiago3.jpg", "src/imagenes/santiago4.jpg"]},
             {"nombre": "Juan Nicolás Chaparro Rodríguez", "bio": "Desarrollador en Inteligencia Artificial y Ciencia de Datos.",
              "imagenes": ["src/imagenes/juan1.jpg", "src/imagenes/juan2.jpg", "src/imagenes/juan3.jpg", "src/imagenes/juan4.jpg"]},
