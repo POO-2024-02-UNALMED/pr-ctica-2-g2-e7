@@ -44,6 +44,12 @@ class Usuario(ABC):
     
     def setPuntos(self, value):
         self.puntos = value
+
+    def devolucionDinero(self, usuarioReceptor, precioProducto, descuento, cantidadRetornar):
+        return 0 # Ligadura dinamica 
+    
+    def devolverProducto(self, idfactura, idproducto, cantidadRetornar, vendedor):
+        return "Proceso Invalido" # Ligadura dinamica 
     
     def pago(self, usuarioRemitente, usuarioReceptor, cantidadTransferir, tipoTransaccion):
         transaccion = Transaccion(usuarioRemitente, usuarioReceptor, tipoTransaccion)
