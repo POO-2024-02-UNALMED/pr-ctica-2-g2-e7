@@ -5,7 +5,9 @@ from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.compras.CarritoCompras import CarritoCompras
 from gestorAplicacion.usuario.Notificacion import Notificacion
 from gestorAplicacion.tienda.Inventario import Inventario
+from gestorAplicacion.fabrica.Fabrica import Fabrica
 from excepciones.DatoNoExistenteError import DatoNoExistenteError
+from excepciones.CantidadInvalidaError import CantidadInvalidaError
 from multimethod import multimethod
 from baseDatos.Serializador import serializar
 from baseDatos.Deserializador import deserializar
@@ -466,27 +468,25 @@ class MainMenu:
             self.comprador.setCarritoCompras(CarritoCompras(self.comprador, self.inventario)) # Inicializar un nuevo carrito en forma de "vaciar" el ya existente.
         return mensaje
 
-    def añada(self,producto,cantidad,comprador):
-       
+  
 
-       
-                
-                try:
-                    numerico = int(cantidad)
-                    if numerico not in [1, 2, 3, 4, 5]:
-                        cantidad= "1"
-                        return("Cantidad inválida, se te asignó una por default que es 1")
-                except ValueError:
-                    cantidad = "1"
-                    return("Entrada inválida, se asignará 1 por defecto")
+    def añada(self, producto, cantidad, comprador):
+        try:
+            numerico = int(cantidad)
+            if numerico not in [1, 2, 3, 4, 5]:
+                raise CantidadInvalidaError("Cantidad inválida, se te asignó una por default que es 1")
+            else:
+                return comprador.getCarritoCompras().añadirProducto(producto, numerico)
+        except ValueError:
+            cantidad = "1"
+            comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
+            return "La cantidad ingresada no es un número válido, se te asignará una por default que es 1"
+        except CantidadInvalidaError as e:
+            cantidad = "1"
+            comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
+            return str(e)
 
-                if producto.getCantidad() <= 0:
-                    return("Error. No hay más productos disponibles.")
-                    
-                else:
-                    mensaje =comprador.getCarritoCompras().añadirProducto(producto, int(cantidad))
-                    return(mensaje)
-                    
+                   
     def voucherMenuDisplay(self, cuponEliminar = None):
         if cuponEliminar != None:
             self.comprador.eliminarCupones(cuponEliminar)
@@ -513,6 +513,11 @@ class MainMenu:
         return self.inventario
     def setInventario(self, inventario):
         self.inventario = inventario
+    def getFabrica(self):
+        return self.fabrica
+
+    def setFabrica(self, fabrica):
+        self.fabrica = fabrica
     
     def returnMenuDisplay(self, idFactura, idProducto, cantidadRetornar):
         while True:
@@ -540,18 +545,23 @@ class MainMenu:
                 opcion = int(input("Seleccione una opción: "))
                 if opcion == 1:
                     print(Inventario.generar_reporte())
-                    print("A continuación elija los productos que quiere crear en la fábrica para reponer en el inventario.\n- Primero elija el producto y posteriormente la cantidad, puede elegir otro producto y repite el proceso.\n- Asegúrese de que esté correcto el nombre y la cantidad de cada producto ya que si se equivoca tiene que ingresar todo de nuevo.\n- Seleccione un máximo de 50 unidades por orden.\nEscriba 'fin' para terminar la orden y enviarla o para salir")
+                    print("A continuación, elija los productos que quiere crear en la fábrica para reponer en el inventario.\n"
+                        "- Primero elija el producto y posteriormente la cantidad, puede elegir otro producto y repite el proceso.\n"
+                        "- Asegúrese de que esté correcto el nombre y la cantidad de cada producto ya que si se equivoca tiene que ingresar todo de nuevo.\n"
+                        "- Seleccione un máximo de 50 unidades por orden.\n"
+                        "Escriba 'fin' para terminar la orden y enviarla o para salir.")
 
-                    resultado = ""
-                    while not resultado.startswith("Orden creada con éxito.") and resultado != "No se seleccionaron productos. La orden no se creó.":
-                        resultado = Vendedor.crear_orden_fabricacion()
+                    while True:
+                        resultado = self.vendedor.crear_orden_fabricacion()
                         print(resultado)
+                        if resultado.startswith("Orden creada con éxito.") or resultado == "No se seleccionaron productos. La orden no se creó.":
+                            break
 
-                    if Vendedor.get_ordenes_pendientes():
-                        mensaje_fabrica_notif = "Se han entregado los productos "
-                        asunto_vendedor = "Orden De producción"
-                        Vendedor.recibir_notificacion(Notificacion(mensaje_fabrica_notif, asunto_vendedor, Vendedor))
-                        Vendedor.get_ordenes_pendientes().clear()
+                    if self.vendedor.get_ordenes_pendientes():
+                        mensaje_fabrica_notif = "Se han entregado los productos"
+                        asunto_Vendedor = "Orden De Producción"
+                        self.vendedor.recibir_notificacion(Notificacion(mensaje_fabrica_notif, asunto_Vendedor, self.vendedor))
+                        self.vendedor.get_ordenes_pendientes().clear()
                 elif opcion == 2:
                     print("========= CUENTA BANCARIA =========")
                     print(self.vendedor.consultarCuentaBancaria())

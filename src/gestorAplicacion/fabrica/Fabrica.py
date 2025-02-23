@@ -1,14 +1,11 @@
-from tienda.Inventario import Inventario
-from tienda.Producto import Producto
-from usuario.Vendedor import Vendedor
-import Trabajador
+from gestorAplicacion.fabrica.Trabajador import Trabajador
 
 class Fabrica:
-    def __init__(self, inventario, vendedor):
+    def __init__(self, inventario):
         self.trabajadores = [Trabajador(i, f"Trabajador {i}", "08:00-20:00") for i in range(1, 101)]
         self.ordenes_pendientes = []
         self.inventario = inventario
-        self.vendedor = vendedor
+
 
     def get_ordenes_pendientes(self):
         return self.ordenes_pendientes
@@ -25,8 +22,8 @@ class Fabrica:
             return "No hay suficientes trabajadores disponibles para procesar esta orden."
 
     def entregar_productos(self, productos, cantidades):
-        for producto, cantidad in zip(productos, cantidades):
-            self.inventario.ajuste_productos(producto, "orden fabricacion", cantidad)
+        productos_fabricados = {producto: cantidad for producto, cantidad in zip(productos, cantidades)}
+        self.inventario.recibirProductosFabricados(productos_fabricados)
         return "Le mandaremos un correo cuando se entreguen sus productos"
 
     def asignar_trabajadores(self, trabajadores_requeridos):

@@ -20,22 +20,32 @@ class Inventario:
         self.listaCategorias.append(categoriaDeportes)
 
     def generar_reporte_por_categoria(self, nombre_categoria, categoria):
-        reporte = [f"{nombre_categoria}:\n"]
+        reporte = []
         for producto in categoria:
             estado = f"Vendido: {producto.getCantidadVendida()} unidades" if producto.getCantidadVendida() > 0 else "No vendido"
             estado_dev = f"Devuelto {producto.getCantidadDevuelta()} unidades" if producto.getCantidadDevuelta() > 0 else "Sin devoluciones"
-            reporte.append(f"- {producto.nombre} | Estado: {estado} | Cantidad en stock: {producto.cantidad} | Cantidad de Devoluciones: {estado_dev}\n")
-        return "".join(reporte)
+
+            reporte.append({
+                "Categoría": nombre_categoria,
+                "Nombre": producto.nombre,
+                "Estado": estado,
+                "Cantidad en stock": producto.cantidad,
+                "Devoluciones": estado_dev
+            })
+
+        return reporte 
     
     def generar_reporte(self):
-        reporte = ["Reporte de Inventario:\n"]
-        reporte.append(self.generar_reporte_por_categoria("Tecnología", self.categoriaTecnologia))
-        reporte.append(self.generar_reporte_por_categoria("Aseo", self.categoriaAseo))
-        reporte.append(self.generar_reporte_por_categoria("Comida", self.categoriaComida))
-        reporte.append(self.generar_reporte_por_categoria("Papelería", self.categoriaPapeleria))
-        reporte.append(self.generar_reporte_por_categoria("Juguetería", self.categoriaJugueteria))
-        reporte.append(self.generar_reporte_por_categoria("Deportes", self.categoriaDeportes))
-        return "".join(reporte)
+        reporte = []
+
+        reporte.extend(self.generar_reporte_por_categoria("Tecnología", self.categoriaTecnologia))
+        reporte.extend(self.generar_reporte_por_categoria("Aseo", self.categoriaAseo))
+        reporte.extend(self.generar_reporte_por_categoria("Comida", self.categoriaComida))
+        reporte.extend(self.generar_reporte_por_categoria("Papelería", self.categoriaPapeleria))
+        reporte.extend(self.generar_reporte_por_categoria("Juguetería", self.categoriaJugueteria))
+        reporte.extend(self.generar_reporte_por_categoria("Deportes", self.categoriaDeportes))
+
+        return reporte
 
     def verificarProducto(self, producto, unidades):
         categoria = producto.getCategoria()
@@ -142,6 +152,9 @@ class Inventario:
                     producto2.setCantidadDevuelta(producto.getCantidadDevuelta())
 
     import random
+    def recibirProductosFabricados(self, productos_fabricados):
+        for producto, cantidad in productos_fabricados.items():
+            producto.reabastecer_cantidad(cantidad)
 
     def crearCatalogo(self):
         # Creamos una matriz de 5x6 usando list comprehension
