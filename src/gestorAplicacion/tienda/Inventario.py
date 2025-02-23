@@ -88,8 +88,7 @@ class Inventario:
         maseconomico=None
         categorias= []
         categorias+=self.categoriaAseo+self.categoriaComida+self.categoriaDeportes+self.categoriaJugueteria+self.categoriaPapeleria+self.categoriaTecnologia
-        for categoria in categorias:
-            for producto in categoria:
+        for producto in categorias:
                 if maseconomico== None or (producto.getPrecio()< maseconomico.getPrecio() and producto.getCantidad()>=1):
                     maseconomico = producto
         return maseconomico
@@ -97,8 +96,7 @@ class Inventario:
         menosvendido=None
         categorias= []
         categorias+=self.categoriaAseo+self.categoriaComida+self.categoriaDeportes+self.categoriaJugueteria+self.categoriaPapeleria+self.categoriaTecnologia
-        for categoria in categorias:
-            for producto in categoria:
+        for producto in categorias:
                 if menosvendido == None or (producto.getCantidadVendida()< menosvendido.getCantidadVendida() ) :
                     menosvendido = producto
         return menosvendido

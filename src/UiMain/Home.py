@@ -400,6 +400,7 @@ class App:
     def añadir(self,valores):
         cantidad=(valores["Cantidad"])
         
+        
         o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
         if o=="La cantidad ingresada no es un número válido, se te asignará una por default que es 1":
             
@@ -461,8 +462,12 @@ class App:
         cantidad=int(valores["Cantidad"])
     
         mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
-        messagebox.showinfo("Eliminacion",mensaje)
-        self.ejecutar_ambas()
+        print(mensaje)
+        if mensaje == "Manejo de errores de la Aplicación: Producto inválido":
+            messagebox.showerror("ERROR 007",mensaje)
+        else:
+            messagebox.showinfo("Eliminacion",mensaje)
+            self.ejecutar_ambas()
     def ejecutar_ambas2(self):
         self.limpiar_ventana(ventana_principal, menu_bar)
         

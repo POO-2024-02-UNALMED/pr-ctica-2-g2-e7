@@ -217,7 +217,7 @@ class CarritoCompras:
 
             return f"Gracias a tu fidelidad obtuviste un descuento de  {self.descuentoAplicadoCompra}  usando tus puntos"
         else:
-            return None
+            return""
     #este es el descuento por la membresia que adquiere el cliente al comprar en la tienda 
     def descuentomembresia(self ):
         membresia=self.usuario.getMembresia()
@@ -324,8 +324,8 @@ class CarritoCompras:
                             descuento = producto.aplicardescuento(producto, 0.10)
                             self.descuentoPorproductos += 1
                             return "Por ser un cliente Platino hoy te daremos un descuento de " + str(descuento) + " en el producto " + producto.getNombre()
-
-            return None
+        return ""
+        
     def descuentoporproductomenosvendido(self):
         ProductoMenosVendido=self.inventario.buscarProductoMenosVendido()
         for producto in self.listaItems:
@@ -333,3 +333,4 @@ class CarritoCompras:
                 descuento=producto.aplicardescuento(producto,0.10)
                 self.descuentoPorproductos+=descuento
                 return f"Por impulso de producto has obtenido un descuento de {descuento} en el producto {producto.getNombre()}" 
+        return ""

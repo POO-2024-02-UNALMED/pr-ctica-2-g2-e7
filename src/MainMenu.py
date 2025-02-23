@@ -107,30 +107,29 @@ class MainMenu:
             
             elif opcion == 4:
                 print("Volviendo al menú del carrito...")
-    def eliminacion(self,producto, cantidad,comprador):
+    def eliminacion(self, producto, cantidad, comprador):
+        try:
+            if not isinstance(producto, Producto):  # Verifica si 'producto' es de tipo 'Producto'
+                raise CantidadInvalidaError("Producto inválido")
         
+        except CantidadInvalidaError as e:
+            return str(e)
         
-                    
+        # Verifica si la cantidad es mayor a 0
+        if cantidad <= 0:
+            return "La cantidad debe ser mayor que 0."
         
-        eliminar= producto
-        count = cantidad
+        # Busca el producto en el carrito de compras
+        producto = comprador.getCarritoCompras().busqueda(producto)
         
-        while True:
-                       
-                            if count > 0:
-                                break
-                            else:
-                                return("La cantidad debe ser mayor que 0.")
-                        
-                    
-        producto = comprador.getCarritoCompras().busqueda(eliminar)
-       
         if producto is None:
-                        return(f"El producto '{eliminar}' no se encuentra en el carrito.")
+            return f"El producto '{producto}' no se encuentra en el carrito."
         else:
-                        resultado = self.comprador.getCarritoCompras().eliminarProducto(producto, count,comprador.getCarritoCompras().getListaItems(),comprador.getCarritoCompras().getCantidadPorProducto())
-                        return(resultado)
-                
+            resultado = comprador.getCarritoCompras().eliminarProducto(
+                producto, cantidad, comprador.getCarritoCompras().getListaItems(), comprador.getCarritoCompras().getCantidadPorProducto()
+            )
+            return resultado
+                    
             
                        
                 
@@ -404,6 +403,9 @@ class MainMenu:
             self.comprador.getCarritoCompras().setPrecioTotal(precioConDescuento) # Se actualiza el precio total de la compra en el carrito de compras.
             self.comprador.getCarritoCompras().restarProductosAlComprar() # Se resta la cantidad de productos comprados a la cantidad total de productos.
             # Espacio para lo de las membresias (para que Santiago lo implemente)
+            mensaje+= self.comprador.getCarritoCompras().descuentoporproductomenosvendido()
+            mensaje+=self.comprador.getCarritoCompras().descuentomembresia()
+            mensaje+=self.comprador.getCarritoCompras().verificardescuentopuntos()
 
             self.comprador.pago(self.comprador, self.vendedor, precioConDescuento, "compra") #Se inicia el proceso de pago.
             self.comprador.getValorCupones().pop(cupon - 1) # Se elimina el cupón de la lista de cupones.
@@ -412,6 +414,7 @@ class MainMenu:
             mensaje += "Resumen de la compra:\n"
             mensaje += f"{self.comprador.getHistorialCompras().mostrar_factura_por_id(len(self.comprador.getHistorialCompras().getFacturas()))}\n" # Se muestra por pantalla la factura.
             mensaje += "¡Muchas gracias por su compra!\n"
+           
             if self.comprador.cantidadCupones != len(self.comprador.getValorCupones()):
                 mensaje += f"Felicidades. Durante la compra te ganaste un cupón del {self.comprador.getValorCupones()[self.comprador.cantidadCupones]} % de descuento para alguna compra en el futuro.\n"
                 self.comprador.cantidadCupones += 1
@@ -426,7 +429,7 @@ class MainMenu:
                 verificacion = producto.verificarCantidadProductos()
                 cantidadProductos.append(verificacion)
                 producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
-                print(producto.getCantidadVendida())
+                
                 self.inventario.ajusteProductos(producto, "compra")
 
             for i in range(len(cantidadProductos)):
@@ -439,7 +442,9 @@ class MainMenu:
             self.comprador.getCarritoCompras().restarProductosAlComprar()
             self.comprador.pago(self.comprador, self.vendedor, self.comprador.getCarritoCompras().getPrecioTotal(), "compra") #Se inicia el proceso de pago.
 
-            # Espacio para lo de las membresias (para que Santiago lo implemente)
+            mensaje+= self.comprador.getCarritoCompras().descuentoporproductomenosvendido()
+            mensaje+=self.comprador.getCarritoCompras().descuentomembresia()
+            mensaje+=self.comprador.getCarritoCompras().verificardescuentopuntos()
 
             mensaje += f"El precio total de la compra es de: {self.comprador.getCarritoCompras().getPrecioTotal()}. Ahora se prosigue con el pago.\n"
             mensaje += "============COMPRA===========\n"
@@ -460,7 +465,7 @@ class MainMenu:
                 verificacion = producto.verificarCantidadProductos()
                 cantidadProductos.append(verificacion)
                 producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
-                print(producto.getCantidadVendida())
+                
                 self.inventario.ajusteProductos(producto, "compra")
 
             for i in range(len(cantidadProductos)):
