@@ -426,6 +426,7 @@ class MainMenu:
                 verificacion = producto.verificarCantidadProductos()
                 cantidadProductos.append(verificacion)
                 producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
+                print(producto.getCantidadVendida())
                 self.inventario.ajusteProductos(producto, "compra")
 
             for i in range(len(cantidadProductos)):
@@ -459,6 +460,7 @@ class MainMenu:
                 verificacion = producto.verificarCantidadProductos()
                 cantidadProductos.append(verificacion)
                 producto.setCantidadVendida(producto.getCantidadVendida() + self.comprador.getCarritoCompras().getCantidadPorProductos(producto))
+                print(producto.getCantidadVendida())
                 self.inventario.ajusteProductos(producto, "compra")
 
             for i in range(len(cantidadProductos)):

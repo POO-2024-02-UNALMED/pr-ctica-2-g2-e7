@@ -292,9 +292,9 @@ class App:
             nonlocal catalogo
 
             if historialCompras != None:
-                catalogo = self.instanciar().crearCatalogoRecomendaciones(historialCompras)
+                catalogo = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
             else:
-                catalogo = self.instanciar().crearCatalogo()
+                catalogo = self.main_menu.getInventario().crearCatalogo()
               
         #Funcion creada para cuando se deba volver a crear el frame,
         # ya que se elimina al actualizar el catálogo
