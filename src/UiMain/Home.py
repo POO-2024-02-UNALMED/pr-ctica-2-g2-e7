@@ -575,6 +575,9 @@ class App:
             mensaje = self.main_menu.returnMenuDisplay(id_factura, id_producto, cantidad_retornar)
 
             messagebox.showinfo("Devolución de Producto", mensaje)
+        
+        except ValueError:
+            messagebox.showerror("ValueError", "Porfavor ingrese unicamente valores numericos mayores a 0")
 
         except CantidadInvalidaError as e:
             messagebox.showerror("Cantidad Invalida", str(e))
