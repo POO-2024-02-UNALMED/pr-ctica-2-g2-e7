@@ -459,12 +459,14 @@ class App:
 
     def elimina(self,valores):
         Producto=valores["Producto a eliminar"]
-        cantidad=int(valores["Cantidad"])
+        cantidad=(valores["Cantidad"])
     
         mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
-        print(mensaje)
-        if mensaje == "Manejo de errores de la Aplicación: Producto inválido":
+        
+        if mensaje == "La cantidad debe ser un número entero.":
             messagebox.showerror("ERROR 007",mensaje)
+        elif mensaje == "El producto no se encuentra en el carrito.":
+            messagebox.showerror("ERROR 008",mensaje)
         else:
             messagebox.showinfo("Eliminacion",mensaje)
             self.ejecutar_ambas()

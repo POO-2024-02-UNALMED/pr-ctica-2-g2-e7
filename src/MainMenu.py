@@ -108,29 +108,33 @@ class MainMenu:
             elif opcion == 4:
                 print("Volviendo al menú del carrito...")
     def eliminacion(self, producto, cantidad, comprador):
+    
         try:
-            if not isinstance(producto, Producto):  # Verifica si 'producto' es de tipo 'Producto'
-                raise CantidadInvalidaError("Producto inválido")
-        
+            cantidad = int(cantidad)
+            if cantidad <= 0:
+                raise CantidadInvalidaError("Cantidad Inválida")
+
         except CantidadInvalidaError as e:
             return str(e)
-        
+        except ValueError:
+            return "La cantidad debe ser un número entero."
+
         # Verifica si la cantidad es mayor a 0
         if cantidad <= 0:
             return "La cantidad debe ser mayor que 0."
-        
+
         # Busca el producto en el carrito de compras
-        producto = comprador.getCarritoCompras().busqueda(producto)
-        
-        if producto is None:
-            return f"El producto '{producto}' no se encuentra en el carrito."
+        producto_obj = comprador.getCarritoCompras().busqueda(producto)
+
+        if producto_obj is None:
+            return f"El producto no se encuentra en el carrito."
         else:
             resultado = comprador.getCarritoCompras().eliminarProducto(
-                producto, cantidad, comprador.getCarritoCompras().getListaItems(), comprador.getCarritoCompras().getCantidadPorProducto()
+                producto_obj, cantidad, comprador.getCarritoCompras().getListaItems(), comprador.getCarritoCompras().getCantidadPorProducto()
             )
             return resultado
-                    
-            
+                        
+                
                        
                 
             
