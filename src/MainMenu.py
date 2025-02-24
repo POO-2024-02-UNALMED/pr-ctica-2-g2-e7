@@ -533,7 +533,7 @@ class MainMenu:
     def returnMenuDisplay(self, idFactura, idProducto, cantidadRetornar):
         while True:
 
-            resultado = self.comprador.devolverProducto(idFactura, idProducto, cantidadRetornar, self.vendedor) # Proceso de reembolso en si
+            resultado = self.comprador.devolverProducto(idFactura, idProducto, cantidadRetornar, self.vendedor, self.inventario) # Proceso de reembolso en si
             
             if resultado == "FacturaInvalida":
                 raise DatoNoExistenteError(f"La factura con ID {idFactura} no existe.")
