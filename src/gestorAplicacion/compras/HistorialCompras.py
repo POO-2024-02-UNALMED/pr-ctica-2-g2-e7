@@ -14,7 +14,7 @@ class HistorialCompras:
         self.cantidadJugueteria = 0
         self.cantidadDeportes = 0
 
-        self.caegoriasMasCompradas = [None, None, None]
+        self.categoriasMasCompradas = [None, None, None]
 
 
     def getFacturas(self):
@@ -97,7 +97,7 @@ class HistorialCompras:
         
         for i in range(3):
             if cantidadesOrdenadas[i] != 0:
-                self.caegoriasMasCompradas[i] = categoriasOrdenadas[i]
+                self.categoriasMasCompradas[i] = categoriasOrdenadas[i]
 
         
 
@@ -120,4 +120,4 @@ class HistorialCompras:
         return self.cantidadDeportes
     
     def getCategoriasMasCompradas(self):
-        return self.caegoriasMasCompradas
+        return self.categoriasMasCompradas

@@ -6,6 +6,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import sys
 import os
+import random
 
 
 
@@ -276,11 +277,12 @@ class App:
     #    |    |    |    |    |    |    |    |
     #    V    V    V    V    V    V    V    V
 
-    #RECOMENDACIONES EN PROGRESO(ATT. SIMÓN)
 
-    def mostrarCatalogo(self, menu_bar, historialCompras):
+    def mostrarCatalogo(self, menu_bar, historialCompras, calificar = False, r = False, coordenadas = None, categoria = None, util= None):
         #El método recibe el menu_bar creado en la ventana principal para poder limpiar la ventana principal
         #sin eliminarlo
+
+        #r = reemplazo, se usa para saber si se debe reemplazar un producto en el catálogo
 
         catalogo = None
         frameCatalogo = tk.Frame(ventana_principal,  width= 600, height= 400)
@@ -290,9 +292,28 @@ class App:
 
         def actualizarCatalogo(historialCompras = None):
             nonlocal catalogo
+            reemplazo = r
 
             if historialCompras != None:
-                catalogo = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                if reemplazo == True:
+                    if util == True:
+                        aleatorio = random.randint(0, 20)
+                        catalogo, categorias = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                        catalogo[coordenadas[0]][0] = self.main_menu.getInventario().getListaCategorias()[Producto.getListaCategorias().index(categoria)][aleatorio]
+                        return categorias
+                    else:
+                        aleatorio = random.randint(0, 20)
+                        categoriaAleatoria = random.randint(0, 5)
+                        categoriaAEvitar = Producto.getListaCategorias().index(categoria)
+                        while categoriaAleatoria == categoriaAEvitar:
+                            categoriaAleatoria = random.randint(0, 5)
+                        catalogo, categorias = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                        catalogo[coordenadas[0]][coordenadas[1]] = self.main_menu.getInventario().getListaCategorias()[categoriaAleatoria][aleatorio]
+                        return categorias
+
+                else:
+                    catalogo, categorias = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                    return categorias
             else:
                 catalogo = self.main_menu.getInventario().crearCatalogo()
               
@@ -311,37 +332,122 @@ class App:
             crearBotonesProductos()
         
         def confirmarRecomendaciones():
-            actualizarCatalogo(historialCompras)
+            categorias = actualizarCatalogo(historialCompras)
             self.limpiar_ventana(ventana_principal, menu_bar)
             crearFrameCatalogo()
-            crearBotonesProductos()
+            crearBotonesProductos(categorias)
         
-        def crearBotonesProductos():
-            #iteracion = 1 #BORRAR
-            for fila in range(0, 5):
-                for columna in range(0,6):
-                    productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
-                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+        def crearBotonesProductos(categorias = None):
+
+            if categorias == None:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
                                       command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
-                  #  prueba = (catalogo[fila][columna] != None) #BORRAR
-                   # print(prueba) #BORRAR
-                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
-                   # iteracion += 1 #BORRAR
+                        producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+            elif categorias == 1:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+
+                        if fila == 0:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+                        
+                        if r == True:
+                            if util == True:
+                                if fila == coordenadas[0] and columna == 0:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            else:
+                                if fila == coordenadas[0] and columna == coordenadas[1]:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+
+            elif categorias == 2:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        if fila == 0 or fila == 1:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+                        if r == True:
+                            if util == True:
+                                if fila == coordenadas[0] and columna == 0:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            else:
+                                if fila == coordenadas[0] and columna == coordenadas[1]:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                    
+            elif categorias == 3:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        if fila == 0 or fila == 1 or fila == 2:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+                        if r == True:
+                            if util == True:
+                                if fila == coordenadas[0] and columna == 0:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            else:
+                                if fila == coordenadas[0] and columna == coordenadas[1]:
+                                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "lightblue",
+                                            command= lambda producto=productoActual, coordenadas=(fila, columna): [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto, coordenadas)])
+                                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+
+                            
+
         
         actualizarCatalogo()
 
         
         if len(historialCompras.getFacturas()) != 0:
-            
-            preguntaRecomendaciones = tk.Label(frameCatalogo, text= "¿Desea actualizar las recomendaciones?", font= ("Arial", 10))
-            preguntaRecomendaciones.pack()
 
-            botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
-            botonConfirmarRecomendaciones.pack(expand= True)
+            if calificar == False:
 
-            botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
-            botonRechazarRecomendaciones.pack()
-            actualizarCatalogo()
+                preguntaRecomendaciones = tk.Label(frameCatalogo, text= "¿Desea actualizar las recomendaciones?", font= ("Arial", 10))
+                preguntaRecomendaciones.pack()
+
+                botonConfirmarRecomendaciones = tk.Button(frameCatalogo, text= "Sí", command= lambda: confirmarRecomendaciones())
+                botonConfirmarRecomendaciones.pack(expand= True)
+
+                botonRechazarRecomendaciones = tk.Button(frameCatalogo, text= "No", command= lambda: rechazarRecomendaciones())
+                botonRechazarRecomendaciones.pack()
+                actualizarCatalogo()
+            else:
+                confirmarRecomendaciones()
         else:
             actualizarCatalogo()
             crearBotonesProductos()
@@ -350,24 +456,179 @@ class App:
         
     
 
-    def seleccionarProducto(self, producto):
+    def seleccionarProducto(self, producto, coordenadas = None):
 
         #Muestra la info del producto para añadir al carrito o regresar al menú
+
+        fila = coordenadas[0] if coordenadas != None else None
+
+        categorias = self.main_menu.getComprador().getHistorialCompras().getCategoriasMasCompradas()
+        categoriasRecomendadas = 0
+
+        for categoria in categorias:
+            if categoria != None:
+                categoriasRecomendadas += 1
+
+        if fila == None:
         
-        frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
-        frameProducto.pack(expand= True, fill= "both")
+            frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+            frameProducto.pack(expand= True, fill= "both")
 
-        infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
-        infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+            infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+            infoProducto.pack(pady= 10,ipadx=20,ipady=20)
 
-        frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
-        frameBotones.pack(side= "top")
+            frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+            frameBotones.pack(side= "top")
 
-        botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
-        botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+            botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+            botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
 
-        botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
-        botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+            botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+            botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+        
+        elif categoriasRecomendadas == 1:
+            if fila == 0:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+                botonCalificarRecomendaciones = tk.Button(frameBotones, text= "Calificar recomendación", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.calificarRecomendacion(producto, coordenadas)])
+                botonCalificarRecomendaciones.grid(row= 0, column= 2, padx= 10, pady= 10)
+
+            else:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+        
+        elif categoriasRecomendadas == 2:
+            if fila == 0 or fila == 1:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+                botonCalificarRecomendaciones = tk.Button(frameBotones, text= "Calificar recomendación", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.calificarRecomendacion(producto, coordenadas)])
+                botonCalificarRecomendaciones.grid(row= 0, column= 2, padx= 10, pady= 10)
+
+            else:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+        elif categoriasRecomendadas == 3:
+            if fila == 0 or fila == 1 or fila == 2:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+                botonCalificarRecomendaciones = tk.Button(frameBotones, text= "Calificar recomendación", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.calificarRecomendacion(producto, coordenadas)])
+                botonCalificarRecomendaciones.grid(row= 0, column= 2, padx= 10, pady= 10)
+
+            else:
+                frameProducto = tk.Frame(ventana_principal, bg= "lightblue")
+                frameProducto.pack(expand= True, fill= "both")
+
+                infoProducto = tk.Label(frameProducto, text= producto, font= ("Arial", 20, "bold"), justify="left")
+                infoProducto.pack(pady= 10,ipadx=20,ipady=20)
+
+                frameBotones = tk.Frame(frameProducto, bg= "lightblue", width= 500, height= 200)
+                frameBotones.pack(side= "top")
+
+                botonAgregar = tk.Button(frameBotones, text= "Agregar al carrito", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.agregarAlCarrito(producto, menu_bar)])
+                botonAgregar.grid(row= 0, column= 0, padx= 10, pady= 10)
+
+                botonRegresar = tk.Button(frameBotones, text= "Regresar", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCarrito(menu_bar)])
+                botonRegresar.grid(row= 0, column= 1, padx= 10, pady= 10)
+
+
+        
+
+        
+
+    def calificarRecomendacion(self, producto, coordenadas_producto):
+
+        fila = coordenadas_producto[0]
+        columna = coordenadas_producto[1]
+        c = producto.getCategoria()
+
+        def recomendacionUtil():
+            messagebox.showinfo("Calificación", "¡Gracias por calificar la recomendación! \n Se ha actualizado el catálogo con una nueva recomendación al inicio de la fila")
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            self.mostrarCatalogo(menu_bar, self.main_menu.getComprador().getHistorialCompras(), calificar= True, r= True, coordenadas= coordenadas_producto, categoria= c, util= True)
+
+        def recomendacionNoUtil():
+            messagebox.showinfo("Calificación", "¡Gracias por calificar la recomendación! \n Se ha actualizado el catálogo con una nueva recomendación de una categoría diferente en la misma posición")
+            self.limpiar_ventana(ventana_principal, menu_bar)
+            self.mostrarCatalogo(menu_bar, self.main_menu.getComprador().getHistorialCompras(), calificar= True, r= True, coordenadas= coordenadas_producto, categoria= c, util= False)
+        
+        frameCalificacion = tk.Frame(ventana_principal, bg= "lightblue")
+        frameCalificacion.pack(expand= True, fill= "both")
+
+        mensaje = tk.Label(frameCalificacion,
+                            text= f"¿Le parece adecuada la recomendación de: {producto.getNombre()}? ",
+                            font= ("Arial", 15, "bold"))
+        mensaje.pack(pady= 10, ipadx= 20, ipady= 20)
+
+        botonSi = tk.Button(frameCalificacion, text= "Sí", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), recomendacionUtil()])
+        botonSi.pack(pady= 10, padx= 10)
+
+        botonNo = tk.Button(frameCalificacion, text= "No", command= lambda: [self.limpiar_ventana(ventana_principal, menu_bar), recomendacionNoUtil()])
+        botonNo.pack(pady= 10, padx= 10)
+
 
 
     def agregarAlCarrito(self, producto, menu_bar):
@@ -936,16 +1197,92 @@ class App:
         # Botón para volver
         boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
         boton_volver.pack(pady=10)
-
-        # Botón para generar orden de fabricación
-        boton_orden = tk.Button(frameReporte, text="Generar Orden de Fabricación", command=self.generarOrdenFabricacion)
-        boton_orden.pack(pady=10)
         
-    def generarOrdenFabricacion(self):
+    def generarOrdenFabricacion(self, menu_bar):
         inventario = self.main_menu.getInventario()
         vendedor = self.main_menu.getVendedor()
-        mensaje = vendedor.crear_orden_fabricacion()
-        messagebox.showinfo("Orden de Fabricación", mensaje)
+
+        titulo = tk.Label(ventana_principal, text="Orden de Fabricación", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        # Entrada para el nombre del producto
+        label_producto = tk.Label(ventana_principal, text="Nombre del producto:", font=("Arial", 12), bg="white")
+        label_producto.pack()
+        entry_producto = tk.Entry(ventana_principal)
+        entry_producto.pack()
+
+        # Entrada para la cantidad
+        label_cantidad = tk.Label(ventana_principal, text="Cantidad a fabricar:", font=("Arial", 12), bg="white")
+        label_cantidad.pack()
+        entry_cantidad = tk.Entry(ventana_principal)
+        entry_cantidad.pack()
+
+        # Etiqueta para mostrar mensajes
+        contenido = tk.Label(ventana_principal, text="", font=("Arial", 12), bg="white", justify="left")
+        contenido.pack(pady=10)
+
+        # Lista para almacenar los productos ingresados
+        productos_seleccionados = []
+        cantidades = []
+
+        # Función para agregar productos sin cerrar la interfaz
+        def agregar_producto():
+            nombre_producto = entry_producto.get().strip()
+            try:
+                cantidad = int(entry_cantidad.get().strip())
+            except ValueError:
+                cantidad = -1  # Manejo de error si la cantidad no es un número
+
+            if not nombre_producto:
+                contenido.config(text="No se ingresó ningún producto.")
+                return
+
+            if cantidad <= 0:
+                contenido.config(text="Cantidad inválida. Ingrese un número mayor a 0.")
+                return
+
+            producto = vendedor.buscarProducto(nombre_producto)
+            if producto is None:
+                contenido.config(text=f"Producto no encontrado: {nombre_producto}\nPor favor, ingrese otro.")
+                return
+
+            productos_seleccionados.append(producto)
+            cantidades.append(cantidad)
+
+            # Limpiar campos después de agregar el producto
+            entry_producto.delete(0, tk.END)
+            entry_cantidad.delete(0, tk.END)
+
+            # Mostrar productos añadidos
+            contenido.config(text=f"Productos en la orden: {len(productos_seleccionados)}")
+
+        # Función para enviar la orden completa a fabricación
+        def enviar_orden():
+            if not productos_seleccionados:
+                contenido.config(text="No se han ingresado productos para fabricar.")
+                return
+
+            mensaje = vendedor.crear_orden_fabricacion(productos_seleccionados, cantidades)
+            contenido.config(text=mensaje)
+
+            # Limpiar la lista después de enviar la orden
+            productos_seleccionados.clear()
+            cantidades.clear()
+
+        # Botón para agregar productos sin cerrar la ventana
+        boton_agregar = tk.Button(ventana_principal, text="Agregar Producto", command=agregar_producto)
+        boton_agregar.pack()
+
+        # Botón para finalizar y enviar la orden completa
+        boton_enviar = tk.Button(ventana_principal, text="Finalizar Orden", command=enviar_orden)
+        boton_enviar.pack()
+        
+         # Botón para volver
+        boton_volver = tk.Button(titulo, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
+        boton_volver.pack(pady=10)
+
+
+
     
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |    
@@ -985,9 +1322,11 @@ class App:
         submenu_comprador.add_separator()
         submenu_vendedor.add_command(label= "1. Generar reporte de ventas", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.generarReporteVentas(menu_bar)])
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
+        submenu_vendedor.add_command(label= "2. Generar Orden de Fabricacion", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.generarOrdenFabricacion(menu_bar)])
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "3. Ver notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.vendedor)])
+        submenu_vendedor.add_command(label= "3. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
+        submenu_vendedor.add_separator()
+        submenu_vendedor.add_command(label= "4. Ver notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.vendedor)])
         menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
         menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
         menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
