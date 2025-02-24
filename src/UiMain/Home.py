@@ -292,7 +292,8 @@ class App:
             nonlocal catalogo
 
             if historialCompras != None:
-                catalogo = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                catalogo, categorias = self.main_menu.getInventario().crearCatalogoRecomendaciones(historialCompras)
+                return categorias
             else:
                 catalogo = self.main_menu.getInventario().crearCatalogo()
               
@@ -311,22 +312,67 @@ class App:
             crearBotonesProductos()
         
         def confirmarRecomendaciones():
-            actualizarCatalogo(historialCompras)
+            categorias = actualizarCatalogo(historialCompras)
             self.limpiar_ventana(ventana_principal, menu_bar)
             crearFrameCatalogo()
-            crearBotonesProductos()
+            crearBotonesProductos(categorias)
         
-        def crearBotonesProductos():
-            #iteracion = 1 #BORRAR
-            for fila in range(0, 5):
-                for columna in range(0,6):
-                    productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
-                    producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+        def crearBotonesProductos(categorias = None):
+
+            if categorias == None:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
                                       command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
-                  #  prueba = (catalogo[fila][columna] != None) #BORRAR
-                   # print(prueba) #BORRAR
-                    producto.grid(row= fila, column= columna, padx= 10, pady= 10)
-                   # iteracion += 1 #BORRAR
+                        producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+            elif categorias == 1:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        if fila == 0:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+            elif categorias == 2:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        if fila == 0 or fila == 1:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+                    
+            elif categorias == 3:
+                for fila in range(0, 5):
+                    for columna in range(0,6):
+                        productoActual = catalogo[fila][columna] #Asegura que la referencia sea correcta
+                        if fila == 0 or fila == 1 or fila == 2:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(), bg = "blue", fg= "white",
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                        else:
+                            producto = tk.Button(frameCatalogo, text= catalogo[fila][columna].getNombre(),
+                                      command= lambda producto=productoActual: [self.limpiar_ventana(ventana_principal, menu_bar),self.seleccionarProducto(producto)])
+                            producto.grid(row= fila, column= columna, padx= 10, pady= 10)
+                            mensajeRecomendaciones = tk.Label(frameCatalogo, text= "Recomendaciones = Productos en azul", font= ("Arial", 30, "bold"))
+                            mensajeRecomendaciones.grid(row = 8, column= 0, columnspan= 6)
+
+                            
+
         
         actualizarCatalogo()
 

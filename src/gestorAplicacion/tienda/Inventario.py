@@ -192,7 +192,7 @@ class Inventario:
         for i in range(3):
             if historialCompra.getCategoriasMasCompradas()[i] != None:
                 categorias += 1
-        print(historialCompra.getCategoriasMasCompradas()) #Borrar
+        
 
 
         if categorias == 1:
@@ -220,7 +220,7 @@ class Inventario:
                 catalogo[fila+1][columna] = self.listaCategorias[categoria][indice]
 
 
-            return catalogo
+            return catalogo, categorias
         
         if categorias == 2:
             categoriaRecomendada1 = historialCompra.getCategoriasMasCompradas()[0]
@@ -249,7 +249,7 @@ class Inventario:
                 indice = i - 16 if i >= 16 else i
                 catalogo[fila+2][columna] = self.listaCategorias[categoria][indice]
             
-            return catalogo
+            return catalogo, categorias
         
         if categorias == 3:
             categoriaRecomendada1 = historialCompra.getCategoriasMasCompradas()[0]
@@ -281,6 +281,6 @@ class Inventario:
                 indice = i - 16 if i >= 16 else i
                 catalogo[fila+3][columna] = self.listaCategorias[categoria][indice]
             
-            return catalogo
+            return catalogo, categorias
 
                 
