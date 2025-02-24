@@ -192,7 +192,7 @@ class Inventario:
         for i in range(3):
             if historialCompra.getCategoriasMasCompradas()[i] != None:
                 categorias += 1
-        print(historialCompra.getCategoriasMasCompradas())
+        print(historialCompra.getCategoriasMasCompradas()) #Borrar
 
 
         if categorias == 1:
@@ -201,8 +201,7 @@ class Inventario:
             productosRecomendados = self.listaCategorias[Producto.getListaCategorias().index(categoriaRecomendada)]
 
             for i in range (6):
-                catalogo[0][i] = productosRecomendados[i]
-                #print(productosRecomendados[i].getNombre()) #Borrar
+                catalogo[0][i] = productosRecomendados[i]               
             
             #Se añaden los productos al resto de la matriz
 
@@ -218,7 +217,8 @@ class Inventario:
 
                 categoria = random.randint(0, 5)
                 indice = i - 16 if i >= 16 else i
-                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+                catalogo[fila+1][columna] = self.listaCategorias[categoria][indice]
+
 
             return catalogo
         
@@ -247,7 +247,7 @@ class Inventario:
 
                 categoria = random.randint(0, 5)
                 indice = i - 16 if i >= 16 else i
-                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+                catalogo[fila+2][columna] = self.listaCategorias[categoria][indice]
             
             return catalogo
         
@@ -279,7 +279,7 @@ class Inventario:
 
                 categoria = random.randint(0, 5)
                 indice = i - 16 if i >= 16 else i
-                catalogo[fila][columna] = self.listaCategorias[categoria][indice]
+                catalogo[fila+3][columna] = self.listaCategorias[categoria][indice]
             
             return catalogo
 
