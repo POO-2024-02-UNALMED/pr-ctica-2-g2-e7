@@ -283,4 +283,6 @@ class Inventario:
             
             return catalogo, categorias
 
+    def getListaCategorias(self):
+        return self.listaCategorias
                 
