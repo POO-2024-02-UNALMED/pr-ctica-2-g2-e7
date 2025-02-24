@@ -1195,16 +1195,92 @@ class App:
         # Botón para volver
         boton_volver = tk.Button(frameReporte, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
         boton_volver.pack(pady=10)
-
-        # Botón para generar orden de fabricación
-        boton_orden = tk.Button(frameReporte, text="Generar Orden de Fabricación", command=self.generarOrdenFabricacion)
-        boton_orden.pack(pady=10)
         
-    def generarOrdenFabricacion(self):
+    def generarOrdenFabricacion(self, menu_bar):
         inventario = self.main_menu.getInventario()
         vendedor = self.main_menu.getVendedor()
-        mensaje = vendedor.crear_orden_fabricacion()
-        messagebox.showinfo("Orden de Fabricación", mensaje)
+
+        titulo = tk.Label(ventana_principal, text="Orden de Fabricación", font=("Arial", 16, "bold"), bg="white")
+        titulo.pack(pady=10)
+
+        # Entrada para el nombre del producto
+        label_producto = tk.Label(ventana_principal, text="Nombre del producto:", font=("Arial", 12), bg="white")
+        label_producto.pack()
+        entry_producto = tk.Entry(ventana_principal)
+        entry_producto.pack()
+
+        # Entrada para la cantidad
+        label_cantidad = tk.Label(ventana_principal, text="Cantidad a fabricar:", font=("Arial", 12), bg="white")
+        label_cantidad.pack()
+        entry_cantidad = tk.Entry(ventana_principal)
+        entry_cantidad.pack()
+
+        # Etiqueta para mostrar mensajes
+        contenido = tk.Label(ventana_principal, text="", font=("Arial", 12), bg="white", justify="left")
+        contenido.pack(pady=10)
+
+        # Lista para almacenar los productos ingresados
+        productos_seleccionados = []
+        cantidades = []
+
+        # Función para agregar productos sin cerrar la interfaz
+        def agregar_producto():
+            nombre_producto = entry_producto.get().strip()
+            try:
+                cantidad = int(entry_cantidad.get().strip())
+            except ValueError:
+                cantidad = -1  # Manejo de error si la cantidad no es un número
+
+            if not nombre_producto:
+                contenido.config(text="No se ingresó ningún producto.")
+                return
+
+            if cantidad <= 0:
+                contenido.config(text="Cantidad inválida. Ingrese un número mayor a 0.")
+                return
+
+            producto = vendedor.buscarProducto(nombre_producto)
+            if producto is None:
+                contenido.config(text=f"Producto no encontrado: {nombre_producto}\nPor favor, ingrese otro.")
+                return
+
+            productos_seleccionados.append(producto)
+            cantidades.append(cantidad)
+
+            # Limpiar campos después de agregar el producto
+            entry_producto.delete(0, tk.END)
+            entry_cantidad.delete(0, tk.END)
+
+            # Mostrar productos añadidos
+            contenido.config(text=f"Productos en la orden: {len(productos_seleccionados)}")
+
+        # Función para enviar la orden completa a fabricación
+        def enviar_orden():
+            if not productos_seleccionados:
+                contenido.config(text="No se han ingresado productos para fabricar.")
+                return
+
+            mensaje = vendedor.crear_orden_fabricacion(productos_seleccionados, cantidades)
+            contenido.config(text=mensaje)
+
+            # Limpiar la lista después de enviar la orden
+            productos_seleccionados.clear()
+            cantidades.clear()
+
+        # Botón para agregar productos sin cerrar la ventana
+        boton_agregar = tk.Button(ventana_principal, text="Agregar Producto", command=agregar_producto)
+        boton_agregar.pack()
+
+        # Botón para finalizar y enviar la orden completa
+        boton_enviar = tk.Button(ventana_principal, text="Finalizar Orden", command=enviar_orden)
+        boton_enviar.pack()
+        
+         # Botón para volver
+        boton_volver = tk.Button(titulo, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
+        boton_volver.pack(pady=10)
+
+
+
     
     #    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    Ʌ    
     #    |    |    |    |    |    |    |    |    
@@ -1244,9 +1320,11 @@ class App:
         submenu_comprador.add_separator()
         submenu_vendedor.add_command(label= "1. Generar reporte de ventas", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.generarReporteVentas(menu_bar)])
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "2. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
+        submenu_vendedor.add_command(label= "2. Generar Orden de Fabricacion", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.generarOrdenFabricacion(menu_bar)])
         submenu_vendedor.add_separator()
-        submenu_vendedor.add_command(label= "3. Ver notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.vendedor)])
+        submenu_vendedor.add_command(label= "3. Consultar cuenta bancaria", command=lambda: [self.limpiar_ventana(ventana_principal, menu_bar), self.menuCuentaBancaria(ventana_principal, "vendedor")])
+        submenu_vendedor.add_separator()
+        submenu_vendedor.add_command(label= "4. Ver notificaciones", command=lambda: [self.limpiar_ventana(ventana_principal,menu_bar), self.verNotificaciones(self.main_menu.vendedor)])
         menu_ayuda = tk.Menu(menu_bar, tearoff= 0) # se crea un menú llamado ayuda
         menu_bar.add_cascade(label= "Archivo", menu= menu_archivo)
         menu_archivo.add_command(label= "Aplicación", command= self.informacion_basica) # Se muestra la información básica del programa
