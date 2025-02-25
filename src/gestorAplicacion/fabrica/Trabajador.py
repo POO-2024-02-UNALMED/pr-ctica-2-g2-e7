@@ -1,12 +1,12 @@
 class Trabajador:
     def __init__(self, id_trabajador, nombre, horario):
-        self.id_trabajador = id_trabajador
+        self.ID_TRABAJADOR = id_trabajador
         self.nombre = nombre
         self.horario = horario
         self.estado = "Disponible"
 
     def get_id_trabajador(self):
-        return self.id_trabajador
+        return self.ID_TRABAJADOR
 
     def get_nombre(self):
         return self.nombre

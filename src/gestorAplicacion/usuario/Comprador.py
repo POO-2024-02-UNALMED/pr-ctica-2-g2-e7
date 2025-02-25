@@ -1,5 +1,6 @@
 from .Usuario import Usuario
 from ..compras.HistorialCompras import HistorialCompras
+from multimethod import multimethod
 
 class Comprador(Usuario):
     def __init__(self, nombre, cuentaBancaria, carritoCompras):

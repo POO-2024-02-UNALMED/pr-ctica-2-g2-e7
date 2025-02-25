@@ -75,10 +75,10 @@ if __name__ == "__main__":
     vendedor = Vendedor("pedro", None, inventario, fabrica)
     cuenta2 = CuentaBancaria(vendedor)
     vendedor.setCuentaBancaria(cuenta2)
-    test = MainMenu(comprador, vendedor, inventario)
-    App(None, test)
+#     test = MainMenu(comprador, vendedor, inventario)
+#     App(None, test)
     #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java), es decir comentan ela variable que dice test de arriba 
     # y la creación de App de arriba y descomentan lo de abajo. Para que funcione la serialización deben de salirse desde la misma interfaz y no cerrarla con el botón de la x.
     #Si tienen dudas de este nuevo proceso no duden en preguntarle a Nicolás.
-    #test = MainMenu()
-    #App(None, test)
+    test = MainMenu()
+    App(None, test)
