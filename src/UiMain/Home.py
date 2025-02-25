@@ -55,7 +55,7 @@ class App:
              "imagenes": ["src/imagenes/santiago1.jpg", "src/imagenes/santiago2.jpg", "src/imagenes/santiago3.jpg", "src/imagenes/santiago4.jpg"]},
             {"nombre": "Juan Nicolás Chaparro Rodríguez", "bio": "Estudiante de Ingenieria de Sistemas e Informática - 18 años\nMis pasiones son la música y los videojuegos.",
              "imagenes": ["src/imagenes/juan1.jpg", "src/imagenes/juan2.jpg", "src/imagenes/juan3.jpg", "src/imagenes/juan4.jpg"]},
-            {"nombre": "Simón David Díaz Rojas", "bio": "Especialista en ciberseguridad y redes informáticas.",
+            {"nombre": "Simón David Díaz Rojas", "bio": "Estudiante de Ingeniería de Sistemas \n 18 años \n Músico por vocación",
              "imagenes": ["src/imagenes/simon1.jpg", "src/imagenes/simon2.jpg", "src/imagenes/simon3.jpg", "src/imagenes/simon4.jpg"]},
             {"nombre": "José Alejandro Castro Rey", "bio": "Estudiante de ciencias de la computacion - 20  años \n mis pasatiempos son los videojuegos y el futbol.",
              "imagenes": ["src/imagenes/jose1.jpg", "src/imagenes/jose2.jpg", "src/imagenes/jose3.jpg", "src/imagenes/jose4.jpg"]}
