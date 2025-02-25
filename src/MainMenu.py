@@ -108,7 +108,7 @@ class MainMenu:
             elif opcion == 4:
                 print("Volviendo al menú del carrito...")
     def eliminacion(self, producto, cantidad, comprador):
-    
+        
         try:
             cantidad = int(cantidad)
             if cantidad <= 0:
@@ -127,7 +127,7 @@ class MainMenu:
         producto_obj = comprador.getCarritoCompras().busqueda(producto)
 
         if producto_obj is None:
-            return f"El producto no se encuentra en el carrito."
+            return f"El producto es inválido."
         else:
             resultado = comprador.getCarritoCompras().eliminarProducto(
                 producto_obj, cantidad, comprador.getCarritoCompras().getListaItems(), comprador.getCarritoCompras().getCantidadPorProducto()
@@ -482,6 +482,8 @@ class MainMenu:
   
 
     def añada(self, producto, cantidad, comprador):
+        if int(cantidad)<1:
+            return 
         try:
             numerico = int(cantidad)
             if numerico not in [1, 2, 3, 4, 5]:

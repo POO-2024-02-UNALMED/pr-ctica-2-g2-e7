@@ -28,6 +28,7 @@ from excepciones.DatoNoExistenteError import DatoNoExistenteError
 from excepciones.CantidadInvalidaError import CantidadInvalidaError
 from excepciones.CarritoComprasVacio import CarritoComprasVacio
 from excepciones.SaldoInsuficienteError import SaldoInsuficienteError
+from excepciones.SinStock import SinStock
 
 class App:
     def __init__(self, ventana_principal = None, mainMenu = None):
@@ -445,7 +446,11 @@ class App:
         
         
         
-    
+    def Comprobar(self,inventario,producto,cantidad):
+        a=Inventario.verificarProducto(inventario,producto,cantidad)
+        if a == False :
+            raise SinStock("Error , producto no disponible en stock")
+
 
     def seleccionarProducto(self, producto, coordenadas = None):
 
@@ -650,16 +655,36 @@ class App:
         # Empacar el marco principal
         f1.pack(padx=10, pady=10, expand=True)
     def añadir(self,valores):
+        
+
         cantidad=(valores["Cantidad"])
         
+
+
         
         o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
         if o=="La cantidad ingresada no es un número válido, se te asignará una por default que es 1":
             
             messagebox.showerror("ERROR 101",o)
         else:
-            messagebox.showinfo("Añadir",o)
+            try:
+                self.Comprobar(self.main_menu.getInventario(),tuc,int(cantidad))
+                self.exceso(cantidad)
+            except SinStock as e:
+                messagebox.showerror("Error",e)
+            except CantidadInvalidaError as f:
+                messagebox.showerror("Error ", f)
+            else:
+                messagebox.showinfo("Añadir",o)
         self.ejecutar_ambas2()
+    def exceso(self,cantidad):
+        if int(cantidad)>5:
+            raise CantidadInvalidaError("Cantidad no valida,debe ser menor a 5")
+        elif int(cantidad) <0 :
+            raise CantidadInvalidaError("Cantidad debe ser positiva")
+        else:
+            pass
+        
 
     
     def eliminarProductosDelCarrito(self, ventana_principal):
@@ -717,7 +742,7 @@ class App:
         
         if mensaje == "La cantidad debe ser un número entero.":
             messagebox.showerror("ERROR 007",mensaje)
-        elif mensaje == "El producto no se encuentra en el carrito.":
+        elif mensaje == "El producto es inválido.":
             messagebox.showerror("ERROR 008",mensaje)
         else:
             messagebox.showinfo("Eliminacion",mensaje)
