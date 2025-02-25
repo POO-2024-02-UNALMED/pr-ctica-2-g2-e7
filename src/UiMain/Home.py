@@ -58,7 +58,7 @@ class App:
 
         # Datos de los desarrolladores
         self.desarrolladores = [
-            {"nombre": "Tomás Aristizábal Gómez", "bio": "Desarrollador especializado en arquitectura de software y sistemas empresariales.",
+            {"nombre": "Tomás Aristizábal Gómez", "bio": "Estudiante de Ingenieria de Sistemas e Informática - 18 años\nMis pasiones son el futbol y la tecnologia",
              "imagenes": ["src/imagenes/tomas1.jpg", "src/imagenes/tomas2.jpg", "src/imagenes/tomas3.jpg", "src/imagenes/tomas4.jpg"]},
             {"nombre": "Santiago Barrientos Medina", "bio": "18 años , Estudiante de ingenieria en sistemas,\n mis pasiones son la aeronáutica y la literatura ",
              "imagenes": ["src/imagenes/santiago1.jpg", "src/imagenes/santiago2.jpg", "src/imagenes/santiago3.jpg", "src/imagenes/santiago4.jpg"]},
