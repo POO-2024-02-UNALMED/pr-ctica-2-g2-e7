@@ -27,7 +27,7 @@ class Comprador(Usuario):
             mensaje += f"{i+1}. Descuento de: {self.valorCupones[i]}%\n"
         return mensaje
     
-    def devolverProducto(self, idfactura, idproducto, cantidadRetornar, vendedor, inventario):
+    def devolverProducto(self, idfactura, idproducto, cantidadRetornar, vendedor):
         factura = self.historialCompras.buscarFactura(idfactura)
         if(factura != None):
             producto = factura.verificarProducto(idproducto, cantidadRetornar)
@@ -36,7 +36,6 @@ class Comprador(Usuario):
                 valorDevolver = vendedor.devolucionDinero(self, producto.getPrecio(), descuento, cantidadRetornar)
                 vendedor.reingresarProducto(cantidadRetornar, producto)
                 self.historialCompras.actualizarCantidadDevueltos(cantidadRetornar)
-                inventario.ajusteProductos(producto, "devolucion")
                 factura.modificarFactura(producto, cantidadRetornar, "eliminar")
                 mensajeComprador = f"Su devolución de {cantidadRetornar} {producto.getNombre()}/s por un valor de {valorDevolver} pesos (corresponde a lo pagado menos un 10% de retención) ha sido procesada exitosamente."; 
                 asuntoComprador = "Devolución procesada"; 
