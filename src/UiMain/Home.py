@@ -665,7 +665,7 @@ class App:
         o=self.main_menu.añada(tuc,cantidad,self.main_menu.getComprador())
         if o=="La cantidad ingresada no es un número válido, se te asignará una por default que es 1":
             
-            messagebox.showerror("ERROR 101",o)
+            messagebox.showerror("ERROR 101","Manejo de errores de la aplicacion :" +o)
         else:
             try:
                 self.Comprobar(self.main_menu.getInventario(),tuc,int(cantidad))
@@ -741,11 +741,11 @@ class App:
         mensaje=self.main_menu.eliminacion(Producto,cantidad,self.main_menu.getComprador())
         
         if mensaje == "La cantidad debe ser un número entero.":
-            messagebox.showerror("ERROR 007",mensaje)
+            messagebox.showerror("ERROR 007","Manejo de errores de la aplicacion :" + mensaje)
         elif mensaje == "El producto es inválido.":
-            messagebox.showerror("ERROR 008",mensaje)
-        elif mensaje == "ERROR: la cantidad que deseas eliminar es mayor que la disponible ":
-            messagebox.showerror("ERROR 009",mensaje)
+            messagebox.showerror("ERROR 008","Manejo de errores de la aplicacion : "+ mensaje)
+        elif mensaje == "la cantidad que deseas eliminar es mayor que la disponible ":
+            messagebox.showerror("ERROR 009","Manejo de errores de la aplicacion :" + mensaje)
         else:
             
             messagebox.showinfo("Eliminacion",mensaje)

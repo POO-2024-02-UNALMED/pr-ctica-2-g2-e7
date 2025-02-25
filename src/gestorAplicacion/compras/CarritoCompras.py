@@ -182,7 +182,7 @@ class CarritoCompras:
             listaItems.pop(indice)
             return f"El producto ha sido eliminado en su totalidad"
         else:
-            return "ERROR: la cantidad que deseas eliminar es mayor que la disponible "
+            return "la cantidad que deseas eliminar es mayor que la disponible "
 #funcionalidad de descuentos 
     def verificardescuentopuntos(self ): #aqui vamos a verificar los descuentos del usuario por los puntos que se ha ganado en nuestra tienda 
         puntos= self.usuario.getPuntos() #obtenemos los puntos del usuario 
