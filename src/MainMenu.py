@@ -482,10 +482,11 @@ class MainMenu:
   
 
     def añada(self, producto, cantidad, comprador):
-        if int(cantidad)<1:
-            return 
+        
         try:
             numerico = int(cantidad)
+            if int(cantidad)<1:
+                return 
             if numerico not in [1, 2, 3, 4, 5]:
                 raise CantidadInvalidaError("Cantidad inválida, se te asignó una por default que es 1")
             else:
