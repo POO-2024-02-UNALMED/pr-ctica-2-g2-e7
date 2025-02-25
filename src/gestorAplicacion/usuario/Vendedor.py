@@ -1,58 +1,30 @@
 from .Usuario import Usuario
 from tkinter import simpledialog
 from gestorAplicacion.usuario.Notificacion import Notificacion
-from multimethod import multimethod
 
 ordenes_pendientes = []
 class Vendedor(Usuario):
-    @multimethod
     def __init__(self, nombre, cuentaBancaria, inventario, fabrica):
         super().__init__(nombre, cuentaBancaria)
         self.ventasRealizadas = 0
         self.inventario = inventario
         self.fabrica = fabrica
-    @multimethod
-    def __init__(self,nombre,cuenta,inventario,fabrica,ventas):
-        self.__init__(nombre,cuenta,inventario,fabrica)
-        self.ventasRealizadas=ventas
 
+    def crear_orden_fabricacion(self, productos_seleccionados, cantidades):
+        if not productos_seleccionados or not cantidades:
+            return "No se ingresaron productos."
 
-    def crear_orden_fabricacion(self):
-        productos_seleccionados = []
-        cantidades = []
+        orden = [productos_seleccionados[:], cantidades[:]]  # Copia de listas para evitar referencias mutables
+        ordenes_pendientes.append(orden)
 
-        while True:
-            nombre_producto = simpledialog.askstring("Entrada", "Ingrese el nombre del producto:")
-            if not nombre_producto:
-                return "No se ingresó ningún producto."
-            if nombre_producto.lower() == "fin":
-                break
-
-            producto = self.buscarProducto(nombre_producto)
-            if producto is None:
-                return f"Producto no encontrado: {nombre_producto}\nPor favor vuelva a ingresar todos los productos de nuevo"
-
-            entrada_cantidad = simpledialog.askinteger("Cantidad", "Ingrese la cantidad a fabricar:")
-            if  entrada_cantidad  <= 0:
-                return "Cantidad inválida.\nVuelva a ingresar todos los productos nuevamente con una cantidad válida"
-
-            cantidad = int(entrada_cantidad)
-
-            productos_seleccionados.append(producto)
-            cantidades.append(cantidad)
-            orden = [productos_seleccionados[:], cantidades[:]]  # Copia de listas para evitar referencias mutables
-            ordenes_pendientes.append(orden)
-
-            if cantidad > 50:
-                ordenes_pendientes.clear()
-
-        if not productos_seleccionados:
-            return "No se seleccionaron productos. La orden no se creó."
-        if len(ordenes_pendientes) > 0:
-            mensaje_fabrica_notif = "Se han entregado los productos"
-            asunto_vendedor = "Orden De Producción"
-            self.recibirNotificacion(mensaje_fabrica_notif, asunto_vendedor)
+        if any(cantidad > 50 for cantidad in cantidades):
             ordenes_pendientes.clear()
+            return "Se ingresó una cantidad mayor a 50. La orden ha sido cancelada."
+
+        mensaje_fabrica_notif = "Se han entregado los productos"
+        asunto_vendedor = "Orden De Producción"
+        self.recibirNotificacion(mensaje_fabrica_notif, asunto_vendedor)
+        ordenes_pendientes.clear()
 
         mensaje_fabrica = self.fabrica.recibir_orden(productos_seleccionados, cantidades)
         return f"Orden creada con éxito. Productos seleccionados: {len(productos_seleccionados)}.\n{mensaje_fabrica}"
