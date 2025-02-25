@@ -744,7 +744,10 @@ class App:
             messagebox.showerror("ERROR 007",mensaje)
         elif mensaje == "El producto es inválido.":
             messagebox.showerror("ERROR 008",mensaje)
+        elif mensaje == "ERROR: la cantidad que deseas eliminar es mayor que la disponible ":
+            messagebox.showerror("ERROR 009",mensaje)
         else:
+            
             messagebox.showinfo("Eliminacion",mensaje)
             self.ejecutar_ambas()
     def ejecutar_ambas2(self):
