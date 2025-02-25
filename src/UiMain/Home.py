@@ -57,7 +57,7 @@ class App:
              "imagenes": ["src/imagenes/juan1.jpg", "src/imagenes/juan2.jpg", "src/imagenes/juan3.jpg", "src/imagenes/juan4.jpg"]},
             {"nombre": "Simón David Díaz Rojas", "bio": "Especialista en ciberseguridad y redes informáticas.",
              "imagenes": ["src/imagenes/simon1.jpg", "src/imagenes/simon2.jpg", "src/imagenes/simon3.jpg", "src/imagenes/simon4.jpg"]},
-            {"nombre": "José Alejandro Castro Rey", "bio": "Ingeniero de software con experiencia en videojuegos y desarrollo móvil.",
+            {"nombre": "José Alejandro Castro Rey", "bio": "Estudiante de ciencias de la computacion - 20  años \n mis pasatiempos son los videojuegos y el futbol.",
              "imagenes": ["src/imagenes/jose1.jpg", "src/imagenes/jose2.jpg", "src/imagenes/jose3.jpg", "src/imagenes/jose4.jpg"]}
         ]
 
