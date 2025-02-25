@@ -1269,8 +1269,8 @@ class App:
         boton_enviar.pack()
         
          # Botón para volver
-        boton_volver = tk.Button(titulo, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
-        boton_volver.pack(pady=10)
+        boton_volver = tk.Button(ventana_principal, text="Volver", command=lambda: self.limpiar_ventana(ventana_principal, menu_bar))
+        boton_volver.pack(side="bottom",pady=200)
 
 
 
