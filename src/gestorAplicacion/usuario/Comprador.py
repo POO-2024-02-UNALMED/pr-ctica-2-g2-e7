@@ -4,7 +4,7 @@ from multimethod import multimethod
 
 class Comprador(Usuario):
     @multimethod
-    def __init__(self, nombre, cuentaBancaria, carritoCompras):
+    def __init__(self, nombre:str, cuentaBancaria:None, carritoCompras:None):
         super().__init__(nombre, cuentaBancaria)
         self.carritoCompras = carritoCompras
         self.historialCompras = HistorialCompras()
