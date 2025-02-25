@@ -6,7 +6,7 @@ from multimethod import multimethod
 ordenes_pendientes = []
 class Vendedor(Usuario):
     @multimethod
-    def __init__(self, nombre, cuentaBancaria:None, inventario, fabrica):
+    def __init__(self, nombre, cuentaBancaria, inventario, fabrica):
         super().__init__(nombre, cuentaBancaria)
         self.ventasRealizadas = 0
         self.inventario = inventario
