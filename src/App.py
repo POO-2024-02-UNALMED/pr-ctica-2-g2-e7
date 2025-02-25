@@ -6,6 +6,8 @@ from MainMenu import MainMenu
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.usuario.Vendedor import Vendedor
+from gestorAplicacion.fabrica.Fabrica import Fabrica
+from UiMain.Home import App
 
 
 def instanciar():
@@ -60,7 +62,23 @@ def instanciar():
 
     
     return inventario
-    
-    # Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java):
-#     test = MainMenu()
- #   test.display()
+
+if __name__ == "__main__":
+    inventario = instanciar()
+    fabrica = Fabrica(inventario)
+    comprador = Comprador("Juan", None, None)
+    cuenta = CuentaBancaria(comprador)
+    cuenta.recargarCuenta(2000)
+    comprador.setCuentaBancaria(cuenta)
+    carrito = CarritoCompras(comprador, inventario)
+    comprador.setCarritoCompras(carrito)
+    vendedor = Vendedor("pedro", None, inventario, fabrica)
+    cuenta2 = CuentaBancaria(vendedor)
+    vendedor.setCuentaBancaria(cuenta2)
+#     test = MainMenu(comprador, vendedor, inventario)
+#     App(None, test)
+    #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java), es decir comentan ela variable que dice test de arriba 
+    # y la creación de App de arriba y descomentan lo de abajo. Para que funcione la serialización deben de salirse desde la misma interfaz y no cerrarla con el botón de la x.
+    #Si tienen dudas de este nuevo proceso no duden en preguntarle a Nicolás.
+    test = MainMenu()
+    App(None, test)

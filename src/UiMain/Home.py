@@ -20,17 +20,8 @@ sys.path.append(ruta_superior)
 # Ahora puedes importar lo que quieras
 from gestorAplicacion.tienda.Inventario import Inventario
 from gestorAplicacion.tienda.Producto import Producto
-
-from gestorAplicacion.usuario.Comprador import Comprador
-from gestorAplicacion.usuario.Notificacion import Notificacion
-from gestorAplicacion.pasarelaPago.CuentaBancaria import CuentaBancaria
-from gestorAplicacion.compras.CarritoCompras import CarritoCompras
-from MainMenu import MainMenu
-from App import instanciar
 from gestorAplicacion.tienda.Producto import Producto
 from gestorAplicacion.tienda.Inventario import Inventario
-from gestorAplicacion.usuario.Vendedor import Vendedor
-from gestorAplicacion.fabrica.Fabrica import Fabrica
 from UiMain.FieldFrame import FieldFrame
 from baseDatos.Serializador import serializar
 from excepciones.DatoNoExistenteError import DatoNoExistenteError
@@ -694,16 +685,16 @@ class App:
         tree.heading("Producto", text="Producto")
         tree.heading("Cantidad", text="Cantidad")
         tree.grid(column=0, row=1, sticky="nsew", columnspan=2)
-        carrito.calcularTotal()
+        self.main_menu.getComprador().getCarritoCompras().calcularTotal()
         total_label = tk.Label(
             contenedorcarrito, 
-            text=f"Total: {carrito.getPrecioTotal()}", 
+            text=f"Total: {self.main_menu.getComprador().getCarritoCompras().getPrecioTotal()}", 
             font=("Arial", 15, "bold"),
             justify="right"
         )
         total_label.grid(column=0, row=2, sticky="e", columnspan=2, pady=(10, 0))
         # Añadir los productos al Treeview
-        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+        for producto, cantidad in zip(self.main_menu.getComprador().getCarritoCompras().getListaItems(), self.main_menu.getComprador().getCarritoCompras().getCantidadPorProducto()):
             tree.insert("", "end", values=(producto.getNombre(), cantidad))
 
         # Ajustar las columnas del Treeview
@@ -722,7 +713,7 @@ class App:
         Producto=valores["Producto a eliminar"]
         cantidad=(valores["Cantidad"])
     
-        mensaje=self.main_menu.eliminacion(Producto,cantidad,comprador)
+        mensaje=self.main_menu.eliminacion(Producto,cantidad,self.main_menu.getComprador())
         
         if mensaje == "La cantidad debe ser un número entero.":
             messagebox.showerror("ERROR 007",mensaje)
@@ -746,7 +737,7 @@ class App:
         for item in tree.get_children():
             tree.delete(item)
         # Repoblar el Treeview con los productos actualizados
-        for producto, cantidad in zip(carrito.getListaItems(), carrito.getCantidadPorProducto()):
+        for producto, cantidad in zip(self.main_menu.getComprador().getCarritoCompras().getListaItems(), self.main_menu.getComprador().getCarritoCompras().getCantidadPorProducto()):
             tree.insert("", "end", values=(producto.getNombre(), cantidad))
  
     def verElCarrito(self,ventana_principal):
@@ -1406,37 +1397,4 @@ class App:
         serializar(self.main_menu)
 
 
-if __name__ == "__main__":
-    ########################################################
-    #Esto es de prueba, no borrar hasta que Nicolás diga
-    # producto1 = Producto(10, 2, 0, 0, Producto.Categoria.TECNOLOGIA, 1, "Iphone", 1000, True)
-    # producto2 = Producto(20, 5, 0, 0, Producto.Categoria.COMIDA, 2, "Manzana", 20, False)
-    # producto3 = Producto(40, 3, 0, 0, Producto.Categoria.ASEO, 3, "Escoba", 50, True)
-    ########################################################
-    inventario = instanciar()
-    fabrica = Fabrica(inventario)
-    # inventario.añadirProducto(producto1)
-    # inventario.añadirProducto(producto2)
-    # inventario.añadirProducto(producto3)
-    comprador = Comprador("Juan", None, None)
-    cuenta = CuentaBancaria(comprador)
-    cuenta.recargarCuenta(2000)
-    comprador.setCuentaBancaria(cuenta)
-    carrito = CarritoCompras(comprador, inventario)
-    ######################################
-    #Esto es de prueba, no borrar hasta que Nicolás diga
-    # carrito.añadirProducto(producto1)
-    # carrito.añadirProducto(producto2, 5)
-    # carrito.añadirProducto(producto3, 2)
-    ######################################
-    comprador.setCarritoCompras(carrito)
-    vendedor = Vendedor("pedro", None, inventario, fabrica)
-    cuenta2 = CuentaBancaria(vendedor)
-    vendedor.setCuentaBancaria(cuenta2)
-    test = MainMenu(comprador, vendedor, inventario)
-    App(None, test)
-    #Menu serializado (Para serializar se hace exactamente igual que en el proyecto de Java), es decir comentan ela variable que dice test de arriba 
-    # y la creación de App de arriba y descomentan lo de abajo. Para que funcione la serialización deben de salirse desde la misma interfaz y no cerrarla con el botón de la x.
-    #Si tienen dudas de este nuevo proceso no duden en preguntarle a Nicolás.
-    # test = MainMenu()
-    # App(None, test)
+
